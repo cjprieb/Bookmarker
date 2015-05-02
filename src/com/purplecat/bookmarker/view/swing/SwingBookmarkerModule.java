@@ -23,7 +23,7 @@ public class SwingBookmarkerModule extends AbstractModule {
 		bind(ILoggingService.class).to(FileLog.class);
 		
 		//Database/Repository items
-		bind(IUrlPatternDatabase.class).to(UrlPatternDatabase.class);//TODO: this is just a stub/sample
+		bind(IUrlPatternDatabase.class).to(UrlPatternDatabase.class);
 		bind(UrlPatternService.class);
 		bind(IMangaDatabaseConnector.class).to(MangaDatabaseConnector.class);
 		bind(Controller.class);

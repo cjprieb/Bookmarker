@@ -1,0 +1,237 @@
+package com.purplecat.bookmarker.services.databases;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import com.purplecat.bookmarker.extensions.PlaceExt;
+import com.purplecat.bookmarker.extensions.TitleExt;
+import com.purplecat.bookmarker.models.Media;
+import com.purplecat.bookmarker.sql.DBUtils;
+import com.purplecat.bookmarker.sql.NamedResultSet;
+import com.purplecat.bookmarker.sql.NamedStatement;
+import com.purplecat.commons.logs.ILoggingService;
+import com.purplecat.commons.logs.LoggingService;
+
+public class MangaDatabaseConnector implements IMangaDatabaseConnector {
+	private static String TAG = "MangaDatabaseConnector";
+	private static String SELECT_MEDIA = "SELECT Media._id _id, MdDisplayTitle _displayTitle, SvdIsSaved _isSaved, " +
+											" hist.svhstDate _lastReadDate, hist.svhstPlace _lastReadPlace FROM MEDIA" + 
+										" LEFT JOIN savedhistory hist on hist._id = media.svdhistory_id";
+	
+	/**
+	 * Assumes the SELECT_MEDIA query was used
+	 * @param result
+	 * @return
+	 * @throws SQLException 
+	 */
+	private Media loadMediaFromResultSet(NamedResultSet result) throws SQLException {
+		Media media = new Media();
+		media._id = result.getLong("_id");
+		media._displayTitle = result.getString("_displayTitle");
+		media._isSaved = result.getBoolean("_isSaved");
+		media._lastReadDate = result.getDateFromString("_lastReadDate");
+		media._lastReadPlace = PlaceExt.parse(result.getString("_lastReadPlace"));
+		return media;
+	}
+	
+	private String 		_connectionPath = null;	
+	
+	public ILoggingService _log = LoggingService.create();
+	
+	public MangaDatabaseConnector(String path) {
+		_connectionPath = path;
+
+		try {
+			_log.log(0, "MangaDataConnector", "Finding JDBC connector...");
+			Class.forName("org.sqlite.JDBC");
+		} catch (ClassNotFoundException e) {
+			//if it gets here, there's a problem.
+			e.printStackTrace();
+			throw new NullPointerException("No sqlite JDBC connector found! Aborting");
+		}
+		_log.log(1, "MangaDataConnector", "Connector class found.");
+	}
+
+	@Override
+	public List<Media> query() {
+		List<Media> list = new LinkedList<Media>();
+		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
+			Statement stmt = conn.createStatement();
+			NamedResultSet result = new NamedResultSet(stmt.executeQuery(SELECT_MEDIA));
+			while ( result.next() ) {
+				list.add(loadMediaFromResultSet(result));
+			}
+		} catch (SQLException e) {
+			_log.error("MangaDatabaseConnector", "Query failed", e);
+		} 
+		return list;
+	}
+
+	@Override
+	public List<Media> querySavedMedia() {
+		List<Media> list = new LinkedList<Media>();
+		String sql = SELECT_MEDIA + " WHERE SvdIsSaved = 1";
+		_log.log(0, TAG, "connecting to database for saved media query");
+		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
+			Statement stmt = conn.createStatement();
+			NamedResultSet result = new NamedResultSet(stmt.executeQuery(sql));
+			while ( result.next() ) {
+				Media item = loadMediaFromResultSet(result);
+				list.add(item);
+				_log.log(1, TAG, "added item: " + item);
+			}
+		} catch (SQLException e) {
+			_log.error(TAG, "Query for saved failed: " + sql, e);
+		} 
+		_log.log(1, TAG, "DONE");
+		return list;
+	}
+
+	@Override
+	public List<Media> queryNonSavedMedia() {
+		List<Media> list = new LinkedList<Media>();
+		String sql = SELECT_MEDIA + " WHERE SvdIsSaved = 0";
+		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
+			Statement stmt = conn.createStatement();
+			NamedResultSet result = new NamedResultSet(stmt.executeQuery(sql));
+			while ( result.next() ) {
+				list.add(loadMediaFromResultSet(result));
+			}
+		} catch (SQLException e) {
+			_log.error(TAG, "Query for non-saved failed: " + sql, e);
+		} 
+		return list;
+	}
+
+	@Override
+	public List<Media> query(long id) {
+		List<Media> list = new LinkedList<Media>();
+		String sql = SELECT_MEDIA + " WHERE Media._id = @id";
+		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
+			NamedStatement stmt = new NamedStatement(conn, sql);
+			stmt.setLong("@id", id);
+			NamedResultSet result = stmt.executeQuery();
+			while ( result.next() ) {
+				list.add(loadMediaFromResultSet(result));
+			}
+		} catch (SQLException e) {
+			_log.error(TAG, "Query for id failed: " + sql, e);
+		} 
+		return list;
+	}
+
+	@Override
+	public List<Media> queryByTitle(String title) {
+		List<Media> list = new LinkedList<Media>();
+		String strippedTitle = TitleExt.stripTitle(title);		
+		String sql = "";
+		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
+			List<Long> idList = new ArrayList<Long>();
+			sql = "SELECT TtMedia_ID FROM Title WHERE TtStripped LIKE @title";
+			NamedStatement stmt = new NamedStatement(conn, sql);
+			stmt.setString("@title", strippedTitle);
+			NamedResultSet result = stmt.executeQuery();
+			while ( result.next() ) {
+				idList.add(result.getLong("TtMedia_ID"));
+			}			
+			
+			
+			if ( idList.size() > 0 ) {
+				sql = String.format(SELECT_MEDIA + " WHERE Media._id IN (%s)", DBUtils.formatIdList(idList));
+				stmt = new NamedStatement(conn, sql);
+				stmt.setString("@title", title);
+				result = stmt.executeQuery();
+				while ( result.next() ) {
+					list.add(loadMediaFromResultSet(result));
+				}
+			}
+		} catch (SQLException e) {
+			_log.error("MangaDatabaseConnector", "Query for id failed: " + sql, e);
+		} 
+		return list;
+	}
+
+	@Override
+	public void insert(Media item) {
+		String sql = "INSERT INTO Media (MdDisplayTitle, SvdIsSaved) VALUES (@title, @saved)";
+		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
+			conn.setAutoCommit(false);
+			
+			NamedStatement stmt = new NamedStatement(conn, sql);
+			stmt.setString("@title", item._displayTitle);
+			stmt.setBoolean("@saved", item._isSaved);
+			item._id = stmt.executeInsert();
+			
+			updateHistory(conn, item);	
+
+			conn.commit();
+		} catch (SQLException e) {
+			_log.error("MangaDatabaseConnector", "Insert failed: " + sql, e);
+		}		
+	}
+
+	@Override
+	public void update(Media item) {
+		if ( item._id > 0 ) {
+			String sql = "";
+			try (Connection conn = DriverManager.getConnection(_connectionPath)) {
+				conn.setAutoCommit(false);
+				
+				sql = "UPDATE Media SET MdDisplayTitle = @title, SvdIsSaved = @saved WHERE _id = @id";
+				NamedStatement stmt = new NamedStatement(conn, sql);
+				stmt.setLong("@id", item._id);
+				stmt.setString("@title", item._displayTitle);
+				stmt.setBoolean("@saved", item._isSaved);
+				stmt.executeUpdate();
+				
+				updateHistory(conn, item);			
+								
+				conn.commit();
+			} catch (SQLException e) {
+				_log.error("MangaDatabaseConnector", "Update failed: " + sql, e);
+			}
+		}
+		else {
+			_log.error("MangaDatabaseConnection", "Unable to update: invalid id");
+		}
+	}
+
+	@Override
+	public void delete(long id) {
+		String sql = "DELETE FROM Media WHERE _id = @id";
+		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
+			NamedStatement stmt = new NamedStatement(conn, sql);
+			stmt.setLong("@id", id);
+			stmt.execute();
+		} catch (SQLException e) {
+			_log.error("MangaDatabaseConnector", "Delete failed: " + sql, e);
+		}	
+	}
+	
+	private void updateHistory(Connection conn, Media item) throws SQLException {		
+		String sql = "INSERT INTO SavedHistory (SvhstMedia_ID, SvhstDate, SvhstPlace, SvhstUrl, SvhstVolume, SvhstChapter, SvhstSubChapter, SvhstPage, SvhstExtra) " +
+				"VALUES (@mediaId, @date, @place, @url, @v, @ch, @sub, @pg, @extra)";
+		NamedStatement stmt = new NamedStatement(conn, sql);
+		stmt.setLong("@mediaId", item._id);
+		stmt.setDate("@date", item._lastReadDate);
+		stmt.setString("@place", PlaceExt.format(item._lastReadPlace));
+		stmt.setString("@url", item._chapterURL);
+		stmt.setInt("@v", item._lastReadPlace._volume);
+		stmt.setInt("@ch", item._lastReadPlace._chapter);
+		stmt.setInt("@sub", item._lastReadPlace._subChapter);
+		stmt.setInt("@pg", item._lastReadPlace._page);
+		stmt.setBoolean("@extra", item._lastReadPlace._extra);
+		long newHistId = stmt.executeInsert();
+		
+		sql = "UPDATE Media SET SvdHistory_ID=@histId WHERE _id = @id";
+		stmt = new NamedStatement(conn, sql);
+		stmt.setLong("@id", item._id);
+		stmt.setLong("@histId", newHistId);
+		stmt.executeUpdate();	
+	}
+}

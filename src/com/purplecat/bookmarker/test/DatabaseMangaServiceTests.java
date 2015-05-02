@@ -14,7 +14,7 @@ import com.google.inject.Injector;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.services.DatabaseMangaService;
 import com.purplecat.bookmarker.services.ServiceException;
-import com.purplecat.bookmarker.view.swing.SwingBookmarkerModule;
+import com.purplecat.bookmarker.test.modules.TestBookmarkerModule;
 import com.purplecat.commons.extensions.DateTimeFormats;
 import com.purplecat.commons.tests.Matchers;
 
@@ -24,7 +24,7 @@ public class DatabaseMangaServiceTests {
 
 	@Before
 	public void setUpBeforeTest() throws Exception {
-		Injector injector = Guice.createInjector(new SwingBookmarkerModule());
+		Injector injector = Guice.createInjector(new TestBookmarkerModule());
 		
 		_service = injector.getInstance(DatabaseMangaService.class);
 	}

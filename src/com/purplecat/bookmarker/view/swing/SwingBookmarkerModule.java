@@ -7,7 +7,7 @@ import com.purplecat.bookmarker.services.UrlPatternService;
 import com.purplecat.bookmarker.services.databases.IMangaDatabaseConnector;
 import com.purplecat.bookmarker.services.databases.IUrlPatternDatabase;
 import com.purplecat.bookmarker.services.databases.MangaDatabaseConnector;
-import com.purplecat.bookmarker.test.SampleDatabaseService.SamplePatternDatabase;
+import com.purplecat.bookmarker.services.databases.UrlPatternDatabase;
 import com.purplecat.commons.logs.FileLog;
 import com.purplecat.commons.logs.ILoggingService;
 import com.purplecat.commons.swing.MyApplication;
@@ -23,7 +23,7 @@ public class SwingBookmarkerModule extends AbstractModule {
 		bind(ILoggingService.class).to(FileLog.class);
 		
 		//Database/Repository items
-		bind(IUrlPatternDatabase.class).to(SamplePatternDatabase.class);//TODO: this is just a stub/sample
+		bind(IUrlPatternDatabase.class).to(UrlPatternDatabase.class);//TODO: this is just a stub/sample
 		bind(UrlPatternService.class);
 		bind(IMangaDatabaseConnector.class).to(MangaDatabaseConnector.class);
 		bind(Controller.class);

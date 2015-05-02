@@ -62,7 +62,7 @@ public class MangaDatabaseConnector implements IMangaDatabaseConnector {
 				list.add(loadMediaFromResultSet(result));
 			}
 		} catch (SQLException e) {
-			_logging.error("MangaDatabaseConnector", "Query failed", e);
+			_logging.error(TAG, "Query failed", e);
 		} 
 		return list;
 	}

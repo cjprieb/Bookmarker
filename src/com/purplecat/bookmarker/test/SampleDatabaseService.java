@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import com.purplecat.bookmarker.models.BaseDatabaseItem;
 import com.purplecat.bookmarker.models.Media;
@@ -70,7 +69,6 @@ public abstract class SampleDatabaseService<T extends BaseDatabaseItem> implemen
 				for (int i = 1; i < tokens.length; i++) {
 					item._map.put(tokens[i], i-1);
 				}
-				item._pattern = Pattern.compile(item._patternString);
 				insert(item);
 			}
 		}

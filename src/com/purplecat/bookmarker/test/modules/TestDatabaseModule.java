@@ -6,9 +6,9 @@ import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.services.UrlPatternService;
 import com.purplecat.bookmarker.services.databases.IMangaDatabaseConnector;
 import com.purplecat.bookmarker.services.databases.IUrlPatternDatabase;
+import com.purplecat.bookmarker.services.databases.MangaDatabaseConnector;
+import com.purplecat.bookmarker.services.databases.UrlPatternDatabase;
 import com.purplecat.bookmarker.test.DatabaseConnectorTests;
-import com.purplecat.bookmarker.test.SampleDatabaseService.SampleMangaDatabase;
-import com.purplecat.bookmarker.test.SampleDatabaseService.SamplePatternDatabase;
 import com.purplecat.commons.logs.ConsoleLog;
 import com.purplecat.commons.logs.ILoggingService;
 import com.purplecat.commons.swing.SwingThreadPool;
@@ -23,9 +23,9 @@ public class TestDatabaseModule extends AbstractModule {
 		bind(ILoggingService.class).to(ConsoleLog.class);
 		
 		//Database/Repository items
-		bind(IUrlPatternDatabase.class).to(SamplePatternDatabase.class);
+		bind(IUrlPatternDatabase.class).to(UrlPatternDatabase.class);
 		bind(UrlPatternService.class);
-		bind(IMangaDatabaseConnector.class).to(SampleMangaDatabase.class);
+		bind(IMangaDatabaseConnector.class).to(MangaDatabaseConnector.class);
 		bind(Controller.class);
 		bind(String.class).annotatedWith(Names.named("JDBC URL")).toInstance("jdbc:sqlite:" + DatabaseConnectorTests.TEST_DATABASE_PATH);
 		

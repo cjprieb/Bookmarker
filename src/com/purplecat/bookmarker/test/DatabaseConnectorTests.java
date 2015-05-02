@@ -5,12 +5,11 @@ import java.io.IOException;
 
 import org.junit.BeforeClass;
 
+import com.purplecat.commons.tests.Utils;
+
 public class DatabaseConnectorTests {
 	public static final String TEST_DATABASE_PATH = "data/bookmarker.db";
-	public static final String CONNECTION_PREFIX = "jdbc:sqlite:";	
 	public static final String DATABASE_PATH = "../BookmarkView/databases/bookmarker.db";
-	
-	public static String TEST_DATABASE_CONNECTION;
 	
 	@BeforeClass
 	public static void loadDatabase() {
@@ -22,10 +21,7 @@ public class DatabaseConnectorTests {
 			throw new NullPointerException("No sqlite JDBC connector found! Aborting");
 		}
 		
-		File dest = new File(TEST_DATABASE_PATH);
-		TEST_DATABASE_CONNECTION = CONNECTION_PREFIX + dest.getAbsolutePath();
-		
-		/*
+		File dest = new File(TEST_DATABASE_PATH);		
 		File src = new File(DATABASE_PATH);
 		System.out.println(String.format("Copying database from %s to %s", src.getAbsolutePath(), dest.getAbsolutePath()));
 		
@@ -36,6 +32,6 @@ public class DatabaseConnectorTests {
 			e.printStackTrace();
 			throw new NullPointerException("Database for tests could not be copied. Aborting.");
 		}
-		System.out.println("Databased copied");*/
+		System.out.println("Databased copied");
 	}
 }

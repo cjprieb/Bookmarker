@@ -12,8 +12,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.TransferHandler;
 
+import com.purplecat.commons.logs.ConsoleLog;
 import com.purplecat.commons.logs.ILoggingService;
-import com.purplecat.commons.logs.LoggingService;
 
 /**
  * use by :
@@ -24,6 +24,8 @@ import com.purplecat.commons.logs.LoggingService;
  *
  */
 public class DragDropHandler extends TransferHandler {
+	public static final String TAG = "DragDropHandler";
+	
 	/*
 	 * Static variables
 	 */
@@ -31,8 +33,7 @@ public class DragDropHandler extends TransferHandler {
 	public static DataFlavor 	sgSerialArrayListFlavor;
 	
 	static String sgLocalArrayListType = DataFlavor.javaJVMLocalObjectMimeType + ";class=java.util.ArrayList";
-	static ILoggingService _logging = LoggingService.create();
-	static String tag = "DragDropHandler";
+	static ILoggingService _logging = new ConsoleLog();//LoggingService.create();
 
 	static {
 		try {
@@ -73,22 +74,22 @@ public class DragDropHandler extends TransferHandler {
 		ArrayList<?> alist = null;
 		try {
 			if ( DragDropHandler.hasLocalArrayListFlavor(t.getTransferDataFlavors()) ) {
-				_logging.debug(1, tag, "local array list flavor");
+				_logging.debug(1, TAG, "local array list flavor");
 				alist = (ArrayList<?>) t.getTransferData(sgLocalArrayListFlavor);
-				_logging.debug(1, tag, "got transfer data");
+				_logging.debug(1, TAG, "got transfer data");
 			} 
 			else if ( DragDropHandler.hasSerialArrayListFlavor(t.getTransferDataFlavors()) ) {
-				_logging.debug(1, tag, "serial array list flavor");
+				_logging.debug(1, TAG, "serial array list flavor");
 				alist = (ArrayList<?>) t.getTransferData(sgSerialArrayListFlavor);
 			}
 			else {
-				_logging.debug(1, tag, "no valid flavor");
+				_logging.debug(1, TAG, "no valid flavor");
 			}
 		}
 		catch (IOException e) {
-			_logging.error(tag, "IOException during ImportData: could not convert Transferable to Arraylist", e);
+			_logging.error(TAG, "IOException during ImportData: could not convert Transferable to Arraylist", e);
 		} catch (UnsupportedFlavorException e) {
-			_logging.error(tag, "UnsupportedFlavorException during ImportData: could not convert Transferable to Arraylist", e);
+			_logging.error(TAG, "UnsupportedFlavorException during ImportData: could not convert Transferable to Arraylist", e);
 		}
 		return(alist);
 	}
@@ -113,7 +114,7 @@ public class DragDropHandler extends TransferHandler {
 
 	@Override
 	public boolean importData(JComponent c, Transferable t) {
-		_logging.debug(0, tag, "Importing Data");
+		_logging.debug(0, TAG, "Importing Data");
 		ListComponent	target 	= null;
 		ArrayList<?> 	alist 	= null;
 		boolean			dataImported	= false;
@@ -121,34 +122,34 @@ public class DragDropHandler extends TransferHandler {
 			dataImported = true;
 			try {				
 				if ( c instanceof ListComponent ) {
-					_logging.debug(1, tag, "importing from list component");
+					_logging.debug(1, TAG, "importing from list component");
 					target = (ListComponent)c;
 				}
 				else if ( c instanceof ListComponentContainer ) {
-					_logging.debug(1, tag, "importing from list container");
+					_logging.debug(1, TAG, "importing from list container");
 					target = ((ListComponentContainer)c).getListComponent();
 				}
 				else {
-					_logging.debug(1, tag, "importing from " + c);	
+					_logging.debug(1, TAG, "importing from " + c);	
 				}
 				if ( hasLocalArrayListFlavor(t.getTransferDataFlavors()) ) {
-					_logging.debug(1, tag, "local array list flavor");
+					_logging.debug(1, TAG, "local array list flavor");
 					alist = (ArrayList<?>) t.getTransferData(sgLocalArrayListFlavor);
-					_logging.debug(1, tag, "got transfer data");
+					_logging.debug(1, TAG, "got transfer data");
 				} 
 				else if ( hasSerialArrayListFlavor(t.getTransferDataFlavors()) ) {
-					_logging.debug(1, tag, "serial array list flavor");
+					_logging.debug(1, TAG, "serial array list flavor");
 					alist = (ArrayList<?>) t.getTransferData(sgSerialArrayListFlavor);
 				} 
 				else {
-					_logging.debug(1, tag, "no valid flavor");
+					_logging.debug(1, TAG, "no valid flavor");
 					dataImported = false;
 				}
 			} catch (UnsupportedFlavorException ufe) {
-				_logging.error(tag, "importData: unsupported data flavor", ufe);
+				_logging.error(TAG, "importData: unsupported data flavor", ufe);
 				dataImported = false;
 			} catch (IOException ioe) {
-				_logging.error(tag, "importData: I/O exception", ioe);
+				_logging.error(TAG, "importData: I/O exception", ioe);
 				dataImported = false;
 			}
 		}
@@ -160,8 +161,8 @@ public class DragDropHandler extends TransferHandler {
 		if ( dataImported == true ) {
 //			DebugUtils.println(print, "dataImported == true: " + target, 1);
 			int index = target.getSelectedIndex();
-			_logging.debug(2, tag, "drop index: " + index);
-			_logging.debug(2, tag, "mSource: " + mSource);
+			_logging.debug(2, TAG, "drop index: " + index);
+			_logging.debug(2, TAG, "mSource: " + mSource);
 //			DebugUtils.println(print, "target: " + target, 2);
 	
 			// Prevent the user from dropping data back on itself.
@@ -180,30 +181,30 @@ public class DragDropHandler extends TransferHandler {
 						dataImported = true;
 
 						for ( int i = alist.size()-1; i <= 0; i-- ) {
-							_logging.debug(2, tag, "adding: " + alist.get(i));
+							_logging.debug(2, TAG, "adding: " + alist.get(i));
 							target.add(index, alist.get(i));
 						}
 					}
 				}
-				_logging.debug(2, tag, "allow move: " + dataImported);
+				_logging.debug(2, TAG, "allow move: " + dataImported);
 			}
 			else {	
 				mAddCount = alist.size();
-				_logging.debug(2, tag, "add count" + mAddCount);
+				_logging.debug(2, TAG, "add count" + mAddCount);
 				for ( int i = 0; i < alist.size(); i++ ) {
 					Object item = alist.get(i);
-					_logging.debug(1, tag, i + ". " + item + " " + (item != null ? item.getClass() : "<null>"));
+					_logging.debug(1, TAG, i + ". " + item + " " + (item != null ? item.getClass() : "<null>"));
 					target.add(alist.get(i));
 				}
 			}
 		}
-		_logging.debug(0, tag, "Data Imported (value): " + dataImported);
+		_logging.debug(0, TAG, "Data Imported (value): " + dataImported);
 		return(dataImported);
 	}
 
 	@Override
 	protected void exportDone(JComponent c, Transferable data, int action) {
-		_logging.debug(0, tag, "Export Done");
+		_logging.debug(0, TAG, "Export Done");
 		if ( (action == MOVE) && (mTransfers != null) ) {
 
 			// If we are moving items around in the same list, we
@@ -218,16 +219,16 @@ public class DragDropHandler extends TransferHandler {
 //			}
 			
 			if ( mSource != null ) {
-				_logging.debug(0, tag, "removing indices");
+				_logging.debug(0, TAG, "removing indices");
 				for ( int i = mTransfers.length - 1; i >= 0; i-- ) {
 					mSource.removeRow(mTransfers[i]);
 				}
 			}
 			else {
-				_logging.debug(0, tag, "export done source " + (mSource != null ? mSource.getClass() : "<null>"));				
+				_logging.debug(0, TAG, "export done source " + (mSource != null ? mSource.getClass() : "<null>"));				
 			}
 		}
-		_logging.debug(1, tag, "AddCount: " + mAddCount + " to (0)");
+		_logging.debug(1, TAG, "AddCount: " + mAddCount + " to (0)");
 //		DebugUtils.println(true, "AddIndex: " + mAddIndex + " to (-1)", 1);
 		
 		if ( mTransfers != null ) {
@@ -236,10 +237,10 @@ public class DragDropHandler extends TransferHandler {
 				s += (s.length() == 0 ? "{" : ", ") + i;
 			}
 			s += "}";
-			_logging.debug(1, tag, "Indices: " + s + " to (null)");
+			_logging.debug(1, TAG, "Indices: " + s + " to (null)");
 		}
 		else {
-			_logging.debug(1, tag, "Indices: null to (null)");			
+			_logging.debug(1, TAG, "Indices: null to (null)");			
 		}
 		mTransfers = null;
 //		mAddIndex = -1;
@@ -269,30 +270,30 @@ public class DragDropHandler extends TransferHandler {
 		else {
 			reason = "type is not supported: " + flavors;
 		}
-		_logging.debug(0, tag, "canImport: " + importable + " (reason = " + reason + ")");
+		_logging.debug(0, TAG, "canImport: " + importable + " (reason = " + reason + ")");
 		return(importable);
 	}
 
 	@Override
 	protected Transferable createTransferable(JComponent c) {
 		ArrayListTransferable transferThis = null;
-		_logging.debug(1, tag, "createTransferable");
+		_logging.debug(1, TAG, "createTransferable");
 		if ( c != null ) {
 			if ( c != null && c instanceof ListComponent ) {
-				_logging.debug(2, tag, "mSource is ListComponent");
+				_logging.debug(2, TAG, "mSource is ListComponent");
 				mSource = (ListComponent) c;
 			}
 			else if ( c instanceof ListComponentContainer ) {
-				_logging.debug(2, tag, "mSource is ListComponentContainer");
+				_logging.debug(2, TAG, "mSource is ListComponentContainer");
 				mSource = ((ListComponentContainer)c).getListComponent();
 			}
 			else {
-				_logging.debug(2, tag, "mSource is null (c=" + c.getClass() + ")");
+				_logging.debug(2, TAG, "mSource is null (c=" + c.getClass() + ")");
 				mSource = null;
 			}
 
 			if ( mSource != null ) {
-				_logging.debug(2, tag, "mSource=" + mSource.getClass());
+				_logging.debug(2, TAG, "mSource=" + mSource.getClass());
 				if ( mSource.allowTransfer() ) {
 					mTransfers		= mSource.getSelectedValues();
 					if ( mTransfers != null && mTransfers.length > 0 ) {

@@ -3,15 +3,17 @@ package com.purplecat.bookmarker.services;
 import java.util.Calendar;
 import java.util.List;
 
+import com.google.inject.Inject;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.UrlPatternResult;
 import com.purplecat.bookmarker.services.databases.IMangaDatabaseConnector;
 
 public class DatabaseMangaService {
 	
-	public IMangaDatabaseConnector _database;
-	public UrlPatternService _patterns;
+	public final IMangaDatabaseConnector _database;
+	public final UrlPatternService _patterns;
 	
+	@Inject
 	public DatabaseMangaService(IMangaDatabaseConnector database, UrlPatternService patterns) {
 		_database = database;
 		_patterns = patterns;
@@ -79,6 +81,7 @@ public class DatabaseMangaService {
 	}
 
 	public List<Media> getSavedList() throws ServiceException {
+		System.out.println("getting saved list: " + _database.getClass());
 		return _database.querySavedMedia();
 	}
 }

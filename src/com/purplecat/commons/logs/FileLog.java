@@ -15,8 +15,11 @@ public class FileLog implements ILoggingService {
 	private File _file;
 	DateFormat _dateFormat;
 	
+	public FileLog() {
+		this(true);
+	}
+	
 	public FileLog(boolean logToConsole) {
-		_logToConsole = logToConsole;
 		_file = new File("logs.txt");
 		_dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 		

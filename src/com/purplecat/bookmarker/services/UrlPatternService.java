@@ -3,13 +3,15 @@ package com.purplecat.bookmarker.services;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.inject.Inject;
 import com.purplecat.bookmarker.models.UrlPattern;
 import com.purplecat.bookmarker.models.UrlPatternResult;
-import com.purplecat.bookmarker.services.databases.IDatabaseConnector;
+import com.purplecat.bookmarker.services.databases.IUrlPatternDatabase;
 
 public class UrlPatternService extends BaseDatabaseItemService<UrlPattern> {
 	
-	public UrlPatternService(IDatabaseConnector<UrlPattern> database) {
+	@Inject
+	public UrlPatternService(IUrlPatternDatabase database) {
 		super(database);
 	}
 	

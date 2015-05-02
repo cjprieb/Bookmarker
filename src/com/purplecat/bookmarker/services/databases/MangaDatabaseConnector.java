@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.purplecat.bookmarker.extensions.PlaceExt;
 import com.purplecat.bookmarker.extensions.TitleExt;
 import com.purplecat.bookmarker.models.Media;
@@ -15,13 +17,24 @@ import com.purplecat.bookmarker.sql.DBUtils;
 import com.purplecat.bookmarker.sql.NamedResultSet;
 import com.purplecat.bookmarker.sql.NamedStatement;
 import com.purplecat.commons.logs.ILoggingService;
-import com.purplecat.commons.logs.LoggingService;
 
 public class MangaDatabaseConnector implements IMangaDatabaseConnector {
-	private static String TAG = "MangaDatabaseConnector";
-	private static String SELECT_MEDIA = "SELECT Media._id _id, MdDisplayTitle _displayTitle, SvdIsSaved _isSaved, " +
+	public static final String TAG = "MangaDatabaseConnector";
+	
+	private static final String SELECT_MEDIA = "SELECT Media._id _id, MdDisplayTitle _displayTitle, SvdIsSaved _isSaved, " +
 											" hist.svhstDate _lastReadDate, hist.svhstPlace _lastReadPlace FROM MEDIA" + 
 										" LEFT JOIN savedhistory hist on hist._id = media.svdhistory_id";
+	
+		
+	
+	public final ILoggingService _logging;
+	public final String _connectionPath;
+	 
+	@Inject
+	public MangaDatabaseConnector(ILoggingService logger, @Named("JDBC URL") String dbPath) {
+		_logging = logger;
+		_connectionPath = dbPath;
+	}
 	
 	/**
 	 * Assumes the SELECT_MEDIA query was used
@@ -38,24 +51,6 @@ public class MangaDatabaseConnector implements IMangaDatabaseConnector {
 		media._lastReadPlace = PlaceExt.parse(result.getString("_lastReadPlace"));
 		return media;
 	}
-	
-	private String 		_connectionPath = null;	
-	
-	public ILoggingService _log = LoggingService.create();
-	
-	public MangaDatabaseConnector(String path) {
-		_connectionPath = path;
-
-		try {
-			_log.log(0, "MangaDataConnector", "Finding JDBC connector...");
-			Class.forName("org.sqlite.JDBC");
-		} catch (ClassNotFoundException e) {
-			//if it gets here, there's a problem.
-			e.printStackTrace();
-			throw new NullPointerException("No sqlite JDBC connector found! Aborting");
-		}
-		_log.log(1, "MangaDataConnector", "Connector class found.");
-	}
 
 	@Override
 	public List<Media> query() {
@@ -67,7 +62,7 @@ public class MangaDatabaseConnector implements IMangaDatabaseConnector {
 				list.add(loadMediaFromResultSet(result));
 			}
 		} catch (SQLException e) {
-			_log.error("MangaDatabaseConnector", "Query failed", e);
+			_logging.error("MangaDatabaseConnector", "Query failed", e);
 		} 
 		return list;
 	}
@@ -76,19 +71,19 @@ public class MangaDatabaseConnector implements IMangaDatabaseConnector {
 	public List<Media> querySavedMedia() {
 		List<Media> list = new LinkedList<Media>();
 		String sql = SELECT_MEDIA + " WHERE SvdIsSaved = 1";
-		_log.log(0, TAG, "connecting to database for saved media query");
+		_logging.log(0, TAG, "connecting to database for saved media query");
 		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
 			Statement stmt = conn.createStatement();
 			NamedResultSet result = new NamedResultSet(stmt.executeQuery(sql));
 			while ( result.next() ) {
 				Media item = loadMediaFromResultSet(result);
 				list.add(item);
-				_log.log(1, TAG, "added item: " + item);
+				_logging.log(1, TAG, "added item: " + item);
 			}
 		} catch (SQLException e) {
-			_log.error(TAG, "Query for saved failed: " + sql, e);
+			_logging.error(TAG, "Query for saved failed: " + sql, e);
 		} 
-		_log.log(1, TAG, "DONE");
+		_logging.log(1, TAG, "DONE");
 		return list;
 	}
 
@@ -103,7 +98,7 @@ public class MangaDatabaseConnector implements IMangaDatabaseConnector {
 				list.add(loadMediaFromResultSet(result));
 			}
 		} catch (SQLException e) {
-			_log.error(TAG, "Query for non-saved failed: " + sql, e);
+			_logging.error(TAG, "Query for non-saved failed: " + sql, e);
 		} 
 		return list;
 	}
@@ -120,7 +115,7 @@ public class MangaDatabaseConnector implements IMangaDatabaseConnector {
 				list.add(loadMediaFromResultSet(result));
 			}
 		} catch (SQLException e) {
-			_log.error(TAG, "Query for id failed: " + sql, e);
+			_logging.error(TAG, "Query for id failed: " + sql, e);
 		} 
 		return list;
 	}
@@ -151,7 +146,7 @@ public class MangaDatabaseConnector implements IMangaDatabaseConnector {
 				}
 			}
 		} catch (SQLException e) {
-			_log.error("MangaDatabaseConnector", "Query for id failed: " + sql, e);
+			_logging.error(TAG, "Query for id failed: " + sql, e);
 		} 
 		return list;
 	}
@@ -171,7 +166,7 @@ public class MangaDatabaseConnector implements IMangaDatabaseConnector {
 
 			conn.commit();
 		} catch (SQLException e) {
-			_log.error("MangaDatabaseConnector", "Insert failed: " + sql, e);
+			_logging.error(TAG, "Insert failed: " + sql, e);
 		}		
 	}
 
@@ -193,11 +188,11 @@ public class MangaDatabaseConnector implements IMangaDatabaseConnector {
 								
 				conn.commit();
 			} catch (SQLException e) {
-				_log.error("MangaDatabaseConnector", "Update failed: " + sql, e);
+				_logging.error(TAG, "Update failed: " + sql, e);
 			}
 		}
 		else {
-			_log.error("MangaDatabaseConnection", "Unable to update: invalid id");
+			_logging.error(TAG, "Unable to update: invalid id");
 		}
 	}
 
@@ -209,7 +204,7 @@ public class MangaDatabaseConnector implements IMangaDatabaseConnector {
 			stmt.setLong("@id", id);
 			stmt.execute();
 		} catch (SQLException e) {
-			_log.error("MangaDatabaseConnector", "Delete failed: " + sql, e);
+			_logging.error(TAG, "Delete failed: " + sql, e);
 		}	
 	}
 	

@@ -9,11 +9,14 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.purplecat.bookmarker.models.UrlPattern;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import com.purplecat.bookmarker.models.UrlPatternResult;
 import com.purplecat.bookmarker.services.ServiceException;
 import com.purplecat.bookmarker.services.UrlPatternService;
-import com.purplecat.bookmarker.test.SampleDatabaseService.SamplePatternDatabase;
+import com.purplecat.bookmarker.test.modules.TestBookmarkerModule;
+import com.purplecat.commons.tests.GetRandom;
+import com.purplecat.commons.tests.Utils;
 
 public class DatabaseUrlPatternServiceTests {
 
@@ -25,7 +28,8 @@ public class DatabaseUrlPatternServiceTests {
 
 	@Before
 	public void setUpBeforeTest() throws Exception {
-		_service = new UrlPatternService(new SamplePatternDatabase());
+		Injector injector = Guice.createInjector(new TestBookmarkerModule());		
+		_service = injector.getInstance(UrlPatternService.class);
 
 		_validUrls = new LinkedList<UrlPatternResult>();
 		List<String> lines = Utils.getFile(getClass(), "/resources/SampleUrlPatternResults.txt");
@@ -40,18 +44,8 @@ public class DatabaseUrlPatternServiceTests {
 			result._page = Utils.parseInt(tokens[5], 0);
 			_validUrls.add(result);
 		}
-
-		lines = Utils.getFile(getClass(), "/resources/SampleUrlPatterns.txt");
-		for (String line : lines) {
-			String[] tokens = line.split("\t");
-			UrlPattern item = new UrlPattern();
-			item._patternString = tokens[0];
-			for (int i = 1; i < tokens.length; i++) {
-				item._map.put(tokens[i], i-1);
-			}
-			_service.add(item);
-			Assert.assertTrue("invalid id", item._id > 0);
-		}
+		
+		Assert.assertTrue("no items in list", _service.list().size() > 0);
 	}
 
 	@Test

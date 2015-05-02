@@ -9,13 +9,14 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.services.DatabaseMangaService;
 import com.purplecat.bookmarker.services.ServiceException;
-import com.purplecat.bookmarker.services.UrlPatternService;
-import com.purplecat.bookmarker.test.SampleDatabaseService.SampleMangaDatabase;
-import com.purplecat.bookmarker.test.SampleDatabaseService.SamplePatternDatabase;
+import com.purplecat.bookmarker.view.swing.SwingBookmarkerModule;
 import com.purplecat.commons.extensions.DateTimeFormats;
+import com.purplecat.commons.tests.Matchers;
 
 public class DatabaseMangaServiceTests {
 	
@@ -23,7 +24,9 @@ public class DatabaseMangaServiceTests {
 
 	@Before
 	public void setUpBeforeTest() throws Exception {
-		_service = new DatabaseMangaService(new SampleMangaDatabase(), new UrlPatternService(new SamplePatternDatabase()));
+		Injector injector = Guice.createInjector(new SwingBookmarkerModule());
+		
+		_service = injector.getInstance(DatabaseMangaService.class);
 	}
 
 	/*@Test
@@ -110,7 +113,7 @@ public class DatabaseMangaServiceTests {
 	@Test
 	public void testUpdateFromUrl() {
 		try {
-			String url = "sample url";			
+			String url = "http://www.batoto.net/read/_/107602/higaeri-quest_v1_ch1.b_by_obsession-scans/32";			
 			Calendar now = Calendar.getInstance();
 			
 			Media matchingManga = _service.updateFromUrl(url);

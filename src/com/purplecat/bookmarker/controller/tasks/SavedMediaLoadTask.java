@@ -2,20 +2,23 @@ package com.purplecat.bookmarker.controller.tasks;
 
 import java.util.List;
 
+import com.google.inject.Inject;
 import com.purplecat.bookmarker.controller.observers.IListLoadedObserver;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.services.DatabaseMangaService;
 import com.purplecat.bookmarker.services.ServiceException;
 import com.purplecat.commons.logs.ILoggingService;
-import com.purplecat.commons.logs.LoggingService;
 import com.purplecat.commons.threads.IThreadTask;
 
 public class SavedMediaLoadTask implements IThreadTask {
+	public static final String TAG = "SavedMediaLoadTask";
+	
+	@Inject public ILoggingService _logging;
+	
 	List<Media> _resultList;
 	ServiceException _error;
 	Iterable<IListLoadedObserver<Media>> _observers;
 	DatabaseMangaService _mediaService;
-	ILoggingService _logging = LoggingService.create();
 	
 	public SavedMediaLoadTask(DatabaseMangaService service, Iterable<IListLoadedObserver<Media>> obs) {
 		_observers = obs;
@@ -35,7 +38,7 @@ public class SavedMediaLoadTask implements IThreadTask {
 			_resultList = _mediaService.getSavedList();
 		} catch (ServiceException e) {
 			_error = e;
-			_logging.error("SavedMediaLoadTask", "Could not load saved list", e);
+			_logging.error(TAG, "Could not load saved list", e);
 		}
 	}
 }

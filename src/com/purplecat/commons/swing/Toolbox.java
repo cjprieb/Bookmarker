@@ -25,19 +25,21 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.text.DefaultEditorKit;
 
+import com.google.inject.Inject;
 import com.purplecat.commons.logs.ILoggingService;
-import com.purplecat.commons.logs.LoggingService;
 
 
 public class Toolbox {
+	public static final String TAG = "Toolbox";
+	
 	public static boolean OPEN_BROWSER			= true;
 	public static boolean USING_NIMBUS_LAF		= false;
 	public static Color COLOR_PANEL_BACKGROUND 	= new Color(0xD6, 0xD9, 0xDF);
 	public static Color COLOR_DUSKY_BLUE 		= new Color(0x66, 0x99, 0xCC);
-	public static ILoggingService Log = LoggingService.create();
-	public static String TAG = "Toolbox";
 	
-	public static void setZeroInsets(JButton...components) {
+	@Inject public ILoggingService _logger;
+	
+	public void setZeroInsets(JButton...components) {
 		Insets zeroInsets = new Insets(0, 5, 0, 5);
 		
 		UIDefaults def = new UIDefaults();
@@ -49,7 +51,7 @@ public class Toolbox {
 		}
 	}
 	
-	public static void setButtonInsets(Insets insets, JButton...components) {
+	public void setButtonInsets(Insets insets, JButton...components) {
 		
 		UIDefaults def = new UIDefaults();
 		def.put("Button.contentMargins", insets);
@@ -60,16 +62,16 @@ public class Toolbox {
 		}
 	}
 	
-	public static void copyTextToClipboard(String text) {
+	public void copyTextToClipboard(String text) {
 		if ( text != null ) {
 			StringSelection selection = new StringSelection(text);
 			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, null);
 		}
 	}
 
-	public static void browse(String url) {
+	public void browse(String url) {
 		if ( OPEN_BROWSER ) {
-			Log.log(0, TAG, "Opening \"" + url + "\" in default program");
+			_logger.log(0, TAG, "Opening \"" + url + "\" in default program");
 	
 			url = url.replaceAll(" ", "%20");
 			try {
@@ -77,34 +79,34 @@ public class Toolbox {
 				Desktop.getDesktop().browse(uri);
 			}
 			catch (IOException e) {
-				Log.error(TAG, "IOException: Could not open \"" + url + "\" in default program" + e);
+				_logger.error(TAG, "IOException: Could not open \"" + url + "\" in default program" + e);
 			} 
 			catch (URISyntaxException e) {
-				Log.error(TAG, "URISyntaxException: Could not open \"" + url + "\" in default program" + e);
+				_logger.error(TAG, "URISyntaxException: Could not open \"" + url + "\" in default program" + e);
 			} 
 		}
 		else {
-			Log.log(0, TAG, "Mock - opening \"" + url + "\" in default program");
+			_logger.log(0, TAG, "Mock - opening \"" + url + "\" in default program");
 		}
 	}
 
-	public static void browse(URL url) {
+	public void browse(URL url) {
 		if ( OPEN_BROWSER ) {
-			Log.log(0, TAG, "Opening \"" + url + "\" in default program");
+			_logger.log(0, TAG, "Opening \"" + url + "\" in default program");
 	
 			try {
 				URI uri = url.toURI();
 				Desktop.getDesktop().browse(uri);
 			}
 			catch (IOException e) {
-				Log.error(TAG, "IOException: Could not open \"" + url + "\" in default program" + e);
+				_logger.error(TAG, "IOException: Could not open \"" + url + "\" in default program" + e);
 			} 
 			catch (URISyntaxException e) {
-				Log.error(TAG, "URISyntaxException: Could not open \"" + url + "\" in default program" + e);
+				_logger.error(TAG, "URISyntaxException: Could not open \"" + url + "\" in default program" + e);
 			} 
 		}
 		else {
-			Log.log(0, TAG, "Mock - opening \"" + url + "\" in default program");
+			_logger.log(0, TAG, "Mock - opening \"" + url + "\" in default program");
 		}
 	}
 	
@@ -123,42 +125,42 @@ public class Toolbox {
 	 * this change is not done on the mac.
 	 * @return
 	 */
-	public static LookAndFeel setSystemLookAndFeel() {
+	public LookAndFeel setSystemLookAndFeel() {
 		if ( System.getProperty("os.name").toLowerCase().startsWith("win") ) {
 			LookAndFeel oldLookAndFeel = UIManager.getLookAndFeel();
 			String name = UIManager.getSystemLookAndFeelClassName();
 
 			try {
 				UIManager.setLookAndFeel(name);
-				Log.log(0, TAG, "Switching look and feel to " + name);
+				_logger.log(0, TAG, "Switching look and feel to " + name);
 				return(oldLookAndFeel);
 			} catch (ClassNotFoundException e) {
-				Log.error(TAG, "ClassNotFoundException: Look & Feel \"" + name + "\" could not be set.", e);
+				_logger.error(TAG, "ClassNotFoundException: Look & Feel \"" + name + "\" could not be set.", e);
 			} catch (InstantiationException e) {
-				Log.error(TAG, "InstantiationException: Look & Feel \"" + name + "\" could not be set.", e);
+				_logger.error(TAG, "InstantiationException: Look & Feel \"" + name + "\" could not be set.", e);
 			} catch (IllegalAccessException e) {
-				Log.error(TAG, "IllegalAccessException: Look & Feel \"" + name + "\"  could not be set.", e);
+				_logger.error(TAG, "IllegalAccessException: Look & Feel \"" + name + "\"  could not be set.", e);
 			} catch (UnsupportedLookAndFeelException e) {
-				Log.error(TAG, "UnsupportedLookAndFeelException: Look & Feel \"" + name + "\"  could not be set.", e);
+				_logger.error(TAG, "UnsupportedLookAndFeelException: Look & Feel \"" + name + "\"  could not be set.", e);
 			}
 		}
 		return(null);
 	}
 	
-	public static boolean setLookAndFeel(LookAndFeel name) {
+	public boolean setLookAndFeel(LookAndFeel name) {
 		if ( System.getProperty("os.name").toLowerCase().startsWith("win") && name != null ) {
 			try {
 				UIManager.setLookAndFeel(name);
-				Log.log(0, TAG, "Switching look and feel to " + name);
+				_logger.log(0, TAG, "Switching look and feel to " + name);
 				return(true);
 			} catch (UnsupportedLookAndFeelException e) {
-				Log.error(TAG, "UnsupportedLookAndFeelException: Look & Feel \"" + name + "\"  could not be set.", e);
+				_logger.error(TAG, "UnsupportedLookAndFeelException: Look & Feel \"" + name + "\"  could not be set.", e);
 			}
 		}	
 		return(false);
 	}
 	
-	public static Point getCenterScreenPoint(Dimension size) {		
+	public Point getCenterScreenPoint(Dimension size) {		
 		Point p = new Point(-1, -1);
 		
 		Dimension screen_d = Toolkit.getDefaultToolkit().getScreenSize();
@@ -173,8 +175,8 @@ public class Toolbox {
 		return(p);		
 	}
 	
-	public static boolean setLookAndFeel(MyApplication app) {
-		Log.log(0, TAG, "Setting Look and Feel");
+	public boolean setLookAndFeel(MyApplication app) {
+		_logger.log(0, TAG, "Setting Look and Feel");
 		boolean valid = false;
 		String lookAndFeelName = UIManager.getSystemLookAndFeelClassName();
 		String nimbusLF = null;
@@ -192,12 +194,12 @@ public class Toolbox {
 //			}
 			
 			if ( app.isMacOS() ) {
-				Log.log(0, TAG, "IS NOT WINDOWS!");
+				_logger.log(0, TAG, "IS NOT WINDOWS!");
 				System.setProperty("com.apple.laf.useScreenMenuBar", "true");
 				System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Bookmarks");
 			}
 			
-			Log.debug(1, TAG, "Setting it to: " + lookAndFeelName);		
+			_logger.debug(1, TAG, "Setting it to: " + lookAndFeelName);		
 			javax.swing.UIManager.setLookAndFeel(lookAndFeelName);
 
 
@@ -206,7 +208,7 @@ public class Toolbox {
 				//TODO: verify this works - I'm having to use Ctrl on some fields but I can't remember which
 				InputMap im = (InputMap) UIManager.get("TextField.focusInputMap");
 				if ( im != null ) {
-					Log.log(1, TAG, "setting text field input map");
+					_logger.log(1, TAG, "setting text field input map");
 					im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction);
 					im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction);
 					im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
@@ -215,7 +217,7 @@ public class Toolbox {
 				
 				im = (InputMap) UIManager.get("TextArea.focusInputMap");
 				if ( im != null ) {
-					Log.log(1, TAG, "setting text area input map");
+					_logger.log(1, TAG, "setting text area input map");
 					im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction);
 					im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction);
 					im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
@@ -225,23 +227,21 @@ public class Toolbox {
 			valid = true;
 
 		} catch (Exception e) {
-			Log.error(lookAndFeelName + TAG, " is an invalid name", e);
+			_logger.error(lookAndFeelName + TAG, " is an invalid name", e);
 			if ( nimbusLF != null ) {
 				try {				
 					USING_NIMBUS_LAF = true;
-					Log.debug(1, TAG, "Resetting it to: " + nimbusLF);		
+					_logger.debug(1, TAG, "Resetting it to: " + nimbusLF);		
 					javax.swing.UIManager.setLookAndFeel(nimbusLF);
 					valid = true;
 				} catch (Exception e2) {				
 					USING_NIMBUS_LAF = false;
-					Log.error(TAG, lookAndFeelName + " is an invalid name", e);				
+					_logger.error(TAG, lookAndFeelName + " is an invalid name", e);				
 				}
 			}
 		}
 //TODO: If having repaint or UI lag issues, turn on.
-//		if ( LoggingService.ENABLE_EDT_DEBUG ) {
-//			RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager());
-//		}
+//		RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager());
 		return(valid);
 	}
 }

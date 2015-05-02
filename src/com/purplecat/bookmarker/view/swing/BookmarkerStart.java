@@ -1,16 +1,17 @@
 package com.purplecat.bookmarker.view.swing;
 
-import java.io.File;
 import java.util.prefs.Preferences;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.purplecat.bookmarker.controller.Controller;
-import com.purplecat.commons.logs.ConsoleLog;
 import com.purplecat.commons.logs.ILoggingService;
 import com.purplecat.commons.swing.MyApplication;
-import com.purplecat.commons.threads.SwingThreadPool;
+import com.purplecat.commons.swing.Toolbox;
 
 public class BookmarkerStart extends MyApplication {
 	//TODO: move to seperate class
@@ -18,16 +19,23 @@ public class BookmarkerStart extends MyApplication {
 	public static final String DATABASE_PATH = "../BookmarkView/databases/bookmarker.db";
 
 	public static void main(String[] args) {
-		new BookmarkerStart(new ConsoleLog()).startApplication();
+		try {
+			Class.forName("org.sqlite.JDBC");
+		} catch (ClassNotFoundException e) {
+			//if it gets here, there's a problem.
+			throw new NullPointerException("No sqlite JDBC connector found! Aborting");
+		}
+		
+		Injector injector = Guice.createInjector(new SwingBookmarkerModule());		
+		injector.getInstance(MyApplication.class).startApplication();
 	}
 	
-	Controller _controller;
+	protected final Controller _controller;
 	
-	public BookmarkerStart(ILoggingService logging) {
-		super(logging);
-		
-		File dest = new File(DATABASE_PATH);
-		_controller = new Controller(new SwingThreadPool(), CONNECTION_PREFIX + dest.getAbsolutePath());
+	@Inject
+	public BookmarkerStart(ILoggingService logging, Toolbox toolbox, Controller controller) {
+		super(logging, toolbox);
+		_controller = controller;
 	}
 
 	@Override

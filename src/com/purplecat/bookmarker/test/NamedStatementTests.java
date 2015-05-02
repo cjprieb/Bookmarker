@@ -7,16 +7,32 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.junit.Before;
 import org.junit.Test;
 
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.name.Named;
 import com.purplecat.bookmarker.sql.NamedStatement;
+import com.purplecat.bookmarker.test.modules.TestDatabaseModule;
 
 public class NamedStatementTests extends DatabaseConnectorTests {
+	
+	@Inject @Named("JDBC URL") String _connection;
+	
+	@Before
+	public void beforeTest() {
+		Injector injector = Guice.createInjector(new TestDatabaseModule());		
+		injector.injectMembers(this);
+		
+		System.out.println("connecting to: " + _connection);
+	}
 
 	@Test
 	public void testGetFormattedStringSimple() {
 		long id = 3;
-		try (Connection conn = DriverManager.getConnection(TEST_DATABASE_CONNECTION)) {
+		try (Connection conn = DriverManager.getConnection(_connection)) {
 			NamedStatement stmt = new NamedStatement(conn, "SELECT _id FROM Media WHERE _id = @id");
 			stmt.setLong("@id", id);
 			String sql = stmt.getFormattedString();
@@ -29,7 +45,7 @@ public class NamedStatementTests extends DatabaseConnectorTests {
 
 	@Test
 	public void testGetFormattedStringComplex() {
-		try (Connection conn = DriverManager.getConnection(TEST_DATABASE_CONNECTION)) {
+		try (Connection conn = DriverManager.getConnection(_connection)) {
 			NamedStatement stmt = new NamedStatement(conn, "SELECT _id FROM Media " +
 															"INNER JOIN Author on Author._id = Media.SvdAuthor " +
 															"WHERE AuthorFullName like @name AND SvdStoryState = @state");
@@ -46,7 +62,7 @@ public class NamedStatementTests extends DatabaseConnectorTests {
 	@Test
 	public void testExecuteQuery() {
 		long id = 4;
-		try (Connection conn = DriverManager.getConnection(TEST_DATABASE_CONNECTION)) {
+		try (Connection conn = DriverManager.getConnection(_connection)) {
 			NamedStatement stmt = new NamedStatement(conn, "SELECT _id FROM Media WHERE _id = @id");
 			stmt.setLong("@id", id);
 			stmt.executeQuery();

@@ -2,8 +2,10 @@ package com.purplecat.bookmarker.test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import com.purplecat.bookmarker.models.BaseDatabaseItem;
 import com.purplecat.bookmarker.models.Media;
@@ -11,6 +13,8 @@ import com.purplecat.bookmarker.models.UrlPattern;
 import com.purplecat.bookmarker.services.ServiceException;
 import com.purplecat.bookmarker.services.databases.IDatabaseConnector;
 import com.purplecat.bookmarker.services.databases.IMangaDatabaseConnector;
+import com.purplecat.bookmarker.services.databases.IUrlPatternDatabase;
+import com.purplecat.commons.tests.Utils;
 
 public abstract class SampleDatabaseService<T extends BaseDatabaseItem> implements IDatabaseConnector<T> {
 	
@@ -56,7 +60,21 @@ public abstract class SampleDatabaseService<T extends BaseDatabaseItem> implemen
 	
 	public abstract T copy(T item);
 	
-	public static class SamplePatternDatabase extends SampleDatabaseService<UrlPattern> {
+	public static class SamplePatternDatabase extends SampleDatabaseService<UrlPattern> implements IUrlPatternDatabase {
+		public SamplePatternDatabase() {
+			List<String> lines = Utils.getFile(getClass(), "/resources/SampleUrlPatterns.txt");
+			for (String line : lines) {
+				String[] tokens = line.split("\t");
+				UrlPattern item = new UrlPattern();
+				item._patternString = tokens[0];
+				for (int i = 1; i < tokens.length; i++) {
+					item._map.put(tokens[i], i-1);
+				}
+				item._pattern = Pattern.compile(item._patternString);
+				insert(item);
+			}
+		}
+		
 		@Override
 		public UrlPattern copy(UrlPattern item) {
 			return item.copy();
@@ -91,7 +109,14 @@ public abstract class SampleDatabaseService<T extends BaseDatabaseItem> implemen
 		@Override
 		public List<Media> queryByTitle(String title) {
 			// TODO Auto-generated method stub
-			return null;
+			Media m = new Media();
+			m._displayTitle = title;
+			m._id = 10;
+			insert(m);
+			
+			List<Media> list = new LinkedList<Media>();
+			list.add(m);
+			return list;
 		}
 	}
 

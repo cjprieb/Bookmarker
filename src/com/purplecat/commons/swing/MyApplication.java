@@ -9,6 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import com.apple.eawt.Application;
+import com.google.inject.Inject;
 import com.purplecat.commons.logs.ILoggingService;
 import com.purplecat.commons.swing.AppUtils.IDragDropAction;
 import com.purplecat.commons.swing.AppUtils.IQuitAction;
@@ -33,10 +34,14 @@ public abstract class MyApplication implements IQuitAction {
 	protected QuitOnCloseWindowListener	mQuitAction		= null;
 	protected JFrame 					mFrame 			= null;
 	protected IDragDropAction			mDragDropAction	= null;
-	protected ILoggingService			_logging		= null;
-
-	public MyApplication(ILoggingService logging) {
+	
+	public final ILoggingService _logging;
+	public final Toolbox _toolbox;
+	
+	@Inject 
+	public MyApplication(ILoggingService logging, Toolbox toolbox) {
 		_logging = logging;
+		_toolbox = toolbox;
 	}
 		
 	/**
@@ -161,7 +166,7 @@ public abstract class MyApplication implements IQuitAction {
 				mFrame.setLocation(x, y);
 			}
 			else {
-				mFrame.setLocation(Toolbox.getCenterScreenPoint(mFrame.getSize()));
+				mFrame.setLocation(_toolbox.getCenterScreenPoint(mFrame.getSize()));
 			}		
 			_logging.log(1, TAG, "location/x " + x);
 			_logging.log(1, TAG, "location/y " + y);

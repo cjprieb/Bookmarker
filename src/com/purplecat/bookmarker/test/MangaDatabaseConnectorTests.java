@@ -8,10 +8,13 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.services.databases.MangaDatabaseConnector;
+import com.purplecat.bookmarker.test.modules.TestDatabaseModule;
 import com.purplecat.commons.extensions.DateTimeFormats;
-import com.purplecat.commons.logs.ConsoleLog;
+import com.purplecat.commons.tests.GetRandom;
 
 public class MangaDatabaseConnectorTests extends DatabaseConnectorTests {
 	
@@ -22,12 +25,11 @@ public class MangaDatabaseConnectorTests extends DatabaseConnectorTests {
 		"d. n. angel", "yume no shizuku ougon no torikago" };
 
 	@BeforeClass
-	public static void setUpBeforeTest() throws Exception {		
-		System.out.println("Connection: " + TEST_DATABASE_CONNECTION);
-		Assert.assertNotNull(TEST_DATABASE_CONNECTION);
+	public static void setUpBeforeTest() throws Exception {
+		Injector injector = Guice.createInjector(new TestDatabaseModule());
 		
-		_database = new MangaDatabaseConnector(TEST_DATABASE_CONNECTION);
-		_database._log = new ConsoleLog();
+		_database = injector.getInstance(MangaDatabaseConnector.class);
+		//_database._log = new ConsoleLog();
 		
 		_randomSavedMedia = _database.querySavedMedia();
 		Assert.assertNotNull("List is null", _randomSavedMedia);

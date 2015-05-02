@@ -1,4 +1,4 @@
-package com.purplecat.bookmarker.test;
+package com.purplecat.commons.tests;
 
 import java.io.File;
 import java.io.FileInputStream;

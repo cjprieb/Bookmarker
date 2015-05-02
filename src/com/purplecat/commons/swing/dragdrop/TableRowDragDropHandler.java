@@ -9,8 +9,8 @@ import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.TransferHandler;
 
+import com.google.inject.Inject;
 import com.purplecat.commons.logs.ILoggingService;
-import com.purplecat.commons.logs.LoggingService;
 import com.purplecat.commons.swing.dragdrop.DragDropHandler.ArrayListTransferable;
 
 
@@ -24,12 +24,13 @@ import com.purplecat.commons.swing.dragdrop.DragDropHandler.ArrayListTransferabl
  */
 public class TableRowDragDropHandler extends TransferHandler {
 	
-	static String tag = "TableRowDragDropHandler";
+	public static final String TAG = "TableRowDragDropHandler";
 
 	JTable 	mSource 	= null;	
 	IEditableList mTransferHandler = null;
 	int[]	mTransfers 	= null;
-	ILoggingService Log = LoggingService.create();
+	
+	@Inject public ILoggingService _logging;
 
 	public TableRowDragDropHandler(IEditableList hdn) {
 		mTransferHandler = hdn;
@@ -37,7 +38,7 @@ public class TableRowDragDropHandler extends TransferHandler {
 
 	@Override
 	public boolean importData(JComponent c, Transferable t) {
-		Log.debug(0, tag, "Importing Data");
+		_logging.debug(0, TAG, "Importing Data");
 		
 		ArrayList<?> 	alist 			= null;		
 		boolean			dataImported	= false;
@@ -54,8 +55,8 @@ public class TableRowDragDropHandler extends TransferHandler {
 		if ( dataImported == true ) {
 			int index = mSource.getSelectedRow();
 			
-			Log.debug(2, tag, "drop index: " + index);
-			Log.debug(2, tag, "mSource: " + mSource);
+			_logging.debug(2, TAG, "drop index: " + index);
+			_logging.debug(2, TAG, "mSource: " + mSource);
 	
 			// Prevent the user from dropping data back on itself.
 			// For example, if the user is moving items #4,#5,#6 and #7 and
@@ -73,14 +74,14 @@ public class TableRowDragDropHandler extends TransferHandler {
 					dataImported = true;
 
 					for ( int i = alist.size()-1; i <= 0; i-- ) {
-						Log.debug(2, tag, "adding: " + alist.get(i));
+						_logging.debug(2, TAG, "adding: " + alist.get(i));
 						mTransferHandler.addRowAt(index, (Integer)alist.get(i));
 					}
 				}
 			}
-			Log.debug(2, tag, "allow move: " + dataImported);
+			_logging.debug(2, TAG, "allow move: " + dataImported);
 		}
-		Log.debug(0, tag, "Data Imported (value): " + dataImported);
+		_logging.debug(0, TAG, "Data Imported (value): " + dataImported);
 		return(dataImported);
 	}
 
@@ -97,14 +98,14 @@ public class TableRowDragDropHandler extends TransferHandler {
 	@Override
 	protected Transferable createTransferable(JComponent c) {
 		ArrayListTransferable transferThis = null;
-		Log.debug(1, tag, "createTransferable");
+		_logging.debug(1, TAG, "createTransferable");
 		if ( c != null && c instanceof JTable ) {
-			Log.debug(2, tag, "mSource is JTable");
+			_logging.debug(2, TAG, "mSource is JTable");
 			mSource = (JTable)c;
 		}
 
 		if ( mSource != null ) {
-			Log.debug(2, tag, "mSource=" + mSource.getClass());
+			_logging.debug(2, TAG, "mSource=" + mSource.getClass());
 			mTransfers = mSource.getSelectedRows();
 			if ( mTransfers.length > 0 ) {
 				ArrayList<Object> alist = new ArrayList<Object>();

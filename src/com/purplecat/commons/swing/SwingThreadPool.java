@@ -1,8 +1,13 @@
-package com.purplecat.commons.threads;
+package com.purplecat.commons.swing;
 
 import java.awt.EventQueue;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+
+import com.purplecat.commons.threads.IThreadPool;
+import com.purplecat.commons.threads.IThreadTask;
+import com.purplecat.commons.threads.RunnableUITask;
+import com.purplecat.commons.threads.RunnableWorkerTask;
 
 public class SwingThreadPool implements IThreadPool {
 	public static final int MAX_THREADS = 5;

@@ -4,7 +4,7 @@ public class RunnableUITask implements Runnable {
 	IThreadPool _runner;
 	IThreadTask _task;
 	
-	RunnableUITask(IThreadPool runner, IThreadTask task) {
+	public RunnableUITask(IThreadPool runner, IThreadTask task) {
 		_runner = runner;
 		_task = task;
 	}

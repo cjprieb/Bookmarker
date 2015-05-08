@@ -2,9 +2,7 @@ package com.purplecat.bookmarker.test;
 
 import static org.junit.Assert.fail;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
+import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -114,7 +112,7 @@ public class DatabaseMangaServiceTests {
 	public void testUpdateFromUrl() {
 		try {
 			String url = "http://www.batoto.net/read/_/107602/higaeri-quest_v1_ch1.b_by_obsession-scans/32";			
-			Calendar now = Calendar.getInstance();
+			DateTime now = new DateTime();
 			
 			Media matchingManga = _service.updateFromUrl(url);
 			Assert.assertNotNull("Item was not found", matchingManga);
@@ -143,7 +141,7 @@ public class DatabaseMangaServiceTests {
 		Assert.assertTrue("no title", media._displayTitle != null && media._displayTitle.length() > 0);
 		Assert.assertTrue("not saved", media._isSaved);
 		Assert.assertNotNull("no last read date", media._lastReadDate);		
-		Assert.assertTrue("invalid last read date: " + DateTimeFormats.FORMAT_SQLITE_DATE.format(media._lastReadDate), media._lastReadDate.after(new GregorianCalendar(2000, 1, 1)));
+		Assert.assertTrue("invalid last read date: " + media._lastReadDate.toString(DateTimeFormats.SQLITE_DATE_FORMAT), media._lastReadDate.isAfter(new DateTime(2000, 1, 1, 0, 0)));
 		Assert.assertNotNull("no place", media._lastReadPlace);
 	}
 	
@@ -152,8 +150,8 @@ public class DatabaseMangaServiceTests {
 		Assert.assertEquals("title mismatch", expected._displayTitle, actual._displayTitle);
 		Assert.assertEquals("saved mismatch", expected._isSaved, actual._isSaved);
 		Assert.assertEquals("last read date mismatch", 
-				DateTimeFormats.FORMAT_SQLITE_DATE.format(expected._lastReadDate), 
-				DateTimeFormats.FORMAT_SQLITE_DATE.format(actual._lastReadDate));		
+				expected._lastReadDate.toString(DateTimeFormats.SQLITE_DATE_FORMAT), 
+				actual._lastReadDate.toString(DateTimeFormats.SQLITE_DATE_FORMAT));		
 		Assert.assertEquals("place mismatch", expected._lastReadPlace, actual._lastReadPlace);
 	}
 }

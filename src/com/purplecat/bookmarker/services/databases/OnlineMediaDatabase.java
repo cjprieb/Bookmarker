@@ -54,9 +54,9 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 		item._rating = result.getDouble("_rating");
 		item._websiteName = result.getString("_websiteName");
 		item._displayTitle = result.getString("_displayTitle");
-		item._updatedDate = result.getDateTimeFromString("_updatedDate");
+		item._updatedDate = result.getDateFromString("_updatedDate");
 		item._updatedPlace = PlaceExt.parse(result.getString("_updatedPlace"));
-		item._lastReadDate = result.getDateTimeFromString("_lastReadDate");
+		item._lastReadDate = result.getDateFromString("_lastReadDate");
 		item._lastReadPlace = PlaceExt.parse(result.getString("_lastReadPlace"));
 		return item;
 	}

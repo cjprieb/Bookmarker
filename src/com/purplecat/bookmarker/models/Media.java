@@ -1,6 +1,6 @@
 package com.purplecat.bookmarker.models;
 
-import java.util.Calendar;
+import org.joda.time.DateTime;
 
 public class Media extends BaseDatabaseItem {
 	
@@ -10,7 +10,7 @@ public class Media extends BaseDatabaseItem {
 
 	public boolean _isSaved;
 
-	public Calendar _lastReadDate;
+	public DateTime _lastReadDate;
 
 	public Place _lastReadPlace;
 	

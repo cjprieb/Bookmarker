@@ -37,7 +37,7 @@ public class DatabaseVersioning {
 			if ( _currentVersion > -1 ) { 
 				if ( _currentVersion <= 11 ) {
 					//current version of program starts at version 11 database or no database
-					_currentVersion = updateToVersion12();					
+					//_currentVersion = updateToVersion12();					
 				}
 			}
 		} 
@@ -49,36 +49,6 @@ public class DatabaseVersioning {
 	public int createDatabase() {
 		//TODO: create new database
 		return CURRENT_VERSION;
-	}
-	
-	public int updateToVersion12() {
-		
-		List<Media> list = new LinkedList<Media>();
-		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
-			conn.setAutoCommit(false);
-			
-			String sqlStr = "SELECT Media._id, hist.svhstDate, hist.svhstPlace FROM MEDIA" + 
-						" LEFT JOIN (SELECT svhstMedia_id, max(svhstDate) maxDate FROM savedhistory GROUP BY svhstMedia_id) " +
-							" maxhist on maxhist.svhstMedia_id = media._id " +
-						" LEFT JOIN savedhistory hist on hist.svhstMedia_id = media._id AND maxDate = hist.svhstDate";
-			Statement stmt = conn.createStatement();
-			ResultSet result = stmt.executeQuery(sqlStr);
-			while ( result.next() ) {
-				Media media = new Media();
-				media._id = result.getLong(1);
-				media._lastReadDate = DateTimeFormats.FORMAT_SQLITE_DATE.parseOrDefault(result.getString(2), null);
-				media._lastReadPlace = PlaceExt.parse(result.getString(3));
-				list.add(media);
-			}
-			
-			String addCols = "";
-
-			conn.commit();
-		} catch (SQLException e) {
-			_log.error("updateToVersion12", "Update failed", e);
-		} 
-		
-		return VERSION_12;
 	}
 	
 	//TODO: move to separate class for sqlite functions

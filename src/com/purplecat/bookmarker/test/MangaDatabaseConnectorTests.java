@@ -1,9 +1,9 @@
 package com.purplecat.bookmarker.test;
 
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -125,7 +125,7 @@ public class MangaDatabaseConnectorTests extends DatabaseConnectorTests {
 			media._displayTitle = GetRandom.getString(6);
 			media._lastReadPlace._chapter++;
 			media._chapterURL = "http://sampleurl";
-			media._lastReadDate = Calendar.getInstance();
+			media._lastReadDate = new DateTime();
 			media._isSaved = true;
 			_database.insert(media);
 			
@@ -150,7 +150,7 @@ public class MangaDatabaseConnectorTests extends DatabaseConnectorTests {
 			media._displayTitle = GetRandom.getString(6);
 			media._lastReadPlace._chapter++;
 			media._chapterURL = "http://sampleurl";
-			media._lastReadDate = Calendar.getInstance();
+			media._lastReadDate = new DateTime();
 			
 			_database.update(media);
 			System.out.println("looking up " + media._id + " after update");
@@ -173,7 +173,7 @@ public class MangaDatabaseConnectorTests extends DatabaseConnectorTests {
 			media._displayTitle = GetRandom.getString(6);
 			media._lastReadPlace._chapter++;
 			media._chapterURL = "http://sampleurl";
-			media._lastReadDate = Calendar.getInstance();
+			media._lastReadDate = new DateTime();
 			media._isSaved = true;
 			
 			_database.update(media);
@@ -231,7 +231,7 @@ public class MangaDatabaseConnectorTests extends DatabaseConnectorTests {
 		Assert.assertTrue("no title", media._displayTitle != null && media._displayTitle.length() > 0);
 		Assert.assertTrue("not saved", media._isSaved);
 		Assert.assertNotNull("no last read date", media._lastReadDate);		
-		Assert.assertTrue("invalid last read date: " + DateTimeFormats.FORMAT_SQLITE_DATE.format(media._lastReadDate), media._lastReadDate.after(new GregorianCalendar(2000, 1, 1)));
+		Assert.assertTrue("invalid last read date: " + media._lastReadDate.toString(DateTimeFormats.SQLITE_DATE_FORMAT), media._lastReadDate.isAfter(new DateTime(2000, 1, 1, 0, 0)));
 		Assert.assertNotNull("no place", media._lastReadPlace);
 	}
 	
@@ -239,9 +239,14 @@ public class MangaDatabaseConnectorTests extends DatabaseConnectorTests {
 		Assert.assertEquals("id mismatch", expected._id, actual._id);
 		Assert.assertEquals("title mismatch", expected._displayTitle, actual._displayTitle);
 		Assert.assertEquals("saved mismatch", expected._isSaved, actual._isSaved);
-		Assert.assertEquals("last read date mismatch", 
-				DateTimeFormats.FORMAT_SQLITE_DATE.format(expected._lastReadDate), 
-				DateTimeFormats.FORMAT_SQLITE_DATE.format(actual._lastReadDate));		
+		if ( expected._lastReadDate != null && actual._lastReadDate != null ) {
+			Assert.assertEquals("last read date mismatch", 
+				expected._lastReadDate.toString(DateTimeFormats.SQLITE_DATE_FORMAT), 
+				actual._lastReadDate.toString(DateTimeFormats.SQLITE_DATE_FORMAT));
+		}
+		else {
+			Assert.assertEquals("last read date mismatch", expected._lastReadDate, actual._lastReadDate);
+		}
 		Assert.assertEquals("place mismatch", expected._lastReadPlace, actual._lastReadPlace);
 	}
 }

@@ -1,7 +1,8 @@
 package com.purplecat.bookmarker.services;
 
-import java.util.Calendar;
 import java.util.List;
+
+import org.joda.time.DateTime;
 
 import com.google.inject.Inject;
 import com.purplecat.bookmarker.models.Media;
@@ -61,7 +62,7 @@ public class DatabaseMangaService {
 			}
 						
 			media._chapterURL = url;
-			media._lastReadDate = Calendar.getInstance();
+			media._lastReadDate = new DateTime();
 			/*media._lastReadPlace._volume = patternResult._volume;
 			media._lastReadPlace._chapter = patternResult._chapter;
 			media._lastReadPlace._subChapter = patternResult._subChapter;

@@ -3,7 +3,6 @@ package com.purplecat.bookmarker.sql;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,15 +49,7 @@ public class NamedResultSet {
 		return _result.getBoolean(getColumn(name));
 	}
 
-	public Calendar getDateFromString(String name) throws SQLException {
-		String dateString = _result.getString(getColumn(name));
-		if ( dateString != null && dateString.length() > 0 ) {
-			return DateTimeFormats.FORMAT_SQLITE_DATE.parseOrDefault(dateString, null);
-		}
-		return null;
-	}
-
-	public DateTime getDateTimeFromString(String name) throws SQLException {
+	public DateTime getDateFromString(String name) throws SQLException {
 		String dateString = _result.getString(getColumn(name));
 		if ( dateString != null && dateString.length() > 0 ) {
 			return _formatter.parseDateTime(dateString);

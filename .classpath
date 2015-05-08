@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="/utilities/lib/guice-4.0-no_aop.jar"/>
 	<classpathentry kind="lib" path="/utilities/lib/guava-16.0.1.jar"/>
 	<classpathentry kind="lib" path="/utilities/lib/javax.inject.jar"/>
+	<classpathentry kind="lib" path="/utilities/joda-time-2.7/joda-time-2.7.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

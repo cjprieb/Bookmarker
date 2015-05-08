@@ -7,7 +7,9 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 
-public class DateTimeFormats {	
+public class DateTimeFormats {
+	public static final String SQLITE_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";	
+	
 	public static final CalendarFormat FORMAT_FILE_DATE 	= new CalendarFormat("yy-MM-dd HH-mm");
 	public static final CalendarFormat FORMAT_MMDD_HHMM 	= new CalendarFormat("MM/dd HH:mm");
 	public static final CalendarFormat FORMAT_MMDDYY		= new CalendarFormat("MM/dd/yy");

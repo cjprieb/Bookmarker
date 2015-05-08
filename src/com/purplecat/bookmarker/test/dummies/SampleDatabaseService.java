@@ -1,4 +1,4 @@
-package com.purplecat.bookmarker.test;
+package com.purplecat.bookmarker.test.dummies;
 
 import java.util.ArrayList;
 import java.util.HashMap;

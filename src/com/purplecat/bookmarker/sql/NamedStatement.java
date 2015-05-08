@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.joda.time.DateTime;
+
 import com.purplecat.commons.extensions.DateTimeFormats;
 
 public class NamedStatement {
@@ -21,6 +23,7 @@ public class NamedStatement {
 	private static final int STRING 	= 3;
 	private static final int BOOLEAN 	= 4;
 	private static final int DATE 		= 5;
+	private static final int DOUBLE		= 6;
 	//Remember to add update the SWITCH statement for preparing statements
 	
 	private Connection _connection;
@@ -37,7 +40,15 @@ public class NamedStatement {
 	}
 	
 	public void setDate(String name, Calendar value) {
+		getParameter(name, DATE)._value = new DateTime(value);
+	}
+	
+	public void setDate(String name, DateTime value) {
 		getParameter(name, DATE)._value = value;
+	}
+	
+	public void setDouble(String name, double value) {
+		getParameter(name, DOUBLE)._value = value;
 	}
 	
 	public void setInt(String name, int value) {
@@ -109,7 +120,10 @@ public class NamedStatement {
 					stmt.setBoolean(index, (boolean)param._value);
 					break;
 				case DATE:
-					stmt.setString(index, DateTimeFormats.FORMAT_SQLITE_DATE.format((Calendar)param._value));
+					stmt.setString(index, ((DateTime)param._value).toString(DateTimeFormats.SQLITE_DATE_FORMAT));
+					break;
+				case DOUBLE:
+					stmt.setDouble(index, (double)param._value);
 					break;
 				}
 			}

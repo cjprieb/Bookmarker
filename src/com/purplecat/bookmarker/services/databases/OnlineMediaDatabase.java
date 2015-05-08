@@ -28,10 +28,10 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 	
 	public final ILoggingService _logging;
 	public final String _connectionPath;
-	public final MangaDatabaseConnector _mediaDatabase;
+	public final MediaDatabaseRepository _mediaDatabase;
 	 
 	@Inject
-	public OnlineMediaDatabase(ILoggingService logger, @Named("JDBC URL") String dbPath, MangaDatabaseConnector mediaDb) {
+	public OnlineMediaDatabase(ILoggingService logger, @Named("JDBC URL") String dbPath, MediaDatabaseRepository mediaDb) {
 		_logging = logger;
 		_connectionPath = dbPath;
 		_mediaDatabase = mediaDb;

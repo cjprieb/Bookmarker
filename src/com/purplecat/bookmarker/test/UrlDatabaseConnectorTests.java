@@ -34,12 +34,11 @@ public class UrlDatabaseConnectorTests extends DatabaseConnectorTests {
 	public void testQueryById() {
 		try {
 			UrlPattern pattern = GetRandom.getItem(_randomItems);
-			List<UrlPattern> list = _database.query(pattern._id);
-			Assert.assertNotNull("Query for id list is null", list);
-			Assert.assertEquals("List doesn't have 1 element", 1, list.size());
-			Assert.assertEquals("Element doesn't match id", pattern._id, list.get(0)._id);
-			checkItem(list.get(0));
-			checkEquals(pattern, list.get(0));
+			UrlPattern item = _database.queryById(pattern._id);
+			Assert.assertNotNull("item is null", item);
+			Assert.assertEquals("Element doesn't match id", pattern._id, item._id);
+			checkItem(item);
+			checkEquals(pattern, item);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail("Exception occurred");
@@ -56,12 +55,11 @@ public class UrlDatabaseConnectorTests extends DatabaseConnectorTests {
 			_database.insert(item);
 			
 			Assert.assertTrue("Invalid id", item._id > 0);
-			
-			List<UrlPattern> list = _database.query(item._id);
-			Assert.assertNotNull("List is null", list);
-			Assert.assertEquals("List doesn't have 1 element", 1, list.size());
-			checkItem(list.get(0));
-			checkEquals(item, list.get(0));
+
+			UrlPattern foundItem = _database.queryById(item._id);
+			Assert.assertNotNull("item is null", item);
+			checkItem(foundItem);
+			checkEquals(item, foundItem);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail("Exception occurred");
@@ -78,11 +76,11 @@ public class UrlDatabaseConnectorTests extends DatabaseConnectorTests {
 			
 			_database.update(item);
 			System.out.println("looking up " + item._id + " after update");
-			List<UrlPattern> list = _database.query(item._id);
-			Assert.assertNotNull("List is null", list);
-			Assert.assertEquals("List doesn't have 1 element: " + item._id, 1, list.size());
-			checkItem(list.get(0));
-			checkEquals(item, list.get(0));
+
+			UrlPattern foundItem = _database.queryById(item._id);
+			Assert.assertNotNull("item is null", item);
+			checkItem(foundItem);
+			checkEquals(item, foundItem);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail("Exception occurred");
@@ -95,10 +93,9 @@ public class UrlDatabaseConnectorTests extends DatabaseConnectorTests {
 		try {
 			UrlPattern media = GetRandom.getItem(_randomItems);
 			_database.delete(media._id);
-			
-			List<UrlPattern> list = _database.query(media._id);
-			Assert.assertNotNull("List is null", list);
-			Assert.assertTrue("List has elements", list.size() == 0);
+
+			UrlPattern foundItem = _database.queryById(media._id);
+			Assert.assertNull("item is not null", foundItem);
 			_randomItems.remove(media);
 		} catch (Exception e) {
 			e.printStackTrace();

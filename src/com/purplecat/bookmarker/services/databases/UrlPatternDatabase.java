@@ -89,20 +89,20 @@ public class UrlPatternDatabase implements IUrlPatternDatabase {
 	}
 
 	@Override
-	public List<UrlPattern> query(long id) {
-		List<UrlPattern> list = new LinkedList<UrlPattern>();
+	public UrlPattern queryById(long id) {
+		UrlPattern pattern = null;
 		String sql = SELECT_ITEMS + " WHERE _id = @id";
 		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
 			NamedStatement stmt = new NamedStatement(conn, sql);
 			stmt.setLong("@id", id);
 			NamedResultSet result = stmt.executeQuery();
 			while ( result.next() ) {
-				list.add(loadItemFromResultSet(result));
+				pattern = loadItemFromResultSet(result);
 			}
 		} catch (SQLException e) {
 			_logging.error(TAG, "Query for id failed: " + sql, e);
 		} 
-		return list;
+		return pattern;
 	}
 
 	@Override

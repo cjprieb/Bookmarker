@@ -13,7 +13,7 @@ import com.google.inject.name.Names;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.services.OnlineUpdateTask;
 import com.purplecat.bookmarker.services.UrlPatternService;
-import com.purplecat.bookmarker.services.databases.IMangaDatabaseConnector;
+import com.purplecat.bookmarker.services.databases.IMediaRepository;
 import com.purplecat.bookmarker.services.databases.IOnlineMediaRepository;
 import com.purplecat.bookmarker.services.databases.IUrlPatternDatabase;
 import com.purplecat.bookmarker.services.websites.IThreadObserver;
@@ -46,7 +46,7 @@ public class OnlineUpdateServiceTests {
 			bind(IUrlPatternDatabase.class).to(SamplePatternDatabase.class);
 			bind(IOnlineMediaRepository.class).to(DummyOnlineItemRepository.class);
 			bind(UrlPatternService.class);
-			bind(IMangaDatabaseConnector.class).to(SampleMangaDatabase.class);
+			bind(IMediaRepository.class).to(SampleMangaDatabase.class);
 			bind(String.class).annotatedWith(Names.named("JDBC URL")).toInstance("jdbc:sqlite:" + DatabaseConnectorTests.TEST_DATABASE_PATH);	
 		}
 	}

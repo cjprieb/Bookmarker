@@ -4,9 +4,9 @@ import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.services.UrlPatternService;
-import com.purplecat.bookmarker.services.databases.IMangaDatabaseConnector;
+import com.purplecat.bookmarker.services.databases.IMediaRepository;
 import com.purplecat.bookmarker.services.databases.IUrlPatternDatabase;
-import com.purplecat.bookmarker.services.databases.MangaDatabaseConnector;
+import com.purplecat.bookmarker.services.databases.MediaDatabaseRepository;
 import com.purplecat.bookmarker.services.databases.UrlPatternDatabase;
 import com.purplecat.commons.logs.FileLog;
 import com.purplecat.commons.logs.ILoggingService;
@@ -25,7 +25,7 @@ public class SwingBookmarkerModule extends AbstractModule {
 		//Database/Repository items
 		bind(IUrlPatternDatabase.class).to(UrlPatternDatabase.class);
 		bind(UrlPatternService.class);
-		bind(IMangaDatabaseConnector.class).to(MangaDatabaseConnector.class);
+		bind(IMediaRepository.class).to(MediaDatabaseRepository.class);
 		bind(Controller.class);
 		bind(String.class).annotatedWith(Names.named("JDBC URL")).toInstance("jdbc:sqlite:../BookmarkView/databases/bookmarker.db");
 		

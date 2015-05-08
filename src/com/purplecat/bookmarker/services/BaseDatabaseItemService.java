@@ -3,13 +3,13 @@ package com.purplecat.bookmarker.services;
 import java.util.List;
 
 import com.purplecat.bookmarker.models.BaseDatabaseItem;
-import com.purplecat.bookmarker.services.databases.IDatabaseConnector;
+import com.purplecat.bookmarker.services.databases.IItemRepository;
 
 public class BaseDatabaseItemService<T extends BaseDatabaseItem> implements IItemService<T> {
 	
-	IDatabaseConnector<T> _database;
+	IItemRepository<T> _database;
 	
-	public BaseDatabaseItemService(IDatabaseConnector<T> database) {
+	public BaseDatabaseItemService(IItemRepository<T> database) {
 		_database = database;
 	}
 
@@ -42,11 +42,6 @@ public class BaseDatabaseItemService<T extends BaseDatabaseItem> implements IIte
 		if ( id <= 0 ) {
 			throw new ServiceException(ServiceException.INVALID_ID);
 		}
-		
-		List<T> list = _database.query(id);
-		if ( list.size() > 0 ) {
-			return list.get(0);
-		}
-		return null;
+		return _database.queryById(id);
 	}
 }

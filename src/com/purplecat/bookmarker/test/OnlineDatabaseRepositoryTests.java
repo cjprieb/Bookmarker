@@ -11,7 +11,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
-import com.purplecat.bookmarker.services.databases.MangaDatabaseConnector;
+import com.purplecat.bookmarker.services.databases.MediaDatabaseRepository;
 import com.purplecat.bookmarker.services.databases.OnlineMediaDatabase;
 import com.purplecat.bookmarker.test.modules.TestDatabaseModule;
 import com.purplecat.commons.tests.GetRandom;
@@ -19,14 +19,14 @@ import com.purplecat.commons.tests.GetRandom;
 public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTests {
 	
 	private static OnlineMediaDatabase _database;
-	private static MangaDatabaseConnector _savedDatabase;
+	private static MediaDatabaseRepository _savedDatabase;
 	private static List<OnlineMediaItem> _randomItems;
 
 	@BeforeClass
 	public static void setUpBeforeTest() throws Exception {
 		Injector injector = Guice.createInjector(new TestDatabaseModule());	
 		_database = injector.getInstance(OnlineMediaDatabase.class);
-		_savedDatabase = injector.getInstance(MangaDatabaseConnector.class);
+		_savedDatabase = injector.getInstance(MediaDatabaseRepository.class);
 		
 		_randomItems = _database.query();
 		Assert.assertNotNull("List is null", _randomItems);
@@ -51,8 +51,7 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTests {
 	@Test
 	public void testInsert() {
 		try {
-			List<Media> list = _savedDatabase.query(15);
-			Media media = list.get(0);
+			Media media = _savedDatabase.queryById(15);
 					
 			OnlineMediaItem item = new OnlineMediaItem();
 			item._updatedPlace._volume = 1;

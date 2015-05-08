@@ -18,8 +18,8 @@ import com.purplecat.bookmarker.sql.NamedResultSet;
 import com.purplecat.bookmarker.sql.NamedStatement;
 import com.purplecat.commons.logs.ILoggingService;
 
-public class MangaDatabaseConnector implements IMangaDatabaseConnector {
-	public static final String TAG = "MangaDatabaseConnector";
+public class MediaDatabaseRepository implements IMediaRepository {
+	public static final String TAG = "MediaDatabaseRepository";
 	
 	private static final String SELECT_MEDIA = "SELECT Media._id _id, MdDisplayTitle _displayTitle, SvdIsSaved _isSaved, " +
 											" hist.svhstDate _lastReadDate, hist.svhstPlace _lastReadPlace FROM MEDIA" + 
@@ -31,7 +31,7 @@ public class MangaDatabaseConnector implements IMangaDatabaseConnector {
 	public final String _connectionPath;
 	 
 	@Inject
-	public MangaDatabaseConnector(ILoggingService logger, @Named("JDBC URL") String dbPath) {
+	public MediaDatabaseRepository(ILoggingService logger, @Named("JDBC URL") String dbPath) {
 		_logging = logger;
 		_connectionPath = dbPath;
 	}
@@ -104,20 +104,20 @@ public class MangaDatabaseConnector implements IMangaDatabaseConnector {
 	}
 
 	@Override
-	public List<Media> query(long id) {
-		List<Media> list = new LinkedList<Media>();
+	public Media queryById(long id) {
+		Media media = null;
 		String sql = SELECT_MEDIA + " WHERE Media._id = @id";
 		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
 			NamedStatement stmt = new NamedStatement(conn, sql);
 			stmt.setLong("@id", id);
 			NamedResultSet result = stmt.executeQuery();
 			while ( result.next() ) {
-				list.add(loadMediaFromResultSet(result));
+				media = loadMediaFromResultSet(result);
 			}
 		} catch (SQLException e) {
 			_logging.error(TAG, "Query for id failed: " + sql, e);
 		} 
-		return list;
+		return media;
 	}
 
 	@Override
@@ -162,7 +162,9 @@ public class MangaDatabaseConnector implements IMangaDatabaseConnector {
 			stmt.setBoolean("@saved", item._isSaved);
 			item._id = stmt.executeInsert();
 			
-			updateHistory(conn, item);	
+			if ( item._isSaved ) {
+				updateHistory(conn, item);
+			}
 
 			conn.commit();
 		} catch (SQLException e) {
@@ -208,7 +210,7 @@ public class MangaDatabaseConnector implements IMangaDatabaseConnector {
 		}	
 	}
 	
-	private void updateHistory(Connection conn, Media item) throws SQLException {		
+	private void updateHistory(Connection conn, Media item) throws SQLException {
 		String sql = "INSERT INTO SavedHistory (SvhstMedia_ID, SvhstDate, SvhstPlace, SvhstUrl, SvhstVolume, SvhstChapter, SvhstSubChapter, SvhstPage, SvhstExtra) " +
 				"VALUES (@mediaId, @date, @place, @url, @v, @ch, @sub, @pg, @extra)";
 		NamedStatement stmt = new NamedStatement(conn, sql);

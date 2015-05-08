@@ -6,15 +6,15 @@ import java.util.List;
 import com.google.inject.Inject;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.UrlPatternResult;
-import com.purplecat.bookmarker.services.databases.IMangaDatabaseConnector;
+import com.purplecat.bookmarker.services.databases.IMediaRepository;
 
 public class DatabaseMangaService {
 	
-	public final IMangaDatabaseConnector _database;
+	public final IMediaRepository _database;
 	public final UrlPatternService _patterns;
 	
 	@Inject
-	public DatabaseMangaService(IMangaDatabaseConnector database, UrlPatternService patterns) {
+	public DatabaseMangaService(IMediaRepository database, UrlPatternService patterns) {
 		_database = database;
 		_patterns = patterns;
 	}
@@ -39,12 +39,7 @@ public class DatabaseMangaService {
 		if ( id <= 0 ) {
 			throw new ServiceException(ServiceException.INVALID_ID);
 		}
-		
-		List<Media> list = _database.query(id);
-		if ( list.size() > 0 ) {
-			return list.get(0);
-		}
-		return null;
+		return _database.queryById(id);
 	}
 	
 	public Media updateFromUrl(String url) throws ServiceException {

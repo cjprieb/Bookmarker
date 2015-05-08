@@ -11,14 +11,14 @@ import org.junit.Test;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.purplecat.bookmarker.models.Media;
-import com.purplecat.bookmarker.services.databases.MangaDatabaseConnector;
+import com.purplecat.bookmarker.services.databases.MediaDatabaseRepository;
 import com.purplecat.bookmarker.test.modules.TestDatabaseModule;
 import com.purplecat.commons.extensions.DateTimeFormats;
 import com.purplecat.commons.tests.GetRandom;
 
 public class MangaDatabaseConnectorTests extends DatabaseConnectorTests {
 	
-	private static MangaDatabaseConnector _database;
+	private static MediaDatabaseRepository _database;
 	private static List<Media> _randomSavedMedia;
 	private static List<Media> _randomNonSavedMedia;
 	private static String[] _sampleTitles = { "360° material", "chihayafuru", "7 centi!", "gozen 3-ji no muhouchitai", "chikutaku bonbon", 
@@ -28,7 +28,7 @@ public class MangaDatabaseConnectorTests extends DatabaseConnectorTests {
 	public static void setUpBeforeTest() throws Exception {
 		Injector injector = Guice.createInjector(new TestDatabaseModule());
 		
-		_database = injector.getInstance(MangaDatabaseConnector.class);
+		_database = injector.getInstance(MediaDatabaseRepository.class);
 		//_database._log = new ConsoleLog();
 		
 		_randomSavedMedia = _database.querySavedMedia();
@@ -85,13 +85,12 @@ public class MangaDatabaseConnectorTests extends DatabaseConnectorTests {
 	@Test
 	public void testQueryById() {
 		try {
-			Media media = GetRandom.getItem(_randomSavedMedia);
-			List<Media> list = _database.query(media._id);
-			Assert.assertNotNull("Query for id list is null", list);
-			Assert.assertEquals("List doesn't have 1 element", 1, list.size());
-			Assert.assertEquals("Element doesn't match id", media._id, list.get(0)._id);
-			checkMediaItem(list.get(0));
-			checkEquals(media, list.get(0));
+			Media media = GetRandom.getItem(_randomSavedMedia);			
+			Media item = _database.queryById(media._id);
+			Assert.assertNotNull("List is null", item);
+			Assert.assertEquals("Element doesn't match id", media._id, item._id);
+			checkSavedMediaItem(item);
+			checkEquals(media, item);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail("Exception occurred");
@@ -103,16 +102,16 @@ public class MangaDatabaseConnectorTests extends DatabaseConnectorTests {
 		try {
 			Media media = new Media();
 			media._displayTitle = GetRandom.getString(6);
+			media._isSaved = false;
 			_database.insert(media);
 			
 			Assert.assertTrue("Invalid id", media._id > 0);	
 			System.out.println("Media added: "  + media._id);
 			
-			List<Media> list = _database.query(media._id);
-			Assert.assertNotNull("List is null", list);
-			Assert.assertEquals("List doesn't have 1 element", 1, list.size());
-			checkMediaItem(list.get(0));
-			checkEquals(media, list.get(0));
+			Media item = _database.queryById(media._id);
+			Assert.assertNotNull("item is null", item);
+			checkMediaItem(item);
+			checkEquals(media, item);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail("Exception occurred");
@@ -133,11 +132,10 @@ public class MangaDatabaseConnectorTests extends DatabaseConnectorTests {
 			Assert.assertTrue("Invalid id", media._id > 0);	
 			System.out.println("Media added: "  + media._id);
 			
-			List<Media> list = _database.query(media._id);
-			Assert.assertNotNull("List is null", list);
-			Assert.assertEquals("List doesn't have 1 element", 1, list.size());
-			checkSavedMediaItem(list.get(0));
-			checkEquals(media, list.get(0));
+			Media item = _database.queryById(media._id);
+			Assert.assertNotNull("item is null", item);
+			checkSavedMediaItem(item);
+			checkEquals(media, item);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail("Exception occurred");
@@ -156,11 +154,11 @@ public class MangaDatabaseConnectorTests extends DatabaseConnectorTests {
 			
 			_database.update(media);
 			System.out.println("looking up " + media._id + " after update");
-			List<Media> list = _database.query(media._id);
-			Assert.assertNotNull("List is null", list);
-			Assert.assertEquals("List doesn't have 1 element: " + media._id, 1, list.size());
-			checkSavedMediaItem(list.get(0));
-			checkEquals(media, list.get(0));
+			
+			Media item = _database.queryById(media._id);
+			Assert.assertNotNull("item is null", item);
+			checkSavedMediaItem(item);
+			checkEquals(media, item);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail("Exception occurred");
@@ -180,11 +178,11 @@ public class MangaDatabaseConnectorTests extends DatabaseConnectorTests {
 			
 			_database.update(media);
 			System.out.println("looking up " + media._id + " after update");
-			List<Media> list = _database.query(media._id);
-			Assert.assertNotNull("List is null", list);
-			Assert.assertEquals("List doesn't have 1 element", 1, list.size());
-			checkSavedMediaItem(list.get(0));
-			checkEquals(media, list.get(0));
+			
+			Media item = _database.queryById(media._id);
+			Assert.assertNotNull("item is null", item);
+			checkSavedMediaItem(item);
+			checkEquals(media, item);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail("Exception occurred");
@@ -196,10 +194,10 @@ public class MangaDatabaseConnectorTests extends DatabaseConnectorTests {
 		try {
 			Media media = GetRandom.getItem(_randomSavedMedia);
 			_database.delete(media._id);
+
 			
-			List<Media> list = _database.query(media._id);
-			Assert.assertNotNull("List is null", list);
-			Assert.assertTrue("List has elements", list.size() == 0);
+			Media item = _database.queryById(media._id);
+			Assert.assertNull("item is not null", item);
 			_randomSavedMedia.remove(media);
 		} catch (Exception e) {
 			e.printStackTrace();

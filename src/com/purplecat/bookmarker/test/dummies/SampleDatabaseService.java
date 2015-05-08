@@ -10,23 +10,22 @@ import com.purplecat.bookmarker.models.BaseDatabaseItem;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.UrlPattern;
 import com.purplecat.bookmarker.services.ServiceException;
-import com.purplecat.bookmarker.services.databases.IDatabaseConnector;
-import com.purplecat.bookmarker.services.databases.IMangaDatabaseConnector;
+import com.purplecat.bookmarker.services.databases.IItemRepository;
+import com.purplecat.bookmarker.services.databases.IMediaRepository;
 import com.purplecat.bookmarker.services.databases.IUrlPatternDatabase;
 import com.purplecat.commons.tests.Utils;
 
-public abstract class SampleDatabaseService<T extends BaseDatabaseItem> implements IDatabaseConnector<T> {
+public abstract class SampleDatabaseService<T extends BaseDatabaseItem> implements IItemRepository<T> {
 	
 	Map<Long, T> _map = new HashMap<Long, T>();
 	int _maxIndex = 0;
 
 	@Override
-	public List<T> query(long id) {
-		List<T> list = new ArrayList<T>();
+	public T queryById(long id) {
 		if ( _map.containsKey(id) ) {
-			list.add(copy(_map.get(id)));
+			return copy(_map.get(id));
 		}
-		return list;
+		return null;
 	}
 
 	@Override
@@ -79,7 +78,7 @@ public abstract class SampleDatabaseService<T extends BaseDatabaseItem> implemen
 		}
 	}
 	
-	public static class SampleMangaDatabase extends SampleDatabaseService<Media> implements IMangaDatabaseConnector {
+	public static class SampleMangaDatabase extends SampleDatabaseService<Media> implements IMediaRepository {
 		
 		public SampleMangaDatabase() {
 			Media manga1 = new Media();

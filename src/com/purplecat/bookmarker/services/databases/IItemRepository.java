@@ -2,11 +2,11 @@ package com.purplecat.bookmarker.services.databases;
 
 import java.util.List;
 
-public interface IDatabaseConnector<T> {
+public interface IItemRepository<T> {
 
 	public List<T> query();
 
-	public List<T> query(long id);
+	public T queryById(long id);
 
 	public void insert(T item);
 

@@ -5,7 +5,7 @@ import java.util.List;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.WebsiteInfo;
 
-public interface IWebsiteScraper {
+public interface IWebsiteParser {
 	public List<OnlineMediaItem> load();
 
 	public WebsiteInfo getInfo();

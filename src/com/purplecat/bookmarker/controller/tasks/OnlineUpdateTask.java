@@ -8,7 +8,7 @@ import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.services.databases.IOnlineMediaRepository;
 import com.purplecat.bookmarker.services.websites.IThreadObserver;
 import com.purplecat.bookmarker.services.websites.IWebsiteList;
-import com.purplecat.bookmarker.services.websites.IWebsiteScraper;
+import com.purplecat.bookmarker.services.websites.IWebsiteParser;
 
 public class OnlineUpdateTask {
 	
@@ -27,7 +27,7 @@ public class OnlineUpdateTask {
 		List<OnlineMediaItem> list = new LinkedList<OnlineMediaItem>();
 		_observer.notifyLoadStarted();
 		
-		for ( IWebsiteScraper scraper : _websites.getList() ) {
+		for ( IWebsiteParser scraper : _websites.getList() ) {
 			_observer.notifySiteStarted(scraper.getInfo());
 			List<OnlineMediaItem> siteList = scraper.load();
 			

@@ -9,12 +9,12 @@ import com.google.inject.Singleton;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.WebsiteInfo;
 import com.purplecat.bookmarker.services.websites.IWebsiteList;
-import com.purplecat.bookmarker.services.websites.IWebsiteScraper;
+import com.purplecat.bookmarker.services.websites.IWebsiteParser;
 
 @Singleton
 public class DummyWebsiteList implements IWebsiteList {
 	
-	public class DummyWebsiteScraper implements IWebsiteScraper {
+	public class DummyWebsiteScraper implements IWebsiteParser {
 		
 		private boolean _loadCalled;
 		private boolean _itemLoadCalled;
@@ -85,7 +85,7 @@ public class DummyWebsiteList implements IWebsiteList {
 
 	}
 	
-	public List<IWebsiteScraper> _list = new LinkedList<IWebsiteScraper>();
+	public List<IWebsiteParser> _list = new LinkedList<IWebsiteParser>();
 	public DummyWebsiteScraper _scraper;
 	
 	public DummyWebsiteList() {
@@ -94,7 +94,7 @@ public class DummyWebsiteList implements IWebsiteList {
 	}
 
 	@Override
-	public Iterable<IWebsiteScraper> getList() {
+	public Iterable<IWebsiteParser> getList() {
 		return _list;
 	}
 }

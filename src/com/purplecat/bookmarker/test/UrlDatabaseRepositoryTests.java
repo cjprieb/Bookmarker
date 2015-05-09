@@ -15,7 +15,7 @@ import com.purplecat.bookmarker.services.databases.UrlPatternDatabase;
 import com.purplecat.bookmarker.test.modules.TestDatabaseModule;
 import com.purplecat.commons.tests.GetRandom;
 
-public class UrlDatabaseConnectorTests extends DatabaseConnectorTests {
+public class UrlDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	
 	private static UrlPatternDatabase _database;
 	private static List<UrlPattern> _randomItems;

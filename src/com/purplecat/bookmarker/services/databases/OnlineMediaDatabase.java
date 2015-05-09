@@ -9,7 +9,9 @@ import java.util.List;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import com.purplecat.bookmarker.extensions.OnlineMediaItemExt;
 import com.purplecat.bookmarker.extensions.PlaceExt;
+import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.sql.NamedResultSet;
 import com.purplecat.bookmarker.sql.NamedStatement;
@@ -95,64 +97,122 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 	}
 
 	@Override
-	public OnlineMediaItem find(OnlineMediaItem item) {
-		// TODO Auto-generated method stub
-		return null;
+	public OnlineMediaItem findOrCreate(OnlineMediaItem item) {
+		OnlineMediaItem result = null;
+		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
+			List<Media> matches = _mediaDatabase.queryByTitle(conn, item._displayTitle);
+			if ( matches.size() > 0 ) {
+				//TODO: don't assume first is best title match
+				item._mediaId = matches.get(0)._id;
+				result = findExistingOnlineItem(conn, item);
+				if ( result != null ) {
+					OnlineMediaItemExt.copyNewToExisting(item, result);
+				} 
+			}
+			
+			conn.setAutoCommit(false);
+			if (matches.size() == 0) {
+				//Insert new Media item
+				item._mediaId = createMedia(conn, item);
+			}
+			
+			if ( result != null ) {
+				update(conn, result);
+			}
+			else {
+				insert(conn, item);
+				result = item;
+			}
+			
+			conn.commit();
+		} catch (SQLException e) {
+			_logging.error(TAG, "findOrCreate failed", e);
+		} 
+		return result;
+	}
+	
+	private OnlineMediaItem findExistingOnlineItem(Connection conn, OnlineMediaItem item) throws SQLException {
+		OnlineMediaItem existing = null;
+		NamedStatement stmt = new NamedStatement(conn, SELECT_ITEMS + " WHERE UpbkMedia_ID = @mediaId AND UpbkWebsiteName = @website");
+		stmt.setLong("@mediaId", item._mediaId);
+		stmt.setString("@website", item._websiteName);
+		NamedResultSet result = stmt.executeQuery();
+		while ( result.next() ) {
+			existing = loadOnlineMediaFromResultSet(result);
+			break;
+		}
+		return existing;
+	}
+	
+	private long createMedia(Connection conn, OnlineMediaItem item) throws SQLException {
+		String sql = "INSERT INTO Media (MdDisplayTitle, SvdIsSaved) VALUES (@title, @isSaved)";
+		NamedStatement stmt = new NamedStatement(conn, sql);
+		stmt.setString("@title", item._displayTitle);
+		stmt.setBoolean("@isSaved", item._isSaved);
+		return stmt.executeInsert();
 	}
 
 	@Override
 	public void insert(OnlineMediaItem item) {
+		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
+			insert(conn, item);
+		} catch (SQLException e) {
+			_logging.error(TAG, "Insert failed", e);
+		} 
+	}
+
+	public void insert(Connection conn, OnlineMediaItem item) throws SQLException {
 		String sql = "INSERT INTO UpdateBookmark (UpbkMedia_ID, UpbkChapterUrl, UpbkTitleUrl, UpbkWebsiteName, UpbkDate, UpbkRating, UpbkIsIgnored, "
 				+ " UpbkPlace, UpbkNewlyAdded, UpbkVolume, UpbkChapter, UpbkSubChapter, UpbkExtra) "
 				+ " VALUES (@mediaId, @chapterUrl, @titleUrl, @websiteName, @date, @rating, @isIgnored, "
 				+ " @place, @newlyAdded, @volume, @chapter, @sub, @extra)";
-		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
-			NamedStatement stmt = new NamedStatement(conn, sql);
-			stmt.setLong("@mediaId", item._mediaId);
-			stmt.setString("@chapterUrl", item._chapterUrl);
-			stmt.setString("@titleUrl", item._titleUrl);
-			stmt.setString("@websiteName", item._websiteName);
-			stmt.setDate("@date", item._updatedDate);
-			stmt.setDouble("@rating", item._rating);
-			stmt.setBoolean("@isIgnored", item._isIgnored);
-			stmt.setString("@place", PlaceExt.format(item._updatedPlace));
-			stmt.setBoolean("@newlyAdded", item._newlyAdded);
-			stmt.setInt("@volume", item._updatedPlace._volume);
-			stmt.setInt("@chapter", item._updatedPlace._chapter);
-			stmt.setInt("@sub", item._updatedPlace._subChapter);
-			stmt.setBoolean("@extra", item._updatedPlace._extra);
-			item._id = stmt.executeInsert();
-		} catch (SQLException e) {
-			_logging.error(TAG, "Insert failed: " + sql, e);
-		} 
+		NamedStatement stmt = new NamedStatement(conn, sql);
+		stmt.setLong("@mediaId", item._mediaId);
+		stmt.setString("@chapterUrl", item._chapterUrl);
+		stmt.setString("@titleUrl", item._titleUrl);
+		stmt.setString("@websiteName", item._websiteName);
+		stmt.setDate("@date", item._updatedDate);
+		stmt.setDouble("@rating", item._rating);
+		stmt.setBoolean("@isIgnored", item._isIgnored);
+		stmt.setString("@place", PlaceExt.format(item._updatedPlace));
+		stmt.setBoolean("@newlyAdded", item._newlyAdded);
+		stmt.setInt("@volume", item._updatedPlace._volume);
+		stmt.setInt("@chapter", item._updatedPlace._chapter);
+		stmt.setInt("@sub", item._updatedPlace._subChapter);
+		stmt.setBoolean("@extra", item._updatedPlace._extra);
+		item._id = stmt.executeInsert();
 	}
 
 	@Override
 	public void update(OnlineMediaItem item) {
+		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
+			update(conn, item);
+		} catch (SQLException e) {
+			_logging.error(TAG, "Update failed", e);
+		} 
+	}
+
+	public void update(Connection conn, OnlineMediaItem item) throws SQLException {
 		String sql = "UPDATE UpdateBookmark SET UpbkMedia_ID=@mediaId, UpbkChapterUrl=@chapterUrl, UpbkTitleUrl=@titleUrl, UpbkWebsiteName=@websiteName, "
 				+ " UpbkDate=@date, UpbkRating=@rating, UpbkIsIgnored=@isIgnored, "
 				+ " UpbkPlace=@place, UpbkNewlyAdded=@newlyAdded, UpbkVolume=@volume, UpbkChapter=@chapter, UpbkSubChapter=@sub, UpbkExtra=@extra"
 				+ " WHERE _id = @id";
-		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
-			NamedStatement stmt = new NamedStatement(conn, sql);
-			stmt.setLong("@id", item._id);
-			stmt.setLong("@mediaId", item._mediaId);
-			stmt.setString("@chapterUrl", item._chapterUrl);
-			stmt.setString("@titleUrl", item._titleUrl);
-			stmt.setString("@websiteName", item._websiteName);
-			stmt.setDate("@date", item._updatedDate);
-			stmt.setDouble("@rating", item._rating);
-			stmt.setBoolean("@isIgnored", item._isIgnored);
-			stmt.setString("@place", PlaceExt.format(item._updatedPlace));
-			stmt.setBoolean("@newlyAdded", item._newlyAdded);
-			stmt.setInt("@volume", item._updatedPlace._volume);
-			stmt.setInt("@chapter", item._updatedPlace._chapter);
-			stmt.setInt("@sub", item._updatedPlace._subChapter);
-			stmt.setBoolean("@extra", item._updatedPlace._extra);
-			stmt.executeUpdate();
-		} catch (SQLException e) {
-			_logging.error(TAG, "Update failed: " + sql, e);
-		} 
+		NamedStatement stmt = new NamedStatement(conn, sql);
+		stmt.setLong("@id", item._id);
+		stmt.setLong("@mediaId", item._mediaId);
+		stmt.setString("@chapterUrl", item._chapterUrl);
+		stmt.setString("@titleUrl", item._titleUrl);
+		stmt.setString("@websiteName", item._websiteName);
+		stmt.setDate("@date", item._updatedDate);
+		stmt.setDouble("@rating", item._rating);
+		stmt.setBoolean("@isIgnored", item._isIgnored);
+		stmt.setString("@place", PlaceExt.format(item._updatedPlace));
+		stmt.setBoolean("@newlyAdded", item._newlyAdded);
+		stmt.setInt("@volume", item._updatedPlace._volume);
+		stmt.setInt("@chapter", item._updatedPlace._chapter);
+		stmt.setInt("@sub", item._updatedPlace._subChapter);
+		stmt.setBoolean("@extra", item._updatedPlace._extra);
+		stmt.executeUpdate();
 	}
 
 	@Override
@@ -166,5 +226,4 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 			_logging.error(TAG, "Delete failed: " + sql, e);
 		} 
 	}
-
 }

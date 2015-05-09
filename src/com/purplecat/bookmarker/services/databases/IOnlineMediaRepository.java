@@ -10,7 +10,7 @@ public interface IOnlineMediaRepository {
 	
 	public OnlineMediaItem queryById(long id);
 
-	public OnlineMediaItem find(OnlineMediaItem item);
+	public OnlineMediaItem findOrCreate(OnlineMediaItem item);
 
 	public void insert(OnlineMediaItem item);
 	

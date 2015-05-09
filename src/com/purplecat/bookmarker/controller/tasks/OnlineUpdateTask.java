@@ -1,4 +1,4 @@
-package com.purplecat.bookmarker.services;
+package com.purplecat.bookmarker.controller.tasks;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -36,15 +36,17 @@ public class OnlineUpdateTask {
 			_observer.notifySiteParsed(scraper.getInfo());
 			
 			for ( OnlineMediaItem item : siteList ) {
-				item = scraper.loadItem(item);
-				OnlineMediaItem found = _repository.find(item);
+				OnlineMediaItem found = _repository.findOrCreate(item);
 				if ( found != null ) {
 					list.add(found);
 				}
-				else {
-					_repository.insert(item);
-					list.add(item);
-				}
+			}
+			
+			//NOTE: reorder list here?
+			
+			for ( OnlineMediaItem item : list ) { //use found items, not parsed items.
+				item = scraper.loadItem(item);
+				_repository.update(item);
 				_observer.notifyItemParsed(item);
 			}
 			_observer.notifySiteFinished(scraper.getInfo());

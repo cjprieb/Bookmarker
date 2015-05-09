@@ -6,7 +6,7 @@ import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.services.UrlPatternService;
 import com.purplecat.bookmarker.services.databases.IMediaRepository;
 import com.purplecat.bookmarker.services.databases.IUrlPatternDatabase;
-import com.purplecat.bookmarker.test.DatabaseConnectorTests;
+import com.purplecat.bookmarker.test.DatabaseConnectorTestBase;
 import com.purplecat.bookmarker.test.dummies.SampleDatabaseService.SampleMangaDatabase;
 import com.purplecat.bookmarker.test.dummies.SampleDatabaseService.SamplePatternDatabase;
 import com.purplecat.commons.logs.ConsoleLog;
@@ -27,7 +27,7 @@ public class TestBookmarkerModule extends AbstractModule {
 		bind(UrlPatternService.class);
 		bind(IMediaRepository.class).to(SampleMangaDatabase.class);
 		bind(Controller.class);
-		bind(String.class).annotatedWith(Names.named("JDBC URL")).toInstance("jdbc:sqlite:" + DatabaseConnectorTests.TEST_DATABASE_PATH);
+		bind(String.class).annotatedWith(Names.named("JDBC URL")).toInstance("jdbc:sqlite:" + DatabaseConnectorTestBase.TEST_DATABASE_PATH);
 		
 		//Swing Items
 		bind(Toolbox.class);

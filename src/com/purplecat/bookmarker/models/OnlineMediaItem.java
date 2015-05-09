@@ -4,8 +4,14 @@ import org.joda.time.DateTime;
 
 public class OnlineMediaItem {
 	
+	/**
+	 * Loaded from website
+	 */
 	public String _chapterUrl = "";
-	
+
+	/**
+	 * Loaded from website
+	 */
 	public String _displayTitle = "";
 	
 	public long _id = -1;
@@ -21,15 +27,30 @@ public class OnlineMediaItem {
 	public long _mediaId = -1;
 	
 	public boolean _newlyAdded = false;
-	
+
+	/**
+	 * Loaded from website
+	 */
 	public double _rating;
-	
+
+	/**
+	 * Loaded from website
+	 */
 	public String _titleUrl = "";
-	
+
+	/**
+	 * Loaded from website
+	 */
 	public Place _updatedPlace = new Place();
-	
+
+	/**
+	 * Loaded from website
+	 */
 	public DateTime _updatedDate;
-	
+
+	/**
+	 * Loaded from website
+	 */
 	public String _websiteName;
 
 }

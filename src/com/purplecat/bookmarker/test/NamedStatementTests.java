@@ -17,7 +17,7 @@ import com.google.inject.name.Named;
 import com.purplecat.bookmarker.sql.NamedStatement;
 import com.purplecat.bookmarker.test.modules.TestDatabaseModule;
 
-public class NamedStatementTests extends DatabaseConnectorTests {
+public class NamedStatementTests extends DatabaseConnectorTestBase {
 	
 	@Inject @Named("JDBC URL") String _connection;
 	

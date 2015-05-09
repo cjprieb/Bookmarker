@@ -99,11 +99,6 @@ public abstract class SampleDatabaseService<T extends BaseDatabaseItem> implemen
 			return null;
 		}
 		@Override
-		public List<Media> queryNonSavedMedia() throws ServiceException {
-			// TODO Auto-generated method stub
-			return null;
-		}
-		@Override
 		public List<Media> queryByTitle(String title) {
 			// TODO Auto-generated method stub
 			Media m = new Media();

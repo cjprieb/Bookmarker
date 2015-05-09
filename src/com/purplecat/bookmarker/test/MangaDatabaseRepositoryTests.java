@@ -1,6 +1,5 @@
 package com.purplecat.bookmarker.test;
 
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -11,16 +10,16 @@ import org.junit.Test;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.purplecat.bookmarker.models.Media;
+import com.purplecat.bookmarker.services.ServiceException;
 import com.purplecat.bookmarker.services.databases.MediaDatabaseRepository;
 import com.purplecat.bookmarker.test.modules.TestDatabaseModule;
 import com.purplecat.commons.extensions.DateTimeFormats;
 import com.purplecat.commons.tests.GetRandom;
 
-public class MangaDatabaseConnectorTests extends DatabaseConnectorTests {
+public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	
 	private static MediaDatabaseRepository _database;
 	private static List<Media> _randomSavedMedia;
-	private static List<Media> _randomNonSavedMedia;
 	private static String[] _sampleTitles = { "360° material", "chihayafuru", "7 centi!", "gozen 3-ji no muhouchitai", "chikutaku bonbon", 
 		"d. n. angel", "yume no shizuku ougon no torikago" };
 
@@ -35,11 +34,6 @@ public class MangaDatabaseConnectorTests extends DatabaseConnectorTests {
 		Assert.assertNotNull("List is null", _randomSavedMedia);
 		Assert.assertTrue("List has no elements", _randomSavedMedia.size() > 0);
 		Assert.assertTrue("item not marked as saved: ", _randomSavedMedia.get(0)._isSaved);
-		
-		_randomNonSavedMedia = _database.queryNonSavedMedia();
-		Assert.assertNotNull("List is null", _randomNonSavedMedia);
-		Assert.assertTrue("List has no elements", _randomNonSavedMedia.size() > 0);	
-		Assert.assertFalse("item marked as saved: ", _randomNonSavedMedia.get(0)._isSaved);
 	}
 
 	@Test
@@ -69,20 +63,6 @@ public class MangaDatabaseConnectorTests extends DatabaseConnectorTests {
 	}
 
 	@Test
-	public void testQueryForNonSaved() {
-		try {
-			List<Media> list = _database.queryNonSavedMedia();
-			Assert.assertNotNull("List is null", list);
-			Assert.assertTrue("List has no elements", list.size() > 0);
-			Assert.assertFalse("item marked as saved: ", list.get(0)._isSaved);
-			checkMediaItem(GetRandom.getItem(list));
-		} catch (Exception e) {
-			e.printStackTrace();
-			Assert.fail("Exception occurred");
-		}
-	}
-
-	@Test
 	public void testQueryById() {
 		try {
 			Media media = GetRandom.getItem(_randomSavedMedia);			
@@ -104,14 +84,11 @@ public class MangaDatabaseConnectorTests extends DatabaseConnectorTests {
 			media._displayTitle = GetRandom.getString(6);
 			media._isSaved = false;
 			_database.insert(media);
-			
-			Assert.assertTrue("Invalid id", media._id > 0);	
-			System.out.println("Media added: "  + media._id);
-			
-			Media item = _database.queryById(media._id);
-			Assert.assertNotNull("item is null", item);
-			checkMediaItem(item);
-			checkEquals(media, item);
+		} catch (ServiceException e) {
+			//cannot save 'unsaved' media through this method; so exception is expected
+			if ( e.getErrorCode() != ServiceException.INVALID_DATA ) {
+				Assert.fail("Service Exception occurred");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail("Exception occurred");
@@ -168,7 +145,7 @@ public class MangaDatabaseConnectorTests extends DatabaseConnectorTests {
 	@Test
 	public void testUpdateNonSaved() {
 		try {
-			Media media = GetRandom.getItem(_randomNonSavedMedia);
+			Media media = _database.queryById(17083);//known unsaved item
 			
 			media._displayTitle = GetRandom.getString(6);
 			media._lastReadPlace._chapter++;

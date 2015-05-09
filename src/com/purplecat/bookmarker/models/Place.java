@@ -1,11 +1,21 @@
 package com.purplecat.bookmarker.models;
 
-public class Place {
+public class Place implements Comparable<Place> {
 	public int _volume;
 	public int _chapter;
 	public int _subChapter;
 	public int _page;
 	public boolean _extra;
+	
+	public Place() {}
+	
+	public Place(int v, int c, int s, int p, boolean e) {
+		_volume = v;
+		_chapter = c;
+		_subChapter = s;
+		_page = p;
+		_extra = e;
+	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -38,5 +48,32 @@ public class Place {
 		place._page = this._page;
 		place._extra = this._extra;
 		return place;
+	}
+
+	@Override
+	public int compareTo(Place p) {
+		int result = 0;
+		
+		if ( result == 0 && _volume != 0 && p._volume != 0 && _volume != p._volume ) {
+			result = ( _volume > p._volume ) ? 1 : -1;
+		}		
+
+		if ( result == 0 && _chapter != p._chapter ) {
+			result = ( _chapter > p._chapter ) ? 1 : -1;
+		}
+		
+		if ( result == 0 && _extra != p._extra ) {
+			result = ( _extra ) ? 1 : -1;
+		}
+		
+		if ( result == 0 && _subChapter != p._subChapter ) {
+			result = ( _subChapter > p._subChapter ) ? 1 : -1;			
+		}
+
+		if ( result == 0 && _page != 0 && p._page != 0 && _page != p._page ) {
+			result = ( _page > p._page ) ? 1 : -1;
+		}
+		
+		return(result);
 	}
 }

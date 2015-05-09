@@ -18,7 +18,7 @@ import com.purplecat.bookmarker.test.modules.TestBookmarkerModule;
 import com.purplecat.commons.tests.GetRandom;
 import com.purplecat.commons.tests.Utils;
 
-public class DatabaseUrlPatternServiceTests {
+public class UrlPatternServiceTests {
 
 	private UrlPatternService _service;
 
@@ -32,7 +32,7 @@ public class DatabaseUrlPatternServiceTests {
 		_service = injector.getInstance(UrlPatternService.class);
 
 		_validUrls = new LinkedList<UrlPatternResult>();
-		List<String> lines = Utils.getFile(getClass(), "/resources/SampleUrlPatternResults.txt");
+		List<String> lines = Utils.getFile(getClass(), "/dummies/resources/SampleUrlPatternResults.txt");
 		for (String line : lines) {
 			String[] tokens = line.split("\t");
 			UrlPatternResult result = new UrlPatternResult();

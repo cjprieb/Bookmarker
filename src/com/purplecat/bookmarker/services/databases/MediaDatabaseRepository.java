@@ -13,6 +13,7 @@ import com.google.inject.name.Named;
 import com.purplecat.bookmarker.extensions.PlaceExt;
 import com.purplecat.bookmarker.extensions.TitleExt;
 import com.purplecat.bookmarker.models.Media;
+import com.purplecat.bookmarker.services.ServiceException;
 import com.purplecat.bookmarker.sql.DBUtils;
 import com.purplecat.bookmarker.sql.NamedResultSet;
 import com.purplecat.bookmarker.sql.NamedStatement;
@@ -68,37 +69,19 @@ public class MediaDatabaseRepository implements IMediaRepository {
 	}
 
 	@Override
-	public List<Media> querySavedMedia() {
+	public List<Media> querySavedMedia() throws ServiceException {
 		List<Media> list = new LinkedList<Media>();
 		String sql = SELECT_MEDIA + " WHERE SvdIsSaved = 1";
-		_logging.log(0, TAG, "connecting to database for saved media query");
 		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
 			Statement stmt = conn.createStatement();
 			NamedResultSet result = new NamedResultSet(stmt.executeQuery(sql));
 			while ( result.next() ) {
 				Media item = loadMediaFromResultSet(result);
 				list.add(item);
-				_logging.log(1, TAG, "added item: " + item);
 			}
 		} catch (SQLException e) {
 			_logging.error(TAG, "Query for saved failed: " + sql, e);
-		} 
-		_logging.log(1, TAG, "DONE");
-		return list;
-	}
-
-	@Override
-	public List<Media> queryNonSavedMedia() {
-		List<Media> list = new LinkedList<Media>();
-		String sql = SELECT_MEDIA + " WHERE SvdIsSaved = 0";
-		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
-			Statement stmt = conn.createStatement();
-			NamedResultSet result = new NamedResultSet(stmt.executeQuery(sql));
-			while ( result.next() ) {
-				list.add(loadMediaFromResultSet(result));
-			}
-		} catch (SQLException e) {
-			_logging.error(TAG, "Query for non-saved failed: " + sql, e);
+			throw new ServiceException("Query for saved media failed", ServiceException.SQL_ERROR);
 		} 
 		return list;
 	}
@@ -122,53 +105,60 @@ public class MediaDatabaseRepository implements IMediaRepository {
 
 	@Override
 	public List<Media> queryByTitle(String title) {
-		List<Media> list = new LinkedList<Media>();
-		String strippedTitle = TitleExt.stripTitle(title);		
-		String sql = "";
+		List<Media> list = null;
 		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
-			List<Long> idList = new ArrayList<Long>();
-			sql = "SELECT TtMedia_ID FROM Title WHERE TtStripped LIKE @title";
-			NamedStatement stmt = new NamedStatement(conn, sql);
-			stmt.setString("@title", strippedTitle);
-			NamedResultSet result = stmt.executeQuery();
-			while ( result.next() ) {
-				idList.add(result.getLong("TtMedia_ID"));
-			}			
-			
-			
-			if ( idList.size() > 0 ) {
-				sql = String.format(SELECT_MEDIA + " WHERE Media._id IN (%s)", DBUtils.formatIdList(idList));
-				stmt = new NamedStatement(conn, sql);
-				stmt.setString("@title", title);
-				result = stmt.executeQuery();
-				while ( result.next() ) {
-					list.add(loadMediaFromResultSet(result));
-				}
-			}
+			list = queryByTitle(conn, title);
 		} catch (SQLException e) {
-			_logging.error(TAG, "Query for id failed: " + sql, e);
+			_logging.error(TAG, "Query for id failed", e);
 		} 
 		return list;
 	}
 
+	public List<Media> queryByTitle(Connection conn, String title) throws SQLException {
+		List<Media> list = new LinkedList<Media>();
+		String strippedTitle = TitleExt.stripTitle(title);
+		List<Long> idList = new ArrayList<Long>();
+
+		String sql = "SELECT TtMedia_ID FROM Title WHERE TtStripped LIKE @title";
+		NamedStatement stmt = new NamedStatement(conn, sql);
+		stmt.setString("@title", strippedTitle);
+		NamedResultSet result = stmt.executeQuery();
+		while ( result.next() ) {
+			idList.add(result.getLong("TtMedia_ID"));
+		}
+		
+		if ( idList.size() > 0 ) {
+			sql = String.format(SELECT_MEDIA + " WHERE Media._id IN (%s)", DBUtils.formatIdList(idList));
+			stmt = new NamedStatement(conn, sql);
+			stmt.setString("@title", title);
+			result = stmt.executeQuery();
+			while ( result.next() ) {
+				list.add(loadMediaFromResultSet(result));
+			}
+		}
+		return list;
+	}
+
 	@Override
-	public void insert(Media item) {
+	public void insert(Media item) throws ServiceException {
+		if ( item._isSaved == false ) {
+			throw new ServiceException("Media item must be 'saved'.", ServiceException.INVALID_DATA);
+		}
 		String sql = "INSERT INTO Media (MdDisplayTitle, SvdIsSaved) VALUES (@title, @saved)";
 		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
 			conn.setAutoCommit(false);
 			
 			NamedStatement stmt = new NamedStatement(conn, sql);
 			stmt.setString("@title", item._displayTitle);
-			stmt.setBoolean("@saved", item._isSaved);
+			stmt.setBoolean("@saved", true);
 			item._id = stmt.executeInsert();
 			
-			if ( item._isSaved ) {
-				updateHistory(conn, item);
-			}
-
+			updateHistory(conn, item);
+			
 			conn.commit();
 		} catch (SQLException e) {
 			_logging.error(TAG, "Insert failed: " + sql, e);
+			throw new ServiceException("Inserting media item failed", ServiceException.SQL_ERROR);
 		}		
 	}
 

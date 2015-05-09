@@ -7,7 +7,7 @@ import org.junit.BeforeClass;
 
 import com.purplecat.commons.tests.Utils;
 
-public class DatabaseConnectorTests {
+public class DatabaseConnectorTestBase {
 	public static final String TEST_DATABASE_PATH = "data/bookmarker.db";
 	public static final String DATABASE_PATH = "../BookmarkView/databases/bookmarker.db";
 	

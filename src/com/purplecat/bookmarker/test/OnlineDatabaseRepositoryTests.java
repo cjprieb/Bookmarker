@@ -16,7 +16,7 @@ import com.purplecat.bookmarker.services.databases.OnlineMediaDatabase;
 import com.purplecat.bookmarker.test.modules.TestDatabaseModule;
 import com.purplecat.commons.tests.GetRandom;
 
-public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTests {
+public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	
 	private static OnlineMediaDatabase _database;
 	private static MediaDatabaseRepository _savedDatabase;
@@ -101,6 +101,30 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTests {
 			Assert.assertNotNull("Item is null", actual);
 			checkItem(actual);
 			checkEquals(item, actual);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail("Exception occurred");
+		}
+	}
+
+	@Test
+	public void testFind() {
+		try {					
+			OnlineMediaItem item = new OnlineMediaItem();
+			item._updatedPlace._volume = 1;
+			item._updatedPlace._chapter = 12;
+			item._displayTitle = "Shana oh Yoshitsune";
+			item._chapterUrl = "http://bato.to/read/_/319045/shana-oh-yoshitsune_v10_ch38_by_easy-going-scans";
+			item._titleUrl = "http://bato.to/comic/_/comics/shana-oh-yoshitsune-r5256";
+			item._updatedDate = new DateTime();
+			OnlineMediaItem result = _database.findOrCreate(item);
+			
+			Assert.assertNotNull("Item is null", result);			
+			Assert.assertTrue("Invalid id", result._id > 0);
+			Assert.assertTrue("Invalid media id", result._mediaId > 0);
+			
+			checkItem(result);
+			checkEquals(item, result);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail("Exception occurred");

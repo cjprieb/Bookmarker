@@ -12,7 +12,8 @@ import com.purplecat.bookmarker.models.Place;
 
 public class ExtensionTests {
 	
-	List<PlacePair> _placeTests;	
+	List<PlacePair> _placeTests;
+	List<PlaceComparePair> _placeCompareTests;
 	
 	@Before
 	public void setupTestStrings() {
@@ -30,6 +31,16 @@ public class ExtensionTests {
 		_placeTests.add(new PlacePair("v10c14.5*", 10, 14, 5, 0, true));
 		_placeTests.add(new PlacePair("v10c42*p53", 10, 42, 0, 53, true));
 		_placeTests.add(new PlacePair("v3c14*p30", 3, 14, 0, 30, true));
+
+		_placeCompareTests = new ArrayList<PlaceComparePair>(100);
+		_placeCompareTests.add(new PlaceComparePair(new Place(), new Place(), 0));
+		_placeCompareTests.add(new PlaceComparePair(new Place(12, 64, 0, 48, false), new Place(12, 64, 0, 48, false), 0));
+		_placeCompareTests.add(new PlaceComparePair(new Place(12, 64, 0, 48, false), new Place(0, 64, 0, 48, false), 0));
+		_placeCompareTests.add(new PlaceComparePair(new Place(12, 64, 0, 48, false), new Place(6, 64, 0, 48, false), 1));
+		_placeCompareTests.add(new PlaceComparePair(new Place(12, 64, 0, 48, false), new Place(12, 70, 0, 48, false), -1));
+		_placeCompareTests.add(new PlaceComparePair(new Place(12, 64, 1, 48, false), new Place(12, 64, 0, 48, false), 1));
+		_placeCompareTests.add(new PlaceComparePair(new Place(12, 64, 1, 48, false), new Place(12, 64, 3, 48, false), -1));
+		_placeCompareTests.add(new PlaceComparePair(new Place(12, 64, 1, 48, true), new Place(12, 64, 1, 48, false), 1));
 	}
 		
 	@Test
@@ -47,6 +58,14 @@ public class ExtensionTests {
 			Assert.assertEquals(pair._value, actual);
 		}		
 	}
+
+	@Test
+	public void placeCompareTests() {
+		for ( PlaceComparePair pair : _placeCompareTests ) {
+			System.out.println("Compareing: " + pair._place1 + " to " + pair._place2);
+			Assert.assertEquals(pair._place1.compareTo(pair._place2), pair._expectedResult);
+		}		
+	}
 	
 	private static class PlacePair {
 		Place _place;
@@ -54,12 +73,19 @@ public class ExtensionTests {
 		
 		public PlacePair(String value, int v, int c, int sub, int page, boolean extra) {
 			_value = value;
-			_place = new Place();
-			_place._volume = v;
-			_place._chapter = c;
-			_place._subChapter = sub;
-			_place._page = page;
-			_place._extra = extra;
+			_place = new Place(v, c, sub, page, extra);
+		}
+	}
+	
+	private static class PlaceComparePair {
+		Place _place1;
+		Place _place2;
+		int _expectedResult;
+		
+		public PlaceComparePair(Place place1, Place place2, int result) {
+			_place1 = place1;
+			_place2 = place2;
+			_expectedResult = result;
 		}
 	}
 

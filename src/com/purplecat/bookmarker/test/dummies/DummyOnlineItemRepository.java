@@ -14,7 +14,7 @@ public class DummyOnlineItemRepository implements IOnlineMediaRepository {
 	int _maxIndex = 0;
 
 	@Override
-	public OnlineMediaItem find(OnlineMediaItem item) {
+	public OnlineMediaItem findOrCreate(OnlineMediaItem item) {
 		
 		if ( item._displayTitle.equals("Shana oh Yoshitsune") ) {
 			insert(item);
@@ -27,9 +27,11 @@ public class DummyOnlineItemRepository implements IOnlineMediaRepository {
 			item._mediaId = 60;
 			item._isSaved = true;
 			return item;
+		}	
+		else {
+			insert(item);
+			return item;
 		}
-		
-		return null;
 	}
 
 	@Override

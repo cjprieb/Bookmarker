@@ -5,10 +5,22 @@ import java.util.List;
 
 import com.purplecat.bookmarker.controller.observers.IListLoadedObserver;
 import com.purplecat.bookmarker.models.Media;
+import com.purplecat.bookmarker.view.swing.renderers.DataFields;
+import com.purplecat.commons.TTableColumn;
 import com.purplecat.commons.swing.TTable.TAbstractTableModel;
 
 public class MediaTableModel extends TAbstractTableModel<Media> {
 	List<Media> _backingList = new LinkedList<Media>();
+	TTableColumn[] _columns;
+	
+	public MediaTableModel(TTableColumn[] columns) {
+		_columns = columns;
+	}
+	
+	@Override
+	public TTableColumn[] getColumns() {
+		return _columns;
+	}
 
 	@Override
 	public Media getItemAt(int row) {
@@ -34,31 +46,30 @@ public class MediaTableModel extends TAbstractTableModel<Media> {
 
 	@Override
 	public String getColumnName(int columnIndex) {
-		String columnName = "";
-		switch ( columnIndex ) {
-		case 0: columnName = "id";	break;
-		case 1: columnName = "displayTitle"; break;
-		case 2: columnName = "lastReadDate"; break;
-		case 3: columnName = "lastReadPlace"; break;
-		}
-		return columnName;
+		return _columns[columnIndex].getName();
+	}
+	
+	@Override
+	public Class<?> getColumnClass(int columnIndex) {
+		return _columns[columnIndex].getClassType();
 	}
 
 	@Override
 	public int getColumnCount() {
-		return 4;
+		return _columns.length;
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Media item = _backingList.get(rowIndex);
 		Object obj = "";
-		switch ( columnIndex ) {
-		case 0: obj = item._id;	break;
-		case 1: obj = item._displayTitle; break;
-		case 2: obj = item._lastReadDate; break;
-		case 3: obj = item._lastReadPlace; break;
-		}
+		
+		TTableColumn column = _columns[columnIndex];
+		if ( column.getField().equals("_id") ) { obj = item._id; }
+		else if ( column == DataFields.TITLE_COL ) { obj = item._displayTitle; }
+		else if ( column == DataFields.DATE_COL ) { obj = item._lastReadDate; }
+		else if ( column == DataFields.PLACE_COL ) { obj = item._lastReadPlace; }
+		
 		return obj;
 	}
 	

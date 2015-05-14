@@ -110,10 +110,10 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	@Test
 	public void testFind() {
 		try {					
-			OnlineMediaItem item = new OnlineMediaItem();
-			item._updatedPlace._volume = 1;
-			item._updatedPlace._chapter = 12;
-			item._displayTitle = "Shana oh Yoshitsune";
+			OnlineMediaItem item = GetRandom.getItem(_randomItems);
+			item._id = 0;
+			item._mediaId = 0;
+			item._updatedPlace._chapter++;
 			item._chapterUrl = "http://bato.to/read/_/319045/shana-oh-yoshitsune_v10_ch38_by_easy-going-scans";
 			item._titleUrl = "http://bato.to/comic/_/comics/shana-oh-yoshitsune-r5256";
 			item._updatedDate = new DateTime();

@@ -10,7 +10,9 @@ import java.util.List;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import com.purplecat.bookmarker.extensions.FavoriteStateExt;
 import com.purplecat.bookmarker.extensions.PlaceExt;
+import com.purplecat.bookmarker.extensions.StoryStateExt;
 import com.purplecat.bookmarker.extensions.TitleExt;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.services.ServiceException;
@@ -22,8 +24,10 @@ import com.purplecat.commons.logs.ILoggingService;
 public class MediaDatabaseRepository implements IMediaRepository {
 	public static final String TAG = "MediaDatabaseRepository";
 	
-	private static final String SELECT_MEDIA = "SELECT Media._id _id, MdDisplayTitle _displayTitle, SvdIsSaved _isSaved, " +
-											" hist.svhstDate _lastReadDate, hist.svhstPlace _lastReadPlace FROM MEDIA" + 
+	private static final String SELECT_MEDIA = "SELECT Media._id _id, MdDisplayTitle _displayTitle, MdIsComplete _isComplete, SvdIsSaved _isSaved, "
+			+ " SvdStoryState _storyState, SvdRating _rating, SvdIsFlagged _isFlagged, SvdNotes _notes, "
+										+ " hist.svhstDate _lastReadDate, hist.svhstPlace _lastReadPlace"
+										+ " FROM MEDIA" + 
 										" LEFT JOIN savedhistory hist on hist._id = media.svdhistory_id";
 	
 		
@@ -47,9 +51,13 @@ public class MediaDatabaseRepository implements IMediaRepository {
 		Media media = new Media();
 		media._id = result.getLong("_id");
 		media._displayTitle = result.getString("_displayTitle");
+		media._isComplete = result.getBoolean("_isComplete");
 		media._isSaved = result.getBoolean("_isSaved");
 		media._lastReadDate = result.getDateFromString("_lastReadDate");
 		media._lastReadPlace = PlaceExt.parse(result.getString("_lastReadPlace"));
+		media._storyState = StoryStateExt.parse(result.getInt("_storyState"));
+		media._rating= FavoriteStateExt.parse(result.getInt("_rating"));
+		media._notes = result.getString("_notes");
 		return media;
 	}
 
@@ -169,11 +177,16 @@ public class MediaDatabaseRepository implements IMediaRepository {
 			try (Connection conn = DriverManager.getConnection(_connectionPath)) {
 				conn.setAutoCommit(false);
 				
-				sql = "UPDATE Media SET MdDisplayTitle = @title, SvdIsSaved = @saved WHERE _id = @id";
+				sql = "UPDATE Media SET MdDisplayTitle = @title, MdIsComplete = @complete, SvdIsSaved = @saved, SvdStoryState = @state,"
+						+ " SvdRating = @rating, SvdNotes = @notes WHERE _id = @id";
 				NamedStatement stmt = new NamedStatement(conn, sql);
 				stmt.setLong("@id", item._id);
 				stmt.setString("@title", item._displayTitle);
+				stmt.setBoolean("@complete", item._isComplete);
 				stmt.setBoolean("@saved", item._isSaved);
+				stmt.setInt("@state", item._storyState.getValue());
+				stmt.setInt("@rating", item._rating.getValue());
+				stmt.setString("@notes", item._notes);
 				stmt.executeUpdate();
 				
 				updateHistory(conn, item);			

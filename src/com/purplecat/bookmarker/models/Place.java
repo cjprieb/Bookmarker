@@ -74,6 +74,12 @@ public class Place implements Comparable<Place> {
 			result = ( _page > p._page ) ? 1 : -1;
 		}
 		
+		//If result is still zero, check compare volumes again, since it was skipped if one volume was zero
+		if ( result == 0 && _volume != p._volume && (
+				( _volume == 0 && _chapter == 0 ) || ( p._volume == 0 && p._chapter == 0) ) ) {
+			result = ( _volume > p._volume ) ? 1 : -1;
+		}
+		
 		return(result);
 	}
 }

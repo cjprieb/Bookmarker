@@ -4,6 +4,7 @@ public class ServiceException extends Exception {
 	public final static int INVALID_ID = 100;
 	public final static int INVALID_DATA = 150;
 	public final static int SQL_ERROR = 200;
+	public static final int WEBSITE_ERROR = 300;
 	
 	private int _errorCode;
 	private String _internalMessage;

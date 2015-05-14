@@ -12,6 +12,7 @@ import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.commons.logs.ILoggingService;
 import com.purplecat.commons.swing.MyApplication;
 import com.purplecat.commons.swing.Toolbox;
+import com.purplecat.commons.swing.renderer.ICellRendererFactory;
 
 public class BookmarkerStart extends MyApplication {
 	//TODO: move to seperate class
@@ -31,16 +32,18 @@ public class BookmarkerStart extends MyApplication {
 	}
 	
 	protected final Controller _controller;
+	protected final ICellRendererFactory _renderer;	
 	
 	@Inject
-	public BookmarkerStart(ILoggingService logging, Toolbox toolbox, Controller controller) {
+	public BookmarkerStart(ILoggingService logging, Toolbox toolbox, Controller controller, ICellRendererFactory renderer) {
 		super(logging, toolbox);
 		_controller = controller;
+		_renderer = renderer;
 	}
 
 	@Override
 	protected void setupMainPanel(JFrame frame) {
-		frame.getContentPane().add(MainPanel.create(_controller));
+		frame.getContentPane().add(MainPanel.create(_controller, _renderer));
 	}
 
 	@Override

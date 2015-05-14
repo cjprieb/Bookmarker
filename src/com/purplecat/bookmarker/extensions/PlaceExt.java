@@ -110,4 +110,22 @@ public class PlaceExt {
 		}
 		return builder.toString();
 	}
+
+	public static String render(Place place) {
+		if ( place == null ) {
+			throw new NullPointerException("Place is null");
+		}
+		StringBuilder builder = new StringBuilder();
+		if ( place._volume > 0 ) {
+			builder.append("v ").append(place._volume).append(" ");
+		}
+		builder.append("ch ").append(place._chapter);
+		if ( place._subChapter > 0 ) {
+			builder.append('.').append(place._subChapter);
+		}
+		if ( place._extra ) {
+			builder.append('*');
+		}
+		return builder.toString();
+	}
 }

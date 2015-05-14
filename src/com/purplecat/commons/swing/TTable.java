@@ -6,6 +6,8 @@ import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
@@ -13,22 +15,90 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import com.purplecat.commons.Point;
+import com.purplecat.commons.TTableColumn;
 import com.purplecat.commons.swing.IRowActionListener.ClickType;
 import com.purplecat.commons.swing.IRowActionListener.RowClickedEvent;
 import com.purplecat.commons.swing.IRowSelectionListener.RowSelectionEvent;
+import com.purplecat.commons.swing.renderer.ICellRendererFactory;
+import com.purplecat.commons.swing.renderer.IconCellRenderer;
 
 public class TTable<T> extends JTable {	
 	protected TTableModel<T> 	mTemplateModel 	= null;
 	protected int				mHighlightRow	= -1;
 //	protected Color				mHighlightColor	= null;
+	protected ICellRendererFactory mFactory;
 
-	public TTable() {		
+	public TTable(ICellRendererFactory factory) {
+		mFactory = factory;
 		new TableMouseListener(); 
 		this.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+	}
+	
+	public void setupColumns() {		
+        for (int i = getColumnCount()-1; i >= 0; i--) {            
+            TableColumn column = getColumnModel().getColumn(i);
+            TTableColumn type = mTemplateModel.getColumns()[i];
+            
+            Object hdrValue = mFactory.getHeaderValue(type);
+            Object longValue = type.getSampleValue();
+			TableCellRenderer renderer = mFactory.getRendererFromType(type);
+			TableCellEditor editor = mFactory.getEditorFromType(type);
+            
+			//Setting All Column Info
+            column.setHeaderValue(hdrValue);
+            
+            /*if ( longValue instanceof MyImage ) {
+            	longValue = BookmarkApplication.getImage(((MyImage)longValue).mKeyName);
+            }*/
+
+            if ( renderer == null ) {
+            	renderer = getDefaultRenderer(longValue.getClass());
+            }
+            else if ( renderer != null ) {
+				column.setCellRenderer(renderer);
+			}
+            
+            if ( editor != null ) {
+            	column.setCellEditor(editor);
+            }
+            
+            //Calculating Widths
+            	Component comp = renderer.getTableCellRendererComponent(this, longValue, false, false, 0, i);
+        	
+            	int cellWidth = comp.getPreferredSize().width;
+        	
+            	if ( hdrValue instanceof ImageIcon ) {
+	            	column.setHeaderRenderer(new IconCellRenderer(this, (ImageIcon)hdrValue));
+	
+	            	cellWidth += 4;
+	            	column.setWidth(cellWidth);
+	            	column.setMaxWidth(cellWidth);
+	            }
+	            else { 
+	                Component compHdr = getTableHeader()
+					.getDefaultRenderer()
+					.getTableCellRendererComponent(this, hdrValue, false, false, 0, 0);
+	            	int headerWidth = compHdr.getPreferredSize().width;            
+	            	int preferredWidth = Math.max(headerWidth, cellWidth);
+	            	
+	            	if ( comp instanceof JLabel ) {
+			            JLabel label = (JLabel)comp;
+			            String text = label.getText();
+		            
+		            //Calculating text width:
+				        if ( text.length() > 0 ) {
+			            	preferredWidth = Math.max(headerWidth, cellWidth);
+				        } 
+	            	}
+		            column.setPreferredWidth(preferredWidth);
+	            }
+        }    
 	}
 
 	@Override
@@ -97,6 +167,7 @@ public class TTable<T> extends JTable {
 	public void setTemplateModel(TTableModel<T> model) {
 		super.setModel(model);
 		mTemplateModel = model;
+		setupColumns();
 	}
 	
 	@Override
@@ -209,6 +280,7 @@ public class TTable<T> extends JTable {
 	
 	public static interface TTableModel<T> extends TableModel {
 		public T getItemAt(int row);
+		public TTableColumn[] getColumns();
 		public int indexOf(T item);
 	}
 	

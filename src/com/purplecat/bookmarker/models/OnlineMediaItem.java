@@ -52,5 +52,10 @@ public class OnlineMediaItem {
 	 * Loaded from website
 	 */
 	public String _websiteName;
+	
+	@Override
+	public String toString() {
+		return String.format("[OnlineMediaItem-%d [title=%s][url=%s][place=%s]]", _id, _displayTitle, _chapterUrl, _updatedPlace.toString());
+	}
 
 }

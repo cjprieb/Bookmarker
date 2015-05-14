@@ -9,6 +9,8 @@ import org.junit.Test;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.purplecat.bookmarker.models.EFavoriteState;
+import com.purplecat.bookmarker.models.EStoryState;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.services.ServiceException;
 import com.purplecat.bookmarker.services.databases.MediaDatabaseRepository;
@@ -102,6 +104,9 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			media._displayTitle = GetRandom.getString(6);
 			media._lastReadPlace._chapter++;
 			media._chapterURL = "http://sampleurl";
+			media._storyState = EStoryState.NEW_BOOKMARK;
+			media._notes = "Some notes!";
+			media._rating = EFavoriteState.GOOD;
 			media._lastReadDate = new DateTime();
 			media._isSaved = true;
 			_database.insert(media);
@@ -127,6 +132,10 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			media._displayTitle = GetRandom.getString(6);
 			media._lastReadPlace._chapter++;
 			media._chapterURL = "http://sampleurl";
+			media._storyState = EStoryState.MIDDLE_CHAPTER;
+			media._notes = "Some notes!";
+			media._rating = EFavoriteState.AWESOME;
+			media._isComplete = true;
 			media._lastReadDate = new DateTime();
 			
 			_database.update(media);
@@ -225,5 +234,11 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			Assert.assertEquals("last read date mismatch", expected._lastReadDate, actual._lastReadDate);
 		}
 		Assert.assertEquals("place mismatch", expected._lastReadPlace, actual._lastReadPlace);
+		//Assert.assertEquals("folder mismatch", expected._folder, actual._folder);
+		Assert.assertEquals("updated mismatch", expected._isUpdated, actual._isUpdated);
+		Assert.assertEquals("updated mismatch", expected._notes, actual._notes);
+		Assert.assertEquals("updated mismatch", expected._rating, actual._rating);
+		Assert.assertEquals("updated mismatch", expected._storyState, actual._storyState);
+		Assert.assertEquals("updated mismatch", expected._isComplete, actual._isComplete);
 	}
 }

@@ -7,12 +7,22 @@ public class Media extends BaseDatabaseItem {
 	public String _chapterURL;
 
 	public String _displayTitle;
+	
+	public boolean _isComplete;
 
 	public boolean _isSaved;
+	
+	public boolean _isUpdated;
 
 	public DateTime _lastReadDate;
 
 	public Place _lastReadPlace;
+	
+	public String _notes;
+	
+	public EFavoriteState _rating;
+	
+	public EStoryState _storyState;
 	
 	public Media() {
 		_lastReadPlace = new Place();

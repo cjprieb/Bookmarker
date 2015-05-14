@@ -74,7 +74,7 @@ public class DummyWebsiteList implements IWebsiteList {
 
 		@Override
 		public WebsiteInfo getInfo() {
-			return new WebsiteInfo();
+			return new WebsiteInfo("name", "url");
 		}
 
 		@Override

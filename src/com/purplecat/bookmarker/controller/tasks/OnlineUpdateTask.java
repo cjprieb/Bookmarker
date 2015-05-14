@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.google.inject.Inject;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
+import com.purplecat.bookmarker.services.ServiceException;
 import com.purplecat.bookmarker.services.databases.IOnlineMediaRepository;
 import com.purplecat.bookmarker.services.websites.IThreadObserver;
 import com.purplecat.bookmarker.services.websites.IWebsiteList;
@@ -29,25 +30,31 @@ public class OnlineUpdateTask {
 		
 		for ( IWebsiteParser scraper : _websites.getList() ) {
 			_observer.notifySiteStarted(scraper.getInfo());
-			List<OnlineMediaItem> siteList = scraper.load();
 			
-			//NOTE: check for duplicates and such here?
-			
-			_observer.notifySiteParsed(scraper.getInfo());
-			
-			for ( OnlineMediaItem item : siteList ) {
-				OnlineMediaItem found = _repository.findOrCreate(item);
-				if ( found != null ) {
-					list.add(found);
+			try {
+				List<OnlineMediaItem> siteList = scraper.load();
+				
+				//NOTE: check for duplicates and such here?
+				
+				_observer.notifySiteParsed(scraper.getInfo());
+				
+				for ( OnlineMediaItem item : siteList ) {
+					OnlineMediaItem found = _repository.findOrCreate(item);
+					if ( found != null ) {
+						list.add(found);
+					}
 				}
-			}
-			
-			//NOTE: reorder list here?
-			
-			for ( OnlineMediaItem item : list ) { //use found items, not parsed items.
-				item = scraper.loadItem(item);
-				_repository.update(item);
-				_observer.notifyItemParsed(item);
+				
+				//NOTE: reorder list here?
+				
+				for ( OnlineMediaItem item : list ) { //use found items, not parsed items.
+					item = scraper.loadItem(item);
+					_repository.update(item);
+					_observer.notifyItemParsed(item);
+				}
+			} 
+			catch (ServiceException e) {
+				//TODO: how to handle service exception
 			}
 			_observer.notifySiteFinished(scraper.getInfo());
 		}

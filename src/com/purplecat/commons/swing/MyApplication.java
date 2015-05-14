@@ -17,7 +17,6 @@ import com.purplecat.commons.swing.AppUtils.QuitOnCloseWindowListener;
 
 public abstract class MyApplication implements IQuitAction {	
 	
-	public static final String APP_NAME = "commons";
 	public static final String TAG = "MyApplication";
 	
 	public void startApplication() {		

@@ -1,5 +1,6 @@
 package com.purplecat.bookmarker.view.swing;
 
+import java.awt.EventQueue;
 import java.util.prefs.Preferences;
 
 import javax.swing.ImageIcon;
@@ -10,6 +11,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.commons.logs.ILoggingService;
+import com.purplecat.commons.swing.IImageRepository;
 import com.purplecat.commons.swing.MyApplication;
 import com.purplecat.commons.swing.Toolbox;
 import com.purplecat.commons.swing.renderer.ICellRendererFactory;
@@ -33,17 +35,22 @@ public class BookmarkerStart extends MyApplication {
 	
 	protected final Controller _controller;
 	protected final ICellRendererFactory _renderer;	
+	protected final IImageRepository _imageRepository;	
+	
+	protected GlassTimerPanel _timerGlassPane;
 	
 	@Inject
-	public BookmarkerStart(ILoggingService logging, Toolbox toolbox, Controller controller, ICellRendererFactory renderer) {
+	public BookmarkerStart(ILoggingService logging, Toolbox toolbox, Controller controller, ICellRendererFactory renderer, IImageRepository repository) {
 		super(logging, toolbox);
 		_controller = controller;
 		_renderer = renderer;
+		_imageRepository = repository;
 	}
 
 	@Override
 	protected void setupMainPanel(JFrame frame) {
-		frame.getContentPane().add(MainPanel.create(_controller, _renderer));
+		_timerGlassPane = new GlassTimerPanel(_imageRepository, frame);
+		frame.getContentPane().add(MainPanel.create(_controller, _renderer, _timerGlassPane));
 	}
 
 	@Override
@@ -69,6 +76,8 @@ public class BookmarkerStart extends MyApplication {
 
 	@Override
 	protected void finalInitialization() {
+		assert(EventQueue.isDispatchThread());
+		_timerGlassPane.startTimer();
 		_controller.loadSavedMedia();
 	}
 

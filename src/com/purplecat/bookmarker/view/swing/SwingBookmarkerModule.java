@@ -11,6 +11,7 @@ import com.purplecat.bookmarker.services.databases.UrlPatternDatabase;
 import com.purplecat.bookmarker.view.swing.renderers.BookmarkerRendererFactory;
 import com.purplecat.commons.logs.FileLog;
 import com.purplecat.commons.logs.ILoggingService;
+import com.purplecat.commons.swing.IImageRepository;
 import com.purplecat.commons.swing.MyApplication;
 import com.purplecat.commons.swing.SwingThreadPool;
 import com.purplecat.commons.swing.Toolbox;
@@ -35,6 +36,7 @@ public class SwingBookmarkerModule extends AbstractModule {
 		bind(Toolbox.class);
 		bind(IThreadPool.class).to(SwingThreadPool.class);
 		bind(ICellRendererFactory.class).to(BookmarkerRendererFactory.class);
+		bind(IImageRepository.class).to(BookmarkerImageRepository.class);
 		
 		//Main Class
 		bind(MyApplication.class).to(BookmarkerStart.class);

@@ -57,7 +57,7 @@ public class TTable<T> extends JTable {
             	longValue = BookmarkApplication.getImage(((MyImage)longValue).mKeyName);
             }*/
 
-            if ( renderer == null ) {
+            if ( renderer == null && longValue != null ) {
             	renderer = getDefaultRenderer(longValue.getClass());
             }
             else if ( renderer != null ) {
@@ -69,35 +69,36 @@ public class TTable<T> extends JTable {
             }
             
             //Calculating Widths
-            	Component comp = renderer.getTableCellRendererComponent(this, longValue, false, false, 0, i);
-        	
+    	
+        	if ( hdrValue instanceof ImageIcon ) {
+        		ImageIcon hdrImage = (ImageIcon)hdrValue;
+            	column.setHeaderRenderer(new IconCellRenderer(this, hdrImage));
+
+            	int cellWidth = hdrImage.getIconWidth() + 4;
+            	column.setWidth(cellWidth);
+            	column.setMaxWidth(cellWidth);
+            }
+            else if ( longValue != null ) { 
+            	Component comp = renderer.getTableCellRendererComponent(this, longValue, false, false, 0, i);            	
             	int cellWidth = comp.getPreferredSize().width;
-        	
-            	if ( hdrValue instanceof ImageIcon ) {
-	            	column.setHeaderRenderer(new IconCellRenderer(this, (ImageIcon)hdrValue));
-	
-	            	cellWidth += 4;
-	            	column.setWidth(cellWidth);
-	            	column.setMaxWidth(cellWidth);
-	            }
-	            else { 
-	                Component compHdr = getTableHeader()
-					.getDefaultRenderer()
-					.getTableCellRendererComponent(this, hdrValue, false, false, 0, 0);
-	            	int headerWidth = compHdr.getPreferredSize().width;            
-	            	int preferredWidth = Math.max(headerWidth, cellWidth);
-	            	
-	            	if ( comp instanceof JLabel ) {
-			            JLabel label = (JLabel)comp;
-			            String text = label.getText();
-		            
-		            //Calculating text width:
-				        if ( text.length() > 0 ) {
-			            	preferredWidth = Math.max(headerWidth, cellWidth);
-				        } 
-	            	}
-		            column.setPreferredWidth(preferredWidth);
-	            }
+            	
+                Component compHdr = getTableHeader()
+				.getDefaultRenderer()
+				.getTableCellRendererComponent(this, hdrValue, false, false, 0, 0);
+            	int headerWidth = compHdr.getPreferredSize().width;            
+            	int preferredWidth = Math.max(headerWidth, cellWidth);
+            	
+            	if ( comp instanceof JLabel ) {
+		            JLabel label = (JLabel)comp;
+		            String text = label.getText();
+	            
+	            //Calculating text width:
+			        if ( text.length() > 0 ) {
+		            	preferredWidth = Math.max(headerWidth, cellWidth);
+			        } 
+            	}
+	            column.setPreferredWidth(preferredWidth);
+            }
         }    
 	}
 

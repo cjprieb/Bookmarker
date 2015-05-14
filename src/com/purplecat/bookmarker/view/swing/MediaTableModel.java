@@ -69,6 +69,9 @@ public class MediaTableModel extends TAbstractTableModel<Media> {
 		else if ( column == DataFields.TITLE_COL ) { obj = item._displayTitle; }
 		else if ( column == DataFields.DATE_COL ) { obj = item._lastReadDate; }
 		else if ( column == DataFields.PLACE_COL ) { obj = item._lastReadPlace; }
+		else if ( column == DataFields.FAVORITE_COL ) { obj = item._rating; }
+		//else if ( column == DataFields.FLAG_COL ) { obj = item._isFlagged; }
+		else if ( column == DataFields.MEDIA_STATE_COL ) { obj = item; }
 		
 		return obj;
 	}

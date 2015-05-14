@@ -2,7 +2,10 @@ package com.purplecat.bookmarker.view.swing.renderers;
 
 import org.joda.time.DateTime;
 
+import com.purplecat.bookmarker.models.EFavoriteState;
+import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.Place;
+import com.purplecat.bookmarker.view.swing.BookmarkerImages;
 import com.purplecat.commons.TTableColumn;
 
 public class DataFields {
@@ -28,8 +31,12 @@ public class DataFields {
 //	public static final TTableColumn NEXT_EPISODE_COL = new TTableColumn(BookmarkOptions.APP_NAME, Resources.string.lblNextInstallment,	ScheduledItem.class, "");
 //	public static final TTableColumn WATCHED_COL	= new TTableColumn(BookmarkOptions.APP_NAME, "Watched", 	Boolean.class, true);	
 
-	public static final TTableColumn TITLE_COL 		= new TTableColumn("Title",	String.class,			"mmmmmmmmmmmmmmmmmmm");
-	public static final TTableColumn DATE_COL 		= new TTableColumn("Date", 	DateTime.class,			DateTime.now());
-	public static final TTableColumn TIME_COL 		= new TTableColumn("Time", 	DateTime.class,			DateTime.now());
-	public static final TTableColumn PLACE_COL 		= new TTableColumn("Place",	Place.class,			new Place(10, 100, 10, 0, false));
+	public static final TTableColumn DATE_COL 		= new TTableColumn("Date", 		DateTime.class,			DateTime.now());
+	public static final TTableColumn FAVORITE_COL	= new TTableColumn("Favorite", 	EFavoriteState.class,	BookmarkerImages.imgFavAverageId, true); //Is an image column
+	public static final TTableColumn FLAG_COL		= new TTableColumn("Flagged", 	Boolean.class,			BookmarkerImages.imgBlankFlagId, true);	 //Is an image column
+	public static final TTableColumn MEDIA_STATE_COL= new TTableColumn("Status", 	Media.class, 			BookmarkerImages.imgOpenBookId, true); //Is an image column
+	public static final TTableColumn PLACE_COL 		= new TTableColumn("Place",		Place.class,			new Place(10, 100, 10, 0, false));
+	public static final TTableColumn TIME_COL 		= new TTableColumn("Time", 		DateTime.class,			DateTime.now());
+	public static final TTableColumn TITLE_COL 		= new TTableColumn("Title",		String.class,			"mmmmmmmmmmmmmmmmmmm");
+
 }

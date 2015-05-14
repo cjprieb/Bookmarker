@@ -17,6 +17,9 @@ public class MediaTableControl {
 	
 	public MediaTableControl(ICellRendererFactory factory) {
 		_model = new MediaTableModel(new TTableColumn[] {
+				//DataFields.FLAG_COL,
+				DataFields.MEDIA_STATE_COL,
+				DataFields.FAVORITE_COL,
 				DataFields.TITLE_COL,
 				DataFields.PLACE_COL,
 				DataFields.DATE_COL

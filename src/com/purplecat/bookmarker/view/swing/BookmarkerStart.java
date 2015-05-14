@@ -55,8 +55,7 @@ public class BookmarkerStart extends MyApplication {
 
 	@Override
 	protected ImageIcon getApplicationIcon() {
-		// TODO Auto-generated method stub
-		return null;
+		return _imageRepository.getImage(BookmarkerImages.imgBookmarkerId);
 	}
 
 	@Override

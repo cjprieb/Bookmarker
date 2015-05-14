@@ -152,13 +152,19 @@ public class MediaDatabaseRepository implements IMediaRepository {
 		if ( item._isSaved == false ) {
 			throw new ServiceException("Media item must be 'saved'.", ServiceException.INVALID_DATA);
 		}
-		String sql = "INSERT INTO Media (MdDisplayTitle, SvdIsSaved) VALUES (@title, @saved)";
+		String sql = "INSERT INTO Media (MdDisplayTitle, MdIsComplete, SvdIsSaved, SvdStoryState, SvdRating, SvdNotes)"
+				+ " VALUES (@title, @complete, @saved, @state, @rating, @notes)";
 		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
 			conn.setAutoCommit(false);
 			
 			NamedStatement stmt = new NamedStatement(conn, sql);
 			stmt.setString("@title", item._displayTitle);
-			stmt.setBoolean("@saved", true);
+			stmt.setString("@title", item._displayTitle);
+			stmt.setBoolean("@complete", item._isComplete);
+			stmt.setBoolean("@saved", item._isSaved);
+			stmt.setInt("@state", item._storyState.getValue());
+			stmt.setInt("@rating", item._rating.getValue());
+			stmt.setString("@notes", item._notes);
 			item._id = stmt.executeInsert();
 			
 			updateHistory(conn, item);

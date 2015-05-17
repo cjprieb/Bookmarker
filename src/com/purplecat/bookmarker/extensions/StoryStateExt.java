@@ -27,7 +27,7 @@ public class StoryStateExt {
 		}*/
 		imageModel._imageKey = getImageKey(state, false); //false=not movie
 		
-		if ( view._isUpdated ) {
+		if ( view.isUpdated() ) {
 			imageModel._updateMode = StoryStateModel.FULL_UPDATE;
 					/*(folder == null || !folder.ignoreUpdates()) ? 
 					Options.get(BookmarkOptions.UPDATED_COLOR) : 

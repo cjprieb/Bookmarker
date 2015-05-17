@@ -2,16 +2,12 @@ package com.purplecat.bookmarker.test.dummies;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import com.purplecat.bookmarker.models.BaseDatabaseItem;
-import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.UrlPattern;
-import com.purplecat.bookmarker.services.ServiceException;
 import com.purplecat.bookmarker.services.databases.IItemRepository;
-import com.purplecat.bookmarker.services.databases.IMediaRepository;
 import com.purplecat.bookmarker.services.databases.IUrlPatternDatabase;
 import com.purplecat.commons.tests.Utils;
 
@@ -75,40 +71,6 @@ public abstract class SampleDatabaseService<T extends BaseDatabaseItem> implemen
 		@Override
 		public UrlPattern copy(UrlPattern item) {
 			return item.copy();
-		}
-	}
-	
-	public static class SampleMangaDatabase extends SampleDatabaseService<Media> implements IMediaRepository {
-		
-		public SampleMangaDatabase() {
-			Media manga1 = new Media();
-			insert(manga1);
-
-			Media manga2 = new Media();
-			insert(manga2);
-		}
-		
-		@Override
-		public Media copy(Media item) {
-			return item.copy();
-		}
-		
-		@Override
-		public List<Media> querySavedMedia() throws ServiceException {
-			// TODO Auto-generated method stub
-			return null;
-		}
-		@Override
-		public List<Media> queryByTitle(String title) {
-			// TODO Auto-generated method stub
-			Media m = new Media();
-			m._displayTitle = title;
-			m._id = 10;
-			insert(m);
-			
-			List<Media> list = new LinkedList<Media>();
-			list.add(m);
-			return list;
 		}
 	}
 

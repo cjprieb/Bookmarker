@@ -1,5 +1,7 @@
 package com.purplecat.bookmarker.models;
 
+import java.util.Comparator;
+
 
 public enum EFavoriteState {	
 	/*
@@ -20,14 +22,14 @@ public enum EFavoriteState {
 	
 	public int getValue() { return(mRelativeValue); }
 	
-	/*public static class FavoriteComparor implements Comparator<EFavoriteState> {
+	public static class FavoriteComparor implements Comparator<EFavoriteState> {
 		@Override
 		public int compare(EFavoriteState s1, EFavoriteState s2) {
-			return(Numbers.compareInt(s1.mRelativeValue, s2.mRelativeValue));
+			return(s1.mRelativeValue == s2.mRelativeValue ? 0 : (s1.mRelativeValue > s2.mRelativeValue ? 1 : -1));
 		}
 	}
 
-	public static String getFavoriteIconKey(EFavoriteState state, String key) {
+	/*public static String getFavoriteIconKey(EFavoriteState state, String key) {
 		if ( state != null ) {
 			switch ( state ) {
 				case MEH:		key = AppImages.imgFavMehId;		break;

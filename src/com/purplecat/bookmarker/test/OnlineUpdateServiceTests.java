@@ -22,8 +22,8 @@ import com.purplecat.bookmarker.test.dummies.DummyOnlineItemRepository;
 import com.purplecat.bookmarker.test.dummies.DummyThreadObserver;
 import com.purplecat.bookmarker.test.dummies.DummyWebsiteList;
 import com.purplecat.bookmarker.test.dummies.DummyWebsiteList.DummyWebsiteScraper;
-import com.purplecat.bookmarker.test.dummies.SampleDatabaseService.SampleMangaDatabase;
 import com.purplecat.bookmarker.test.dummies.SampleDatabaseService.SamplePatternDatabase;
+import com.purplecat.bookmarker.test.dummies.SampleMangaDatabase;
 import com.purplecat.commons.logs.ConsoleLog;
 import com.purplecat.commons.logs.ILoggingService;
 

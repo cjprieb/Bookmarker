@@ -235,7 +235,7 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 		}
 		Assert.assertEquals("place mismatch", expected._lastReadPlace, actual._lastReadPlace);
 		//Assert.assertEquals("folder mismatch", expected._folder, actual._folder);
-		Assert.assertEquals("updated mismatch", expected._isUpdated, actual._isUpdated);
+		//Assert.assertEquals("updated mismatch", expected._isUpdated, actual._isUpdated);
 		Assert.assertEquals("updated mismatch", expected._notes, actual._notes);
 		Assert.assertEquals("updated mismatch", expected._rating, actual._rating);
 		Assert.assertEquals("updated mismatch", expected._storyState, actual._storyState);

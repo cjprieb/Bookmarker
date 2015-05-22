@@ -2,7 +2,7 @@ package com.purplecat.bookmarker.models;
 
 import org.joda.time.DateTime;
 
-public class OnlineMediaItem {
+public class OnlineMediaItem extends BaseDatabaseItem implements Comparable<Media> {
 	
 	/**
 	 * Loaded from website
@@ -53,9 +53,60 @@ public class OnlineMediaItem {
 	 */
 	public String _websiteName;
 	
+	public boolean isUpdated() {
+		if ( _lastReadPlace != null ) {
+			return _lastReadPlace.compareTo(_updatedPlace) < 0;
+		}
+		else {
+			return false;
+		}
+	}
+	
 	@Override
 	public String toString() {
 		return String.format("[OnlineMediaItem-%d [title=%s][url=%s][place=%s]]", _id, _displayTitle, _chapterUrl, _updatedPlace.toString());
+	}
+	
+	@Override
+	public int compareTo(Media m) {
+		if ( isUpdated() == m.isUpdated() ) {
+			if ( isUpdated() ) {
+				if ( _updatedDate != null && m._updatedDate != null ) {
+					return m._updatedDate.compareTo(_updatedDate);
+				}
+				else {
+					return _updatedDate != null ? -1 : 1;
+				}
+			}
+			else {
+				if ( _lastReadDate != null && m._lastReadDate != null ) {
+					return m._lastReadDate.compareTo(_lastReadDate);
+				}
+				else {
+					return _lastReadDate != null ? -1 : 1;
+				}
+			}
+		}
+		else {
+			return isUpdated() ? -1 : 1;
+		}
+	}
+
+	public OnlineMediaItem copy() {
+		OnlineMediaItem media = new OnlineMediaItem();
+		media._id = this._id;
+		media._chapterUrl = this._chapterUrl;
+		media._displayTitle = this._displayTitle;
+		media._isSaved = this._isSaved;
+		media._lastReadDate = this._lastReadDate;
+		media._lastReadPlace = (this._lastReadPlace != null ? this._lastReadPlace.copy() : null);
+		media._updatedDate = this._updatedDate;
+		media._updatedPlace = this._updatedPlace.copy();
+		//media._storyState = this._storyState;
+		//media._notes = this._notes;
+		media._rating = this._rating;
+		//media._isComplete = this._isComplete;
+		return media;
 	}
 
 }

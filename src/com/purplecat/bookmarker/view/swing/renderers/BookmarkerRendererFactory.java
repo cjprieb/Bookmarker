@@ -26,9 +26,9 @@ public class BookmarkerRendererFactory implements ICellRendererFactory {
 		if ( column == DataFields.FAVORITE_COL ) {
 			obj = _repository.getImage(BookmarkerImages.imgEmblemHeartId);
 		}
-		else if ( column == DataFields.MEDIA_STATE_COL /*||
-				column == DataFields.SCHEDULED_STATE_COL || 
-				column == DataFields.ONLINE_STATE_COL */) {
+		else if ( column == DataFields.MEDIA_STATE_COL || 
+				column == DataFields.ONLINE_STATE_COL /*||
+				column == DataFields.SCHEDULED_STATE_COL  */) {
 			obj = _repository.getImage(BookmarkerImages.imgOpenBookId);
 		}
 		else if ( column == DataFields.FLAG_COL ) {
@@ -55,22 +55,22 @@ public class BookmarkerRendererFactory implements ICellRendererFactory {
 		else if ( type == DataFields.FAVORITE_COL ) {
 			renderer = new FavoriteStateIconRenderer(_repository);	
 		}		
-		else if ( type == DataFields.MEDIA_STATE_COL /*||
-				type == DataFields.SCHEDULED_STATE_COL || 
-						type == DataFields.ONLINE_STATE_COL*/ ) {
+		else if ( type == DataFields.MEDIA_STATE_COL || 
+				type == DataFields.ONLINE_STATE_COL /*||
+				type == DataFields.SCHEDULED_STATE_COL*/ ) {
 			renderer = new StoryStateIconRenderer(_repository);	
 		}
 		else if ( type == DataFields.FLAG_COL ) {
 			renderer = new FlagIconRenderer(_repository);	
+		}
+		else if ( type == DataFields.RATING_COL ) {
+			renderer = new RatingRenderer();	
 		}
 		/*else if ( type.getClassType() == GenreList.class ) {
 			renderer = new GenreRenderer();	
 		}
 		else if ( type == DataFields.NEXT_EPISODE_COL ) {
 			renderer = new EpisodeProgressRenderer();
-		}
-		else if ( type == DataFields.RATING_COL ) {
-			renderer = new RatingRenderer();	
 		}
 		else if ( type == DataFields.IGNORE_COL || type == DataFields.WATCHED_COL ) {
 			//Use default renderer for Boolean values.

@@ -11,21 +11,21 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
+import com.purplecat.bookmarker.services.databases.IOnlineMediaRepository;
 import com.purplecat.bookmarker.services.databases.MediaDatabaseRepository;
-import com.purplecat.bookmarker.services.databases.OnlineMediaDatabase;
 import com.purplecat.bookmarker.test.modules.TestDatabaseModule;
 import com.purplecat.commons.tests.GetRandom;
 
 public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	
-	private static OnlineMediaDatabase _database;
+	private static IOnlineMediaRepository _database;
 	private static MediaDatabaseRepository _savedDatabase;
 	private static List<OnlineMediaItem> _randomItems;
 
 	@BeforeClass
 	public static void setUpBeforeTest() throws Exception {
 		Injector injector = Guice.createInjector(new TestDatabaseModule());	
-		_database = injector.getInstance(OnlineMediaDatabase.class);
+		_database = injector.getInstance(IOnlineMediaRepository.class);
 		_savedDatabase = injector.getInstance(MediaDatabaseRepository.class);
 		
 		_randomItems = _database.query();
@@ -108,7 +108,7 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	}
 
 	@Test
-	public void testFind() {
+	public void testFindOrCreate() {
 		try {					
 			OnlineMediaItem item = GetRandom.getItem(_randomItems);
 			item._id = 0;

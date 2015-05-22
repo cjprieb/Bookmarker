@@ -38,5 +38,7 @@ public class DataFields {
 	public static final TTableColumn PLACE_COL 		= new TTableColumn("Place",		Place.class,			new Place(10, 100, 10, 0, false));
 	public static final TTableColumn TIME_COL 		= new TTableColumn("Time", 		DateTime.class,			DateTime.now());
 	public static final TTableColumn TITLE_COL 		= new TTableColumn("Title",		String.class,			"mmmmmmmmmmmmmmmmmmm");
+	public static final TTableColumn RATING_COL		= new TTableColumn("Rating", 	Double.class,			(Double)5.00);
+	public static final TTableColumn ONLINE_STATE_COL= new TTableColumn("Status", 	Media.class, 			BookmarkerImages.imgOpenBookId, true); //Is an image column
 
 }

@@ -9,13 +9,13 @@ import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.UrlPatternResult;
 import com.purplecat.bookmarker.services.databases.IMediaRepository;
 
-public class DatabaseMangaService {
+public class SavedMediaService {
 	
 	public final IMediaRepository _database;
 	public final UrlPatternService _patterns;
 	
 	@Inject
-	public DatabaseMangaService(IMediaRepository database, UrlPatternService patterns) {
+	public SavedMediaService(IMediaRepository database, UrlPatternService patterns) {
 		_database = database;
 		_patterns = patterns;
 	}

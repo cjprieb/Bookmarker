@@ -10,33 +10,22 @@ import org.junit.Test;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.purplecat.bookmarker.models.Media;
-import com.purplecat.bookmarker.services.DatabaseMangaService;
+import com.purplecat.bookmarker.services.SavedMediaService;
 import com.purplecat.bookmarker.services.ServiceException;
 import com.purplecat.bookmarker.test.modules.TestBookmarkerModule;
 import com.purplecat.commons.extensions.DateTimeFormats;
 import com.purplecat.commons.tests.Matchers;
 
-public class DatabaseMangaServiceTests {
+public class MediaServiceTests {
 	
-	private DatabaseMangaService _service;
+	private SavedMediaService _service;
 
 	@Before
 	public void setUpBeforeTest() throws Exception {
 		Injector injector = Guice.createInjector(new TestBookmarkerModule());
 		
-		_service = injector.getInstance(DatabaseMangaService.class);
+		_service = injector.getInstance(SavedMediaService.class);
 	}
-
-	/*@Test
-	public void testList() {
-		try {
-			List<Media> list = _service.list();
-			Assert.assertNotNull("List is null", list);
-			Assert.assertTrue("List has no elements", list.size() > 0);
-		} catch (ServiceException e) {
-			fail("Exception thrown: " + e.getMessage());
-		}		
-	}*/
 
 	@Test
 	public void testAdd() {

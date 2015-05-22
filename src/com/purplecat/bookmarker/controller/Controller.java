@@ -10,7 +10,7 @@ import com.purplecat.bookmarker.controller.observers.SampleTaskObserver;
 import com.purplecat.bookmarker.controller.tasks.SampleTask;
 import com.purplecat.bookmarker.controller.tasks.SavedMediaLoadTask;
 import com.purplecat.bookmarker.models.Media;
-import com.purplecat.bookmarker.services.DatabaseMangaService;
+import com.purplecat.bookmarker.services.SavedMediaService;
 import com.purplecat.commons.threads.IThreadPool;
 
 @Singleton
@@ -18,13 +18,13 @@ public class Controller {
 	public static final String TAG = "Controller";
 	
 	private final IThreadPool _threadPool;	
-	private final DatabaseMangaService _mediaService;
+	private final SavedMediaService _mediaService;
 	
 	private final List<SampleTaskObserver> _sampleTaskObservers;
 	private final List<IListLoadedObserver<Media>> _mediaLoadObservers;
 	
 	@Inject
-	public Controller(IThreadPool threadPool, DatabaseMangaService mangaService) {
+	public Controller(IThreadPool threadPool, SavedMediaService mangaService) {
 		_threadPool = threadPool;		
 		_mediaService = mangaService;
 		

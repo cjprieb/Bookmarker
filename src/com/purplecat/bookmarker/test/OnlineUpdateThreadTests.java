@@ -28,7 +28,7 @@ import com.purplecat.commons.logs.ConsoleLog;
 import com.purplecat.commons.logs.ILoggingService;
 
 
-public class OnlineUpdateServiceTests {
+public class OnlineUpdateThreadTests {
 	
 	public class TestWebsiteScrapingModule extends AbstractModule {
 

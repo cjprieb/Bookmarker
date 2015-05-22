@@ -7,16 +7,14 @@ import java.util.Map;
 
 import com.purplecat.bookmarker.models.BaseDatabaseItem;
 import com.purplecat.bookmarker.models.UrlPattern;
-import com.purplecat.bookmarker.services.databases.IItemRepository;
 import com.purplecat.bookmarker.services.databases.IUrlPatternDatabase;
 import com.purplecat.commons.tests.Utils;
 
-public abstract class SampleDatabaseService<T extends BaseDatabaseItem> implements IItemRepository<T> {
+public abstract class SampleDatabaseService<T extends BaseDatabaseItem> {
 	
 	Map<Long, T> _map = new HashMap<Long, T>();
 	int _maxIndex = 0;
 
-	@Override
 	public T queryById(long id) {
 		if ( _map.containsKey(id) ) {
 			return copy(_map.get(id));
@@ -24,7 +22,6 @@ public abstract class SampleDatabaseService<T extends BaseDatabaseItem> implemen
 		return null;
 	}
 
-	@Override
 	public List<T> query() {
 		List<T> list = new ArrayList<T>();
 		for ( T item : _map.values() ) {
@@ -33,7 +30,6 @@ public abstract class SampleDatabaseService<T extends BaseDatabaseItem> implemen
 		return list; 
 	}
 
-	@Override
 	public void insert(T item) {
 		if ( item._id <= 0 ){
 			_maxIndex++;
@@ -42,12 +38,10 @@ public abstract class SampleDatabaseService<T extends BaseDatabaseItem> implemen
 		_map.put(item._id, item);
 	}
 
-	@Override
 	public void update(T item) {
 		_map.put(item._id, item);
 	}
 
-	@Override
 	public void delete(long id) {
 		_map.remove(id);
 	}

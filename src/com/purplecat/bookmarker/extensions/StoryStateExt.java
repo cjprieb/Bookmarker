@@ -2,6 +2,7 @@ package com.purplecat.bookmarker.extensions;
 
 import com.purplecat.bookmarker.models.EStoryState;
 import com.purplecat.bookmarker.models.Media;
+import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.StoryStateModel;
 import com.purplecat.bookmarker.view.swing.BookmarkerImages;
 
@@ -35,6 +36,32 @@ public class StoryStateExt {
 		}
 		else {
 			imageModel._updateMode = StoryStateModel.NOT_UPDATED;
+		}
+
+		return(imageModel);		
+	}
+	
+	public static StoryStateModel getView(OnlineMediaItem view) {
+		StoryStateModel imageModel = new StoryStateModel();
+		
+		if ( view._id > 0 ) {
+			
+			//EStoryState state = view._isComplete ? EStoryState.FINISHED_BOOKMARK : EStoryState.LAST_AVAILABLE_CHAPTER;
+			/*BookmarkFolder folder = view.getFolder();
+			if (  folder != null ) {
+				state =  folder.getStoryState();
+			}*/
+			imageModel._imageKey = getImageKey(EStoryState.LAST_AVAILABLE_CHAPTER, false); //false=not movie
+			
+			if ( view._isSaved && view.isUpdated() ) {
+				imageModel._updateMode = StoryStateModel.FULL_UPDATE;
+						/*(folder == null || !folder.ignoreUpdates()) ? 
+						Options.get(BookmarkOptions.UPDATED_COLOR) : 
+						Options.get(BookmarkOptions.MUTED_UPDATED_COLOR);*/
+			}
+			else {
+				imageModel._updateMode = StoryStateModel.NOT_UPDATED;
+			}
 		}
 
 		return(imageModel);		

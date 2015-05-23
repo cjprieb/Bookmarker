@@ -8,6 +8,7 @@ import javax.swing.ImageIcon;
 
 import com.purplecat.bookmarker.extensions.StoryStateExt;
 import com.purplecat.bookmarker.models.Media;
+import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.StoryStateModel;
 import com.purplecat.bookmarker.view.swing.BookmarkerImages;
 import com.purplecat.bookmarker.view.swing.DefaultColors;
@@ -28,14 +29,12 @@ public class StoryStateIconRenderer extends EnablableTableCellRenderer {
 		if ( value != null ) {		
 			if ( value instanceof Media ) {
 				image = StoryStateExt.getView((Media)value);
-			}		
+			}			
+			else if ( value instanceof OnlineMediaItem ) {
+				image = StoryStateExt.getView((OnlineMediaItem)value);
+			}	
 			/*else if ( value instanceof ScheduledItem ) {
 				image = StoryStateFormat.getStoryStateImage((ScheduledItem)value);
-				this.setIcon(BookmarkApplication.getImage(image.mImageKey));
-			}		
-			else if ( value instanceof UpdateOnlineBookmark ) {
-				image = StoryStateFormat.getStoryStateImage((UpdateOnlineBookmark)value);
-				this.setIcon(getUpdateIcon(image));
 			}*/
 		}
 		

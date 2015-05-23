@@ -203,7 +203,7 @@ public class BatotoWebsite implements IWebsiteParser {
 	@Override
 	public OnlineMediaItem loadItem(OnlineMediaItem item) throws ServiceException {
 		// TODO Auto-generated method stub
-		return null;
+		return item;
 	}
 
 }

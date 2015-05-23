@@ -19,6 +19,10 @@ public class SavedMediaService {
 		_database = database;
 		_patterns = patterns;
 	}
+	
+	public IMediaRepository getRepository() {
+		return _database;
+	}
 
 	public void add(Media item) throws ServiceException {
 		_database.insert(item);

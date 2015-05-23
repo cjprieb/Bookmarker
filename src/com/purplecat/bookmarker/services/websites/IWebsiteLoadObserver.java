@@ -5,7 +5,7 @@ import java.util.List;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.WebsiteInfo;
 
-public interface IThreadObserver {
+public interface IWebsiteLoadObserver {
 
 	public void notifyLoadStarted();
 	

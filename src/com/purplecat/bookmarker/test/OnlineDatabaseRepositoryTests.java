@@ -31,6 +31,15 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 		_randomItems = _database.query();
 		Assert.assertNotNull("List is null", _randomItems);
 		Assert.assertTrue("List has no elements", _randomItems.size() > 0);
+		
+		boolean hasSaved = false;
+		for(OnlineMediaItem item : _randomItems) {
+			if ( item._isSaved ) {
+				hasSaved = true;
+				break;
+			}
+		}
+		Assert.assertTrue("List has no saved elements", hasSaved);
 	}
 
 	@Test

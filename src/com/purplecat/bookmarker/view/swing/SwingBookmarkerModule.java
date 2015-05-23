@@ -5,11 +5,17 @@ import com.google.inject.name.Names;
 import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.services.UrlPatternService;
 import com.purplecat.bookmarker.services.databases.IMediaRepository;
+import com.purplecat.bookmarker.services.databases.IOnlineMediaRepository;
 import com.purplecat.bookmarker.services.databases.IUrlPatternDatabase;
 import com.purplecat.bookmarker.services.databases.MediaDatabaseRepository;
+import com.purplecat.bookmarker.services.databases.OnlineMediaDatabase;
 import com.purplecat.bookmarker.services.databases.UrlPatternDatabase;
+import com.purplecat.bookmarker.services.websites.DefaultWebsiteList;
+import com.purplecat.bookmarker.services.websites.IWebsiteList;
+import com.purplecat.bookmarker.services.websites.IWebsiteLoadObserver;
+import com.purplecat.bookmarker.services.websites.WebsiteThreadObserver;
 import com.purplecat.bookmarker.view.swing.renderers.BookmarkerRendererFactory;
-import com.purplecat.commons.logs.FileLog;
+import com.purplecat.commons.logs.ConsoleLog;
 import com.purplecat.commons.logs.ILoggingService;
 import com.purplecat.commons.swing.IImageRepository;
 import com.purplecat.commons.swing.MyApplication;
@@ -23,13 +29,17 @@ public class SwingBookmarkerModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		//Utility Items
-		bind(ILoggingService.class).to(FileLog.class);
+		//bind(ILoggingService.class).to(FileLog.class);
+		bind(ILoggingService.class).to(ConsoleLog.class);
 		
 		//Database/Repository items
 		bind(IUrlPatternDatabase.class).to(UrlPatternDatabase.class);
-		bind(UrlPatternService.class);
+		bind(IOnlineMediaRepository.class).to(OnlineMediaDatabase.class);
 		bind(IMediaRepository.class).to(MediaDatabaseRepository.class);
+		bind(UrlPatternService.class);
 		bind(Controller.class);
+		bind(IWebsiteLoadObserver.class).to(WebsiteThreadObserver.class);
+		bind(IWebsiteList.class).to(DefaultWebsiteList.class);
 		bind(String.class).annotatedWith(Names.named("JDBC URL")).toInstance("jdbc:sqlite:../BookmarkView/databases/bookmarker.db");
 		
 		//Swing Items

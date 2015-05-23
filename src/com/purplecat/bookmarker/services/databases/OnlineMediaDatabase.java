@@ -53,6 +53,7 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 		item._chapterUrl = result.getString("_chapterUrl");
 		item._newlyAdded = result.getBoolean("_newlyAdded");
 		item._isIgnored = result.getBoolean("_isIgnored");
+		item._isSaved = result.getBoolean("_isSaved");
 		item._rating = result.getDouble("_rating");
 		item._websiteName = result.getString("_websiteName");
 		item._displayTitle = result.getString("_displayTitle");
@@ -111,6 +112,7 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 			}
 			
 			conn.setAutoCommit(false);
+			
 			if (matches.size() == 0) {
 				//Insert new Media item
 				item._mediaId = createMedia(conn, item);
@@ -121,7 +123,14 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 			}
 			else {
 				insert(conn, item);
-				result = item;
+				if ( item._mediaId > 0 ) {
+					//matching media was found, but not matching online media, 
+					// so reload after insert to load media-specific fields
+					result = findExistingOnlineItem(conn, item);
+				}
+				else {
+					result = item;
+				}
 			}
 			
 			conn.commit();

@@ -10,6 +10,10 @@ import com.purplecat.bookmarker.services.databases.IUrlPatternDatabase;
 import com.purplecat.bookmarker.services.databases.MediaDatabaseRepository;
 import com.purplecat.bookmarker.services.databases.OnlineMediaDatabase;
 import com.purplecat.bookmarker.services.databases.UrlPatternDatabase;
+import com.purplecat.bookmarker.services.websites.DefaultWebsiteList;
+import com.purplecat.bookmarker.services.websites.IWebsiteList;
+import com.purplecat.bookmarker.services.websites.IWebsiteLoadObserver;
+import com.purplecat.bookmarker.services.websites.WebsiteThreadObserver;
 import com.purplecat.bookmarker.test.DatabaseConnectorTestBase;
 import com.purplecat.commons.logs.ConsoleLog;
 import com.purplecat.commons.logs.ILoggingService;
@@ -30,6 +34,8 @@ public class TestDatabaseModule extends AbstractModule {
 		bind(UrlPatternService.class);
 		bind(IMediaRepository.class).to(MediaDatabaseRepository.class);
 		bind(Controller.class);
+		bind(IWebsiteLoadObserver.class).to(WebsiteThreadObserver.class);
+		bind(IWebsiteList.class).to(DefaultWebsiteList.class);
 		bind(String.class).annotatedWith(Names.named("JDBC URL")).toInstance("jdbc:sqlite:" + DatabaseConnectorTestBase.TEST_DATABASE_PATH);
 		
 		//Swing Items

@@ -7,6 +7,10 @@ import com.purplecat.bookmarker.services.UrlPatternService;
 import com.purplecat.bookmarker.services.databases.IMediaRepository;
 import com.purplecat.bookmarker.services.databases.IOnlineMediaRepository;
 import com.purplecat.bookmarker.services.databases.IUrlPatternDatabase;
+import com.purplecat.bookmarker.services.databases.OnlineMediaDatabase;
+import com.purplecat.bookmarker.services.websites.DefaultWebsiteList;
+import com.purplecat.bookmarker.services.websites.IWebsiteList;
+import com.purplecat.bookmarker.services.websites.WebsiteThreadObserver;
 import com.purplecat.bookmarker.test.DatabaseConnectorTestBase;
 import com.purplecat.bookmarker.test.dummies.SampleDatabaseService.SamplePatternDatabase;
 import com.purplecat.bookmarker.test.dummies.SampleMangaDatabase;
@@ -26,10 +30,13 @@ public class TestBookmarkerModule extends AbstractModule {
 		
 		//Database/Repository items
 		bind(IUrlPatternDatabase.class).to(SamplePatternDatabase.class);
+		bind(IOnlineMediaRepository.class).to(OnlineMediaDatabase.class);
 		bind(UrlPatternService.class);
 		bind(IMediaRepository.class).to(SampleMangaDatabase.class);
 		bind(IOnlineMediaRepository.class).to(SampleOnlineMangaDatabase.class);
 		bind(Controller.class);
+		bind(WebsiteThreadObserver.class);
+		bind(IWebsiteList.class).to(DefaultWebsiteList.class);
 		bind(String.class).annotatedWith(Names.named("JDBC URL")).toInstance("jdbc:sqlite:" + DatabaseConnectorTestBase.TEST_DATABASE_PATH);
 		
 		//Swing Items

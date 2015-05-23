@@ -5,10 +5,10 @@ import java.util.List;
 import com.google.inject.Singleton;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.WebsiteInfo;
-import com.purplecat.bookmarker.services.websites.IThreadObserver;
+import com.purplecat.bookmarker.services.websites.IWebsiteLoadObserver;
 
 @Singleton
-public class DummyThreadObserver implements IThreadObserver {
+public class DummyThreadObserver implements IWebsiteLoadObserver {
 	private boolean _loadStarted;
 	private boolean _siteStarted;
 	private boolean _siteLoaded;

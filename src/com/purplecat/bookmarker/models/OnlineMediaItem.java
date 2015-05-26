@@ -2,7 +2,7 @@ package com.purplecat.bookmarker.models;
 
 import org.joda.time.DateTime;
 
-public class OnlineMediaItem extends BaseDatabaseItem implements Comparable<Media> {
+public class OnlineMediaItem extends BaseDatabaseItem implements Comparable<OnlineMediaItem> {
 	
 	/**
 	 * Loaded from website
@@ -68,7 +68,7 @@ public class OnlineMediaItem extends BaseDatabaseItem implements Comparable<Medi
 	}
 	
 	@Override
-	public int compareTo(Media m) {
+	public int compareTo(OnlineMediaItem m) {
 		if ( isUpdated() == m.isUpdated() ) {
 			if ( isUpdated() ) {
 				if ( _updatedDate != null && m._updatedDate != null ) {
@@ -107,6 +107,12 @@ public class OnlineMediaItem extends BaseDatabaseItem implements Comparable<Medi
 		media._rating = this._rating;
 		//media._isComplete = this._isComplete;
 		return media;
+	}
+
+	public void updateFrom(Media item) {
+		this._isSaved = item._isSaved;
+		this._lastReadDate = item._lastReadDate;
+		this._lastReadPlace = (item._lastReadPlace != null ? item._lastReadPlace.copy() : null);
 	}
 
 }

@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import java.util.List;
-
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,32 +37,6 @@ public class OnlineTableViews {
 		
 		Injector injector = Guice.createInjector(new TestBookmarkerModule());
 		_repository = injector.getInstance(IOnlineMediaRepository.class);
-	}
-	
-	@Test 
-	public void onlineTableModel_ListLoaded() {
-		UpdateMediaTableModel model = new UpdateMediaTableModel(_columns);
-		
-		List<OnlineMediaItem> updateList = _repository.query();
-		model.getObserver().notifyListLoaded(updateList);		
-		assertEquals(updateList.size(), model.getRowCount());
-		
-		//List should not be duplicated:
-		model.getObserver().notifyListLoaded(updateList);
-		assertEquals(updateList.size(), model.getRowCount());			
-	}
-	
-	@Test 
-	public void onlineTableModel_GetColumns() {
-		UpdateMediaTableModel model = new UpdateMediaTableModel(_columns);
-		
-		List<OnlineMediaItem> updateList = _repository.query();
-		model.getObserver().notifyListLoaded(updateList);
-		
-		int row = GetRandom.getInteger(0, model.getRowCount()-1);
-		for(int i = 0; i < _columns.length; i++ ) {
-			assertNotNull(model.getValueAt(row, 0));
-		}
 	}
 	
 	@Test 

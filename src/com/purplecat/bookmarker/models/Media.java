@@ -87,6 +87,11 @@ public class Media extends BaseDatabaseItem implements Comparable<Media> {
 		media._isComplete = this._isComplete;
 		return media;
 	}
+
+	public void updateFrom(OnlineMediaItem item) {
+		this._updatedDate = item._updatedDate;
+		this._updatedPlace = item._updatedPlace;
+	}
 	
 	public static class FavoriteComparor implements Comparator<EFavoriteState> {
 		@Override

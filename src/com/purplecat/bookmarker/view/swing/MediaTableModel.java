@@ -3,8 +3,12 @@ package com.purplecat.bookmarker.view.swing;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.purplecat.bookmarker.controller.observers.IItemChangedObserver;
 import com.purplecat.bookmarker.controller.observers.IListLoadedObserver;
 import com.purplecat.bookmarker.models.Media;
+import com.purplecat.bookmarker.models.OnlineMediaItem;
+import com.purplecat.bookmarker.models.WebsiteInfo;
+import com.purplecat.bookmarker.services.websites.IWebsiteLoadObserver;
 import com.purplecat.bookmarker.view.swing.renderers.DataFields;
 import com.purplecat.commons.TTableColumn;
 import com.purplecat.commons.swing.TTable.TAbstractTableModel;
@@ -80,13 +84,56 @@ public class MediaTableModel extends TAbstractTableModel<Media> {
 		return new MediaListObserver();
 	}
 	
-	public class MediaListObserver implements IListLoadedObserver<Media> {
+	public class MediaListObserver implements IItemChangedObserver<Media>, IListLoadedObserver<Media>, IWebsiteLoadObserver {
 		@Override
 		public void notifyListLoaded(List<Media> list) {
 			_backingList.clear();
 			_backingList.addAll(list);
 			MediaTableModel.this.fireTableDataChanged();
-		}		
+		}
+		
+		@Override
+		public void notifyItemUpdated(Media item) {
+			int iIndex = 0;
+			for ( Media existingItem : _backingList ) {
+				if ( existingItem._id == item._id ) {
+					_backingList.set(iIndex, item);
+					MediaTableModel.this.fireTableRowsUpdated(iIndex, iIndex);
+					break;
+				}
+				iIndex++;
+			}
+		}
+		
+		@Override
+		public void notifyLoadStarted() {}
+
+		@Override
+		public void notifySiteStarted(WebsiteInfo site) {}
+
+		@Override
+		public void notifySiteParsed(WebsiteInfo site) {}
+
+		@Override
+		public void notifyItemParsed(OnlineMediaItem item) {
+			int iIndex = 0;
+			for ( Media existingItem : _backingList ) {
+				if ( existingItem._id == item._mediaId ) {
+					existingItem.updateFrom(item);
+					MediaTableModel.this.fireTableRowsUpdated(iIndex, iIndex);
+					break;
+				}
+				iIndex++;
+			}
+		}
+
+		@Override
+		public void notifySiteFinished(WebsiteInfo site) {}
+
+		@Override
+		public void notifyLoadFinished(List<OnlineMediaItem> list) {
+			//Filter by Updated?
+		}	
 	}
 	
 }

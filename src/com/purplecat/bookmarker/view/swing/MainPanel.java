@@ -1,8 +1,6 @@
 package com.purplecat.bookmarker.view.swing;
 
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.GroupLayout;
@@ -12,6 +10,8 @@ import javax.swing.JPanel;
 import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.controller.observers.IListLoadedObserver;
 import com.purplecat.bookmarker.models.Media;
+import com.purplecat.bookmarker.view.swing.actions.LoadUpdatesAction;
+import com.purplecat.bookmarker.view.swing.actions.StopUpdatesAction;
 import com.purplecat.commons.swing.renderer.ICellRendererFactory;
 
 public class MainPanel {
@@ -22,9 +22,12 @@ public class MainPanel {
 		
 		MediaTableControl savedMediaTableControl = new MediaTableControl(rendererFactory);
 		ctrl.observeSavedMediaLoading(savedMediaTableControl.getModel().getObserver());
+		ctrl.observeOnlineThreadLoading(savedMediaTableControl.getModel().getObserver());
+		ctrl.observeSavedMediaUpdate(savedMediaTableControl.getModel().getObserver());
 		
-		UpdateMediaTableControl updateMediaTableControl = new UpdateMediaTableControl(rendererFactory);
+		UpdateMediaTableControl updateMediaTableControl = new UpdateMediaTableControl(rendererFactory, ctrl);
 		ctrl.observeOnlineThreadLoading(updateMediaTableControl.getModel().getObserver());
+		ctrl.observeSavedMediaUpdate(updateMediaTableControl.getModel().getObserver());
 		
 		JButton loadUpdatesButton = new JButton("Load Updates");
 		loadUpdatesButton.addActionListener(new LoadUpdatesAction(ctrl));
@@ -37,6 +40,7 @@ public class MainPanel {
 		ctrl.observeSavedMediaLoading(new GlassPanelListObserver(timerGlassPane));
 		
 		GroupLayout layout = new GroupLayout(panel);
+		panel.setLayout(layout);
 		layout.setHorizontalGroup(layout.createSequentialGroup()
 				.addContainerGap()
 				.addComponent(savedMediaTableControl.getComponent(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
@@ -80,31 +84,5 @@ public class MainPanel {
 			_glassPanel.stopTimer();
 			_glassPanel.setVisible(false);
 		}		
-	}
-	
-	public static class LoadUpdatesAction implements ActionListener {
-		Controller _controller;
-		
-		public LoadUpdatesAction(Controller ctrl) {
-			_controller = ctrl;
-		}
-		
-		@Override 
-		public void actionPerformed(ActionEvent e) {
-			_controller.loadUpdateMedia();		
-		}
-	}
-	
-	public static class StopUpdatesAction implements ActionListener {
-		Controller _controller;
-		
-		public StopUpdatesAction(Controller ctrl) {
-			_controller = ctrl;
-		}
-		
-		@Override 
-		public void actionPerformed(ActionEvent e) {
-			_controller.stopUpdates();		
-		}
 	}
 }

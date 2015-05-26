@@ -2,13 +2,19 @@ package com.purplecat.bookmarker.view.swing;
 
 import java.awt.Component;
 
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.table.TableRowSorter;
 
+import com.google.inject.Inject;
+import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
+import com.purplecat.bookmarker.view.swing.actions.UpdateMediaFromItemAction;
 import com.purplecat.bookmarker.view.swing.renderers.DataFields;
 import com.purplecat.commons.TTableColumn;
 import com.purplecat.commons.swing.TTable;
+import com.purplecat.commons.swing.TablePopupCreator;
 import com.purplecat.commons.swing.renderer.ICellRendererFactory;
 
 public class UpdateMediaTableControl {
@@ -17,8 +23,11 @@ public class UpdateMediaTableControl {
 	private final JScrollPane _scroll;
 	private final TableRowSorter<UpdateMediaTableModel> _sorter;
 	private final TTableColumn[] _columns;
+	private final Controller _controller;
 	
-	public UpdateMediaTableControl(ICellRendererFactory factory) {
+	@Inject
+	public UpdateMediaTableControl(ICellRendererFactory factory, Controller ctrl) {
+		_controller = ctrl;
 		_columns = new TTableColumn[] {
 				DataFields.TIME_COL,
 				DataFields.ONLINE_STATE_COL,
@@ -31,11 +40,21 @@ public class UpdateMediaTableControl {
 		_scroll = new JScrollPane(_table);
 		_sorter = new OnlineBookmarkSorter(_model);
 		_table.setRowSorter(_sorter);
+		
+		setupPopupMenu();
 	}
 	
 	public UpdateMediaTableModel getModel() {
 		return _model;
 	}
+	
+	private void setupPopupMenu() {
+		JPopupMenu menu = new JPopupMenu();
+
+		menu.add(new JMenuItem(new UpdateMediaFromItemAction(_table, _controller)));
+		
+		_table.addMouseListener(new TablePopupCreator(_table, menu));
+	}	
 	
 	public Component getComponent() {
 		return _scroll;

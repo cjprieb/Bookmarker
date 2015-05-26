@@ -5,7 +5,8 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
-import com.purplecat.bookmarker.controller.observers.IListLoadedObserver;
+import com.purplecat.bookmarker.controller.observers.IItemChangedObserver;
+import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.WebsiteInfo;
 import com.purplecat.bookmarker.services.websites.IWebsiteLoadObserver;
@@ -113,26 +114,37 @@ public class UpdateMediaTableModel extends TAbstractTableModel<OnlineMediaItem> 
 		}
 		if ( bFound ) {
 			_backingList.set(iIndex, updatedItem);
+			UpdateMediaTableModel.this.fireTableRowsUpdated(iIndex, iIndex);
 		}
 		else {
 			iIndex = _backingList.size();
 			_backingList.add(updatedItem);
+			UpdateMediaTableModel.this.fireTableRowsInserted(iIndex, iIndex);
 		}
-		UpdateMediaTableModel.this.fireTableRowsInserted(iIndex, iIndex);
+	}
+	
+	private void updateItem(Media item) {
+		int iIndex = 0;
+		for ( OnlineMediaItem onlineItem : _backingList ) {
+			if ( onlineItem._mediaId == item._id ) {
+				onlineItem.updateFrom(item);
+				UpdateMediaTableModel.this.fireTableRowsUpdated(iIndex, iIndex);
+				break;
+			}
+			iIndex++;
+		}
 	}
 	
 	public OnlineMediaListObserver getObserver() {
 		return new OnlineMediaListObserver();
 	}
 	
-	public class OnlineMediaListObserver implements IListLoadedObserver<OnlineMediaItem>, IWebsiteLoadObserver {
+	public class OnlineMediaListObserver implements IItemChangedObserver<Media>, IWebsiteLoadObserver {
 		@Override
-		public void notifyListLoaded(List<OnlineMediaItem> list) {
-			_backingList.clear();
-			_backingList.addAll(list);
-			UpdateMediaTableModel.this.fireTableDataChanged();
+		public void notifyItemUpdated(Media item) {
+			updateItem(item);
 		}
-
+		
 		@Override
 		public void notifyLoadStarted() {}
 

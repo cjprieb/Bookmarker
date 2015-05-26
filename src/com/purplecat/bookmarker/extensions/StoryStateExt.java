@@ -53,8 +53,8 @@ public class StoryStateExt {
 			}*/
 			imageModel._imageKey = getImageKey(EStoryState.LAST_AVAILABLE_CHAPTER, false); //false=not movie
 			
-			if ( view._isSaved && view.isUpdated() ) {
-				imageModel._updateMode = StoryStateModel.FULL_UPDATE;
+			if ( view._isSaved ) {
+				imageModel._updateMode = view.isUpdated() ? StoryStateModel.FULL_UPDATE : StoryStateModel.MUTED_UPDATE;
 						/*(folder == null || !folder.ignoreUpdates()) ? 
 						Options.get(BookmarkOptions.UPDATED_COLOR) : 
 						Options.get(BookmarkOptions.MUTED_UPDATED_COLOR);*/

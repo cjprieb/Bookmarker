@@ -18,14 +18,10 @@ public class UpdateMediaFromItemAction extends AbstractAction {
 		this.putValue(NAME, "Save bookmark");
 	}
 	
-	@Override
-	public boolean isEnabled() {
-		//if it's 0 or less, then it's a site item and can't be added
-		return _table.getSelectedItem() != null && _table.getSelectedItem()._id > 0; 
-	}
-	
 	@Override 
 	public void actionPerformed(ActionEvent e) {
-		_controller.updateMediaFrom(_table.getSelectedItem());
+		if ( _table.getSelectedItem() != null && _table.getSelectedItem()._id > 0 ) {
+			_controller.updateMediaFrom(_table.getSelectedItem());
+		}
 	}
 }

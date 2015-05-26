@@ -44,6 +44,9 @@ public class NamedStatement {
 	}
 	
 	public void setDate(String name, DateTime value) {
+		if ( value == null ) {
+			throw new NullPointerException("DateTime cannot be null");
+		}
 		getParameter(name, DATE)._value = value;
 	}
 	

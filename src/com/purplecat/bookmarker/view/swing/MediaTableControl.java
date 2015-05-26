@@ -1,8 +1,12 @@
 package com.purplecat.bookmarker.view.swing;
 
 import java.awt.Component;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JScrollPane;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.table.TableRowSorter;
 
 import com.purplecat.bookmarker.models.EFavoriteState.FavoriteComparor;
@@ -36,6 +40,11 @@ public class MediaTableControl {
 		_scroll = new JScrollPane(_table);
 		_sorter = new SavedBookmarkSorter(_model);
 		_table.setRowSorter(_sorter);
+		
+		List<RowSorter.SortKey> sortKeys = new LinkedList<RowSorter.SortKey>();
+		sortKeys.add(new RowSorter.SortKey(2, SortOrder.ASCENDING)); //TITLE column
+		_sorter.setSortKeys(sortKeys);
+		//_sorter.sort();
 	}
 	
 	public MediaTableModel getModel() {

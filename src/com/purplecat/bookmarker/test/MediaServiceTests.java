@@ -10,21 +10,26 @@ import org.junit.Test;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.purplecat.bookmarker.models.Media;
+import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.services.SavedMediaService;
 import com.purplecat.bookmarker.services.ServiceException;
+import com.purplecat.bookmarker.services.databases.IOnlineMediaRepository;
 import com.purplecat.bookmarker.test.modules.TestBookmarkerModule;
 import com.purplecat.commons.extensions.DateTimeFormats;
+import com.purplecat.commons.tests.GetRandom;
 import com.purplecat.commons.tests.Matchers;
 
 public class MediaServiceTests {
 	
 	private SavedMediaService _service;
+	private IOnlineMediaRepository _onlineRepository;
 
 	@Before
 	public void setUpBeforeTest() throws Exception {
 		Injector injector = Guice.createInjector(new TestBookmarkerModule());
 		
 		_service = injector.getInstance(SavedMediaService.class);
+		_onlineRepository = injector.getInstance(IOnlineMediaRepository.class);
 	}
 
 	@Test
@@ -108,6 +113,39 @@ public class MediaServiceTests {
 			Assert.assertNotNull("invalid id", matchingManga._id);
 			Assert.assertEquals("chapter url mismatch", url, matchingManga._chapterURL);
 			Assert.assertTrue("updated date mismatch", Matchers.MatchDateTime(now, matchingManga._lastReadDate, 20));
+			Assert.assertEquals(1, matchingManga._lastReadPlace._volume);
+			Assert.assertEquals(1, matchingManga._lastReadPlace._chapter);
+			Assert.assertEquals(2, matchingManga._lastReadPlace._subChapter);
+			Assert.assertEquals(32, matchingManga._lastReadPlace._page);
+			Assert.assertTrue("not saved", matchingManga._isSaved);
+			
+			//Immediate update succeeded; check that it was saved correctly
+			Media updatedManga = _service.get(matchingManga._id);
+			Assert.assertNotNull("Item was not found", updatedManga);
+			checkEquals(matchingManga, updatedManga);
+		} catch (ServiceException e) {
+			e.printStackTrace();
+			fail("Exception thrown: " + e.getMessage());
+		}		
+	}
+	
+	@Test
+	public void testUpdateFromOnlineMedia() {
+		try {
+			OnlineMediaItem onlineItem = GetRandom.getItem(_onlineRepository.query());
+			Media mediaItem = GetRandom.getItem(_service._database.query());
+			onlineItem._mediaId = mediaItem._id;
+			DateTime now = new DateTime();
+			
+			Media matchingManga = _service.updateFromOnlineItem(onlineItem);
+			Assert.assertNotNull("Item was not found", matchingManga);
+			Assert.assertEquals("invalid id", onlineItem._mediaId, matchingManga._id);
+			Assert.assertEquals("chapter url mismatch", onlineItem._chapterUrl, matchingManga._chapterURL);
+			Assert.assertTrue("updated date mismatch", Matchers.MatchDateTime(now, matchingManga._lastReadDate, 20));
+			Assert.assertEquals(onlineItem._updatedPlace._volume, matchingManga._lastReadPlace._volume);
+			Assert.assertEquals(onlineItem._updatedPlace._chapter, matchingManga._lastReadPlace._chapter);
+			Assert.assertEquals(onlineItem._updatedPlace._subChapter, matchingManga._lastReadPlace._subChapter);
+			Assert.assertEquals(onlineItem._updatedPlace._page, matchingManga._lastReadPlace._page);
 			Assert.assertTrue("not saved", matchingManga._isSaved);
 			
 			//Immediate update succeeded; check that it was saved correctly

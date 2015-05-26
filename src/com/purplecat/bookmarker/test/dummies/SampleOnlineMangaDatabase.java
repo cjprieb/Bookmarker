@@ -38,6 +38,7 @@ public class SampleOnlineMangaDatabase extends SampleDatabaseService<OnlineMedia
 				OnlineMediaItem media = new OnlineMediaItem();
 				int order = obj.getInt("order");
 				media._id = obj.getInt("_id");
+				media._mediaId = obj.getInt("_mediaId");
 				media._displayTitle = obj.getString("_displayTitle");
 				media._lastReadPlace = parsePlace(obj.getJsonObject("_lastReadPlace"));
 				media._lastReadDate = parseDate(obj.containsKey("_lastReadDate") ? obj.getString("_lastReadDate") : null);

@@ -154,7 +154,7 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	@Test
 	public void testUpdateNonSaved() {
 		try {
-			Media media = _database.queryById(17083);//known unsaved item
+			Media media = _database.queryById(23660);//known unsaved item
 			
 			media._displayTitle = GetRandom.getString(6);
 			media._lastReadPlace._chapter++;

@@ -30,7 +30,6 @@ public class TestBookmarkerModule extends AbstractModule {
 		
 		//Database/Repository items
 		bind(IUrlPatternDatabase.class).to(SamplePatternDatabase.class);
-		bind(IOnlineMediaRepository.class).to(OnlineMediaDatabase.class);
 		bind(UrlPatternService.class);
 		bind(IMediaRepository.class).to(SampleMangaDatabase.class);
 		bind(IOnlineMediaRepository.class).to(SampleOnlineMangaDatabase.class);

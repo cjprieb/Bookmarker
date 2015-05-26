@@ -6,6 +6,7 @@ import org.joda.time.DateTime;
 
 import com.google.inject.Inject;
 import com.purplecat.bookmarker.models.Media;
+import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.UrlPatternResult;
 import com.purplecat.bookmarker.services.databases.IMediaRepository;
 
@@ -67,11 +68,11 @@ public class SavedMediaService {
 						
 			media._chapterURL = url;
 			media._lastReadDate = new DateTime();
-			/*media._lastReadPlace._volume = patternResult._volume;
+			media._lastReadPlace._volume = patternResult._volume;
 			media._lastReadPlace._chapter = patternResult._chapter;
 			media._lastReadPlace._subChapter = patternResult._subChapter;
 			media._lastReadPlace._page = patternResult._page;
-			media._lastReadPlace._extra = patternResult._extra;*/
+			//media._lastReadPlace._extra = patternResult.;
 			media._isSaved = true;
 			
 			_database.update(media);
@@ -81,7 +82,31 @@ public class SavedMediaService {
 	}
 
 	public List<Media> getSavedList() throws ServiceException {
-		System.out.println("getting saved list: " + _database.getClass());
 		return _database.querySavedMedia();
+	}
+
+	public Media updateFromOnlineItem(OnlineMediaItem onlineItem) throws ServiceException  {		
+		Media media = null;
+		if ( onlineItem != null && onlineItem._mediaId > 0 ) {
+			//find media item corresponding to the online item
+			media = _database.queryById(onlineItem._mediaId); 
+
+			//update media item from online item
+			media._chapterURL = onlineItem._chapterUrl;
+			media._lastReadDate = new DateTime();
+			media._lastReadPlace._volume = onlineItem._updatedPlace._volume;
+			media._lastReadPlace._chapter = onlineItem._updatedPlace._chapter;
+			media._lastReadPlace._subChapter = onlineItem._updatedPlace._subChapter;
+			media._lastReadPlace._page = onlineItem._updatedPlace._page;
+			media._lastReadPlace._extra = onlineItem._updatedPlace._extra;
+			media._isSaved = true;
+			
+			_database.update(media);
+		}
+		else {
+			throw new ServiceException(ServiceException.INVALID_ID);
+		}
+		
+		return media;
 	}
 }

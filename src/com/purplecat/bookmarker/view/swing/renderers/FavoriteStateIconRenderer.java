@@ -15,12 +15,12 @@ public class FavoriteStateIconRenderer extends EnablableTableCellRenderer {
 	
 	@Override
 	public void setValue(Object value) {
-		String key = null;
+		int key = 0;
 		if ( value != null && value instanceof EFavoriteState ) {
 			key = FavoriteStateExt.getIconKey((EFavoriteState)value);
 		}
 		
-		if ( key != null ) {
+		if ( key > 0 ) {
 			setIcon(_repository.getImage(key));
 		}
 		else {

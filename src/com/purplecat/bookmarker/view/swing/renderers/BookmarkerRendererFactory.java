@@ -4,8 +4,8 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
 import com.google.inject.Inject;
+import com.purplecat.bookmarker.Resources;
 import com.purplecat.bookmarker.models.Place;
-import com.purplecat.bookmarker.view.swing.BookmarkerImages;
 import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.TTableColumn;
 import com.purplecat.commons.swing.EnablableTableCellRenderer;
@@ -27,15 +27,15 @@ public class BookmarkerRendererFactory implements ICellRendererFactory {
 	public Object getHeaderValue(TTableColumn column) {
 		Object obj = _resources.getString(column.getNameId());
 		if ( column == DataFields.FAVORITE_COL ) {
-			obj = _repository.getImage(BookmarkerImages.imgEmblemHeartId);
+			obj = _repository.getImage(Resources.image.imgEmblemHeartId);
 		}
 		else if ( column == DataFields.MEDIA_STATE_COL || 
 				column == DataFields.ONLINE_STATE_COL /*||
 				column == DataFields.SCHEDULED_STATE_COL  */) {
-			obj = _repository.getImage(BookmarkerImages.imgOpenBookId);
+			obj = _repository.getImage(Resources.image.imgOpenBookId);
 		}
 		else if ( column == DataFields.FLAG_COL ) {
-			obj = _repository.getImage(BookmarkerImages.imgFlagHeaderId);
+			obj = _repository.getImage(Resources.image.imgFlagHeaderId);
 		}
 		/*else if ( column == DataFields.WATCHED_COL ) {
 			obj = _repository.getAppImage(AppImages.appBlankId);

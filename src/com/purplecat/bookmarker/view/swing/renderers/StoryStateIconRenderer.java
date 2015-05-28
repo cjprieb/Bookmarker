@@ -6,11 +6,11 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 
+import com.purplecat.bookmarker.Resources;
 import com.purplecat.bookmarker.extensions.StoryStateExt;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.StoryStateModel;
-import com.purplecat.bookmarker.view.swing.BookmarkerImages;
 import com.purplecat.bookmarker.view.swing.DefaultColors;
 import com.purplecat.commons.swing.EnablableTableCellRenderer;
 import com.purplecat.commons.swing.IImageRepository;
@@ -38,7 +38,7 @@ public class StoryStateIconRenderer extends EnablableTableCellRenderer {
 			}*/
 		}
 		
-		if ( image != null && image._imageKey != null ) {
+		if ( image != null && image._imageKey > 0 ) {
 			setIcon(createUpdateImage(image));
 		}
 		else if ( value instanceof ImageIcon ) {
@@ -95,8 +95,8 @@ public class StoryStateIconRenderer extends EnablableTableCellRenderer {
 		
 		ImageIcon icon = _repository.getImage(storyState._imageKey);
 		
-		if ( storyState._imageKey.equals(BookmarkerImages.imgClosedBowRedId) && updateColor != null ) {
-			icon = _repository.getImage(BookmarkerImages.imgClosedBowGreenId);
+		if ( storyState._imageKey == Resources.image.imgClosedBowRedId && updateColor != null ) {
+			icon = _repository.getImage(Resources.image.imgClosedBowGreenId);
 		}
 		else if ( icon != null && updateColor != null ) {
 			int width 	= icon.getIconWidth();

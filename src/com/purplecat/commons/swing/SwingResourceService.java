@@ -23,33 +23,50 @@ public class SwingResourceService implements IResourceService {
 	static final String TAG = "SwingResourceService";
 	
 	String _resourcePath;	
-	Map<Integer, String> _cache;
+	Map<Integer, String> _stringCache;
+	Map<Integer, String> _imageCache;
 	ILoggingService _logger;
 	
 	@Inject
-	public SwingResourceService(ILoggingService logger, @Named("Resource Path") String resourcePath) {
+	public SwingResourceService(ILoggingService logger, @Named("Resource File") String resourcePath) {
 		_resourcePath = resourcePath;
 		_logger = logger;
 		
-		_cache = new HashMap<Integer, String>();
+		_stringCache = new HashMap<Integer, String>();
+		_imageCache = new HashMap<Integer, String>();
+		
 		//String sResourceClass = String.format("com.purplecat.%s.Resources", appName);
 		String sXmlLocation = String.format("/%s/data/strings_labels.xml", resourcePath.replaceAll("\\.", "/").toLowerCase());
-		loadItemMapFromXml(resourcePath, sXmlLocation, "string");
+		loadItemMapFromXml(resourcePath, sXmlLocation, "string", _stringCache);
+		
+		sXmlLocation = String.format("/%s/data/images.xml", resourcePath.replaceAll("\\.", "/").toLowerCase());
+		loadItemMapFromXml(resourcePath, sXmlLocation, "image", _imageCache);
 		//SwingFileManager.loadItemMapFromXml("com.purplecat.commons.Resources", "/com/purplecat/commons/resources/strings_labels.xml", "string", mCache);
 	}
 
 	@Override
 	public String getString(int id) {
-		if ( _cache.containsKey(id) ) {
-			return _cache.get(id);
+		if ( _stringCache.containsKey(id) ) {
+			return _stringCache.get(id);
 		}
 		else {
 			_logger.error(TAG, "Could not find matching string for id " + Integer.toHexString(id));
 			return "";
 		}
 	}
+
+	@Override
+	public String getImageFile(int id) {
+		if ( _imageCache.containsKey(id) ) {
+			return _imageCache.get(id);
+		}
+		else {
+			_logger.error(TAG, "Could not find matching image string for id " + Integer.toHexString(id));
+			return "";
+		}
+	}
 	
-	private void loadItemMapFromXml(String classPath, String resourcePath, String tagName){
+	private void loadItemMapFromXml(String classPath, String resourcePath, String tagName, Map<Integer, String> cache){
 //		Log.logMessage(0, "loading xml in " + resourcePath);
 		try {
 			InputStream stream = getClass().getResourceAsStream(resourcePath);
@@ -62,13 +79,24 @@ public class SwingResourceService implements IResourceService {
 	            for ( int i = 0; i < list.getLength(); i++ ) {
 	            	Node node = list.item(i);
 	            	String name = node.getAttributes().getNamedItem("name").getNodeValue();
-	            	try {
+	            	try {	            		
 	            		Class<?> rClass = Class.forName(classPath);
-	            		rClass = rClass.getDeclaredClasses()[0];
-	            		Field field = rClass.getField(name);
-	            		if ( field != null ) {
-	            			int key = (Integer)field.get(rClass);
-	            			_cache.put(key, node.getTextContent());
+	            		Class<?> foundClass = null;
+	            		for ( Class<?> declaredClass : rClass.getDeclaredClasses() ) {
+	            			if ( declaredClass.getSimpleName().equals(tagName) ) {
+	            				foundClass = declaredClass;
+	            				break;
+	            			}
+	            		}
+	            		if ( foundClass != null ) {
+		            		Field field = foundClass.getField(name);
+		            		if ( field != null ) {
+		            			int key = (Integer)field.get(foundClass);
+		            			cache.put(key, node.getTextContent());
+		            		}
+	            		}
+	            		else {
+		            		_logger.error(TAG, "No Such Class in: " + classPath + " for tag " + tagName);  
 	            		}
 	            	} catch (ClassNotFoundException e) {
 	            		_logger.error(TAG, "Class doesn't exist: \"" + classPath + "\"", e);

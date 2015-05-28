@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource>
+<!-- Common App Icons -->
+	<image name="appBlankCircleId">blankcircle.png</image>
+	<image name="appGreenCheckId">greencheck.png</image>
+	<image name="appProcessDoneId">process-done.png</image>
+	<image name="appProcessWorkingId">process-working.png</image>
+	<image name="appRedXId">redcross.png</image>
+<!--  Bookmarker Icons -->
+    <image name="imgEmblemHeartId">heart.png</image>
+	<image name="imgFavBlankStarId">blank-star.png</image>
+	<image name="imgFavStarId">star.png</image>
+	<image name="imgFavGoodId">good.png</image>
+	<image name="imgFavMehId">meh.png</image>
+	<image name="imgFavAverageId">average.png</image>
+	<image name="imgFlag">flag.png</image>
+	<image name="imgFlagHeaderId">flag-header.png</image>
+	<image name="imgBlankFlagId">blank_flag.png</image>
+	<image name="imgClosedBookId">closed-book.png</image>
+	<image name="imgOpenBookId">open-book.png</image>
+	<image name="imgOpenBookQuestionId">open-book-question.png</image>
+	<image name="imgOpenBookmarkOrangeId">open-bookmark-orange.png</image>
+	<image name="imgOpenBookmarkBlueId">open-bookmark-blue.png</image>
+	<image name="imgClosedRedXId">closed-red-x.png</image>
+	<image name="imgClosedBookmarkRedId">closed-bookmark-red.png</image>
+	<image name="imgQuestionMarkId">question-mark.png</image>
+	<image name="imgClosedBowRedId">closed-bow-red.png</image>
+	<image name="imgClosedBowGreenId">closed-bow-green.png</image>
+	<image name="imgFinishedSeasonId">finished-season.png</image>
+	<image name="imgMidSeasonId">mid-season.png</image>
+	<image name="imgEndSeasonId">end-season.png</image>
+	<image name="imgNewSeasonId">new-season.png</image>
+	<image name="imgBookmarkerId">bookmarker.png</image>
+</resource>

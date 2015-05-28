@@ -1,13 +1,11 @@
 package com.purplecat.commons.swing;
 
-import java.awt.Color;
-
 import javax.swing.ImageIcon;
 
-public interface IImageRepository {
-	ImageIcon getAppImage(String name);
+public interface IImageRepository {	
+	ImageIcon getImage(String fileName);
 	
-	ImageIcon getImage(String name);
+	ImageIcon getImage(int imageKey);
 
-	ImageIcon getTimerIcon(int mFrameNumber);
+	ImageIcon getTimerIcon(String fileName, int mFrameNumber);
 }

@@ -6,7 +6,7 @@ public class StoryStateModel {
 	public static final int FULL_UPDATE = 100;
 	
 	
-	public String _imageKey;
+	public int _imageKey;
 	
 	public int _updateMode;
 

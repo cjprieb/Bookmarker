@@ -1,10 +1,10 @@
 package com.purplecat.bookmarker.extensions;
 
+import com.purplecat.bookmarker.Resources;
 import com.purplecat.bookmarker.models.EStoryState;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.StoryStateModel;
-import com.purplecat.bookmarker.view.swing.BookmarkerImages;
 
 
 public class StoryStateExt {
@@ -67,18 +67,18 @@ public class StoryStateExt {
 		return(imageModel);		
 	}
 	
-	public static String getImageKey(EStoryState state, boolean isMovie) {
-		String key = null;
+	public static int getImageKey(EStoryState state, boolean isMovie) {
+		int key = 0;
 		if ( state != null ) {
 			switch (state) {
-				case LAST_AVAILABLE_CHAPTER: 	key = isMovie ? BookmarkerImages.imgEndSeasonId : BookmarkerImages.imgOpenBookId;			break;
-				case MIDDLE_CHAPTER: 			key = isMovie ? BookmarkerImages.imgMidSeasonId : BookmarkerImages.imgOpenBookQuestionId;	break;
-				case FINISHED_BOOKMARK: 		key = isMovie ? BookmarkerImages.imgFinishedSeasonId : BookmarkerImages.imgClosedBookId;	break;
-				case NEW_BOOKMARK: 				key = isMovie ? BookmarkerImages.imgNewSeasonId : BookmarkerImages.imgClosedBowRedId;		break;
+				case LAST_AVAILABLE_CHAPTER: 	key = isMovie ? Resources.image.imgEndSeasonId : Resources.image.imgOpenBookId;			break;
+				case MIDDLE_CHAPTER: 			key = isMovie ? Resources.image.imgMidSeasonId : Resources.image.imgOpenBookQuestionId;	break;
+				case FINISHED_BOOKMARK: 		key = isMovie ? Resources.image.imgFinishedSeasonId : Resources.image.imgClosedBookId;	break;
+				case NEW_BOOKMARK: 				key = isMovie ? Resources.image.imgNewSeasonId : Resources.image.imgClosedBowRedId;		break;
 				
-				case DONT_READ:					key = BookmarkerImages.imgClosedRedXId;			break;
-				case MIDDLE_CHAPTER_REREAD:		key = BookmarkerImages.imgOpenBookmarkOrangeId;	break;
-				case MIDDLE_CHAPTER_BORED: 		key = BookmarkerImages.imgClosedBookmarkRedId;	break;
+				case DONT_READ:					key = Resources.image.imgClosedRedXId;			break;
+				case MIDDLE_CHAPTER_REREAD:		key = Resources.image.imgOpenBookmarkOrangeId;	break;
+				case MIDDLE_CHAPTER_BORED: 		key = Resources.image.imgClosedBookmarkRedId;	break;
 				default:																		break;
 			}
 		}

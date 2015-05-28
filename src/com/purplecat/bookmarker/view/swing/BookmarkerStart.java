@@ -9,11 +9,10 @@ import javax.swing.JFrame;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.purplecat.bookmarker.Resources;
 import com.purplecat.bookmarker.controller.Controller;
-import com.purplecat.commons.logs.ILoggingService;
 import com.purplecat.commons.swing.IImageRepository;
 import com.purplecat.commons.swing.MyApplication;
-import com.purplecat.commons.swing.Toolbox;
 import com.purplecat.commons.swing.renderer.ICellRendererFactory;
 
 public class BookmarkerStart extends MyApplication {
@@ -49,7 +48,7 @@ public class BookmarkerStart extends MyApplication {
 
 	@Override
 	protected ImageIcon getApplicationIcon() {
-		return _imageRepository.getImage(BookmarkerImages.imgBookmarkerId);
+		return _imageRepository.getImage(Resources.image.imgBookmarkerId);
 	}
 
 	@Override

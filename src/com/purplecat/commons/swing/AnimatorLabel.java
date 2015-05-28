@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.Timer;
 
 import com.google.inject.Inject;
+import com.purplecat.commons.IResourceService;
 
 
 /* 
@@ -21,13 +22,13 @@ public class AnimatorLabel extends WindowAdapter implements ActionListener {
     protected boolean	mStarted		= false;
     
     protected final IImageRepository _images;
-
+    
     @Inject
-    public AnimatorLabel(IImageRepository images){
+    public AnimatorLabel(IImageRepository images) {
     	_images = images;
     	
     	mLabel = new JLabel();
-        mLabel.setIcon(_images.getAppImage(AppIcons.appProcessDoneId));
+        mLabel.setIcon(_images.getImage("process-done.png"));
         
 
         //Set up a timer that calls this object's action handler.
@@ -55,14 +56,14 @@ public class AnimatorLabel extends WindowAdapter implements ActionListener {
     	if ( mStarted ) {
     		mStarted = false;
     		mTimer.stop();
-        	mLabel.setIcon(_images.getAppImage(AppIcons.appProcessDoneId));
+            mLabel.setIcon(_images.getImage("process-done.png"));
     	}
     }
     
     @Override
     public void actionPerformed(ActionEvent e) {
         //Advance the animation frame.
-    	mLabel.setIcon(_images.getTimerIcon(mFrameNumber));
+    	mLabel.setIcon(_images.getTimerIcon("process-working.png", mFrameNumber));
         mFrameNumber++;
     }
     

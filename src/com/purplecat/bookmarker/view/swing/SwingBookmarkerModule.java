@@ -20,6 +20,7 @@ import com.purplecat.commons.logs.ConsoleLog;
 import com.purplecat.commons.logs.ILoggingService;
 import com.purplecat.commons.swing.IImageRepository;
 import com.purplecat.commons.swing.MyApplication;
+import com.purplecat.commons.swing.SwingImageRepository;
 import com.purplecat.commons.swing.SwingResourceService;
 import com.purplecat.commons.swing.SwingThreadPool;
 import com.purplecat.commons.swing.Toolbox;
@@ -33,7 +34,8 @@ public class SwingBookmarkerModule extends AbstractModule {
 		//Utility Items
 		//bind(ILoggingService.class).to(FileLog.class);
 		bind(ILoggingService.class).to(ConsoleLog.class);
-		bind(String.class).annotatedWith(Names.named("Resource Path")).toInstance("com.purplecat.bookmarker.Resources");
+		bind(String.class).annotatedWith(Names.named("Resource File")).toInstance("com.purplecat.bookmarker.Resources");
+		bind(String.class).annotatedWith(Names.named("Project Path")).toInstance("/com/purplecat/bookmarker/");
 		
 		//Database/Repository items
 		bind(IUrlPatternDatabase.class).to(UrlPatternDatabase.class);
@@ -50,7 +52,7 @@ public class SwingBookmarkerModule extends AbstractModule {
 		bind(MainPanel.class);
 		bind(IThreadPool.class).to(SwingThreadPool.class);
 		bind(ICellRendererFactory.class).to(BookmarkerRendererFactory.class);
-		bind(IImageRepository.class).to(BookmarkerImageRepository.class);
+		bind(IImageRepository.class).to(SwingImageRepository.class);
 		bind(IResourceService.class).to(SwingResourceService.class);
 		
 		//Main Class

@@ -168,4 +168,37 @@ public class Resources {
 		public static final int titleErrorCannotDownload = 0x7f0000a3;
 		public static final int tooltipNoWeekDay = 0x7f0000a4;
 	}
+
+	public static class image {
+		public static final int appBlankCircleId = 0x7f0000a5;
+		public static final int appGreenCheckId = 0x7f0000a6;
+		public static final int appProcessDoneId = 0x7f0000a7;
+		public static final int appProcessWorkingId = 0x7f0000a8;
+		public static final int appRedXId = 0x7f0000a9;
+		public static final int imgEmblemHeartId = 0x7f0000aa;
+		public static final int imgFavBlankStarId = 0x7f0000ab;
+		public static final int imgFavStarId = 0x7f0000ac;
+		public static final int imgFavGoodId = 0x7f0000ad;
+		public static final int imgFavMehId = 0x7f0000ae;
+		public static final int imgFavAverageId = 0x7f0000af;
+		public static final int imgFlag = 0x7f0000b0;
+		public static final int imgFlagHeaderId = 0x7f0000b1;
+		public static final int imgBlankFlagId = 0x7f0000b2;
+		public static final int imgClosedBookId = 0x7f0000b3;
+		public static final int imgOpenBookId = 0x7f0000b4;
+		public static final int imgOpenBookQuestionId = 0x7f0000b5;
+		public static final int imgOpenBookmarkOrangeId = 0x7f0000b6;
+		public static final int imgOpenBookmarkBlueId = 0x7f0000b7;
+		public static final int imgClosedRedXId = 0x7f0000b8;
+		public static final int imgClosedBookmarkRedId = 0x7f0000b9;
+		public static final int imgQuestionMarkId = 0x7f0000ba;
+		public static final int imgClosedBowRedId = 0x7f0000bb;
+		public static final int imgClosedBowGreenId = 0x7f0000bc;
+		public static final int imgFinishedSeasonId = 0x7f0000bd;
+		public static final int imgMidSeasonId = 0x7f0000be;
+		public static final int imgEndSeasonId = 0x7f0000bf;
+		public static final int imgNewSeasonId = 0x7f0000c0;
+		public static final int imgBookmarkerId = 0x7f0000c1;
+	}
+
 }

@@ -7,37 +7,44 @@ import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import com.google.inject.Inject;
+import com.purplecat.bookmarker.Resources;
 import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.controller.observers.IListLoadedObserver;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.view.swing.actions.LoadUpdatesAction;
 import com.purplecat.bookmarker.view.swing.actions.StopUpdatesAction;
+import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.swing.renderer.ICellRendererFactory;
 
 public class MainPanel {
+	
+	@Inject Controller _controller;
+	@Inject ICellRendererFactory _rendererFactory;
+	@Inject IResourceService _resources;
 
-	public static JPanel create(Controller ctrl, ICellRendererFactory rendererFactory, GlassTimerPanel timerGlassPane) {
+	public JPanel create(GlassTimerPanel timerGlassPane) {
 		JPanel panel = new JPanel();
 		panel.setPreferredSize(new Dimension(1000, 600));
 		
-		MediaTableControl savedMediaTableControl = new MediaTableControl(rendererFactory);
-		ctrl.observeSavedMediaLoading(savedMediaTableControl.getModel().getObserver());
-		ctrl.observeOnlineThreadLoading(savedMediaTableControl.getModel().getObserver());
-		ctrl.observeSavedMediaUpdate(savedMediaTableControl.getModel().getObserver());
+		MediaTableControl savedMediaTableControl = new MediaTableControl(_rendererFactory, _resources);
+		_controller.observeSavedMediaLoading(savedMediaTableControl.getModel().getObserver());
+		_controller.observeOnlineThreadLoading(savedMediaTableControl.getModel().getObserver());
+		_controller.observeSavedMediaUpdate(savedMediaTableControl.getModel().getObserver());
 		
-		UpdateMediaTableControl updateMediaTableControl = new UpdateMediaTableControl(rendererFactory, ctrl);
-		ctrl.observeOnlineThreadLoading(updateMediaTableControl.getModel().getObserver());
-		ctrl.observeSavedMediaUpdate(updateMediaTableControl.getModel().getObserver());
+		UpdateMediaTableControl updateMediaTableControl = new UpdateMediaTableControl(_rendererFactory, _controller, _resources);
+		_controller.observeOnlineThreadLoading(updateMediaTableControl.getModel().getObserver());
+		_controller.observeSavedMediaUpdate(updateMediaTableControl.getModel().getObserver());
 		
-		JButton loadUpdatesButton = new JButton("Load Updates");
-		loadUpdatesButton.addActionListener(new LoadUpdatesAction(ctrl));
+		JButton loadUpdatesButton = new JButton(_resources.getString(Resources.string.lblLoadUpdates));
+		loadUpdatesButton.addActionListener(new LoadUpdatesAction(_controller));
 		
-		JButton stopUpdatesButton = new JButton("Stop Updates");
-		stopUpdatesButton.addActionListener(new StopUpdatesAction(ctrl));
+		JButton stopUpdatesButton = new JButton(_resources.getString(Resources.string.lblStopUpdates));
+		stopUpdatesButton.addActionListener(new StopUpdatesAction(_controller));
 
 		timerGlassPane.setCoverPanel(panel);
 		
-		ctrl.observeSavedMediaLoading(new GlassPanelListObserver(timerGlassPane));
+		_controller.observeSavedMediaLoading(new GlassPanelListObserver(timerGlassPane));
 		
 		GroupLayout layout = new GroupLayout(panel);
 		panel.setLayout(layout);

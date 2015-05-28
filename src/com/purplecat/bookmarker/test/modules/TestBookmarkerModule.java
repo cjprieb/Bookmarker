@@ -7,7 +7,6 @@ import com.purplecat.bookmarker.services.UrlPatternService;
 import com.purplecat.bookmarker.services.databases.IMediaRepository;
 import com.purplecat.bookmarker.services.databases.IOnlineMediaRepository;
 import com.purplecat.bookmarker.services.databases.IUrlPatternDatabase;
-import com.purplecat.bookmarker.services.databases.OnlineMediaDatabase;
 import com.purplecat.bookmarker.services.websites.DefaultWebsiteList;
 import com.purplecat.bookmarker.services.websites.IWebsiteList;
 import com.purplecat.bookmarker.services.websites.WebsiteThreadObserver;
@@ -15,8 +14,10 @@ import com.purplecat.bookmarker.test.DatabaseConnectorTestBase;
 import com.purplecat.bookmarker.test.dummies.SampleDatabaseService.SamplePatternDatabase;
 import com.purplecat.bookmarker.test.dummies.SampleMangaDatabase;
 import com.purplecat.bookmarker.test.dummies.SampleOnlineMangaDatabase;
+import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.logs.ConsoleLog;
 import com.purplecat.commons.logs.ILoggingService;
+import com.purplecat.commons.swing.SwingResourceService;
 import com.purplecat.commons.swing.SwingThreadPool;
 import com.purplecat.commons.swing.Toolbox;
 import com.purplecat.commons.threads.IThreadPool;
@@ -40,6 +41,7 @@ public class TestBookmarkerModule extends AbstractModule {
 		
 		//Swing Items
 		bind(Toolbox.class);
-		bind(IThreadPool.class).to(SwingThreadPool.class);		
+		bind(IThreadPool.class).to(SwingThreadPool.class);
+		bind(IResourceService.class).to(SwingResourceService.class);
 	}
 }

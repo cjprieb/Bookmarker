@@ -11,15 +11,18 @@ import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.WebsiteInfo;
 import com.purplecat.bookmarker.services.websites.IWebsiteLoadObserver;
 import com.purplecat.bookmarker.view.swing.renderers.DataFields;
+import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.TTableColumn;
 import com.purplecat.commons.swing.TTable.TAbstractTableModel;
 
 public class UpdateMediaTableModel extends TAbstractTableModel<OnlineMediaItem> {
 	List<OnlineMediaItem> _backingList = new LinkedList<OnlineMediaItem>();
 	TTableColumn[] _columns;
+	IResourceService _resources;
 	
-	public UpdateMediaTableModel(TTableColumn[] columns) {
+	public UpdateMediaTableModel(TTableColumn[] columns, IResourceService resources) {
 		_columns = columns;
+		_resources = resources;
 	}
 	
 	@Override
@@ -51,7 +54,7 @@ public class UpdateMediaTableModel extends TAbstractTableModel<OnlineMediaItem> 
 
 	@Override
 	public String getColumnName(int columnIndex) {
-		return _columns[columnIndex].getName();
+		return _resources.getString(_columns[columnIndex].getNameId());
 	}
 	
 	@Override
@@ -70,8 +73,7 @@ public class UpdateMediaTableModel extends TAbstractTableModel<OnlineMediaItem> 
 		Object obj = "";
 		
 		TTableColumn column = _columns[columnIndex];
-		if ( column.getField().equals("_id") ) { obj = item._id; }
-		else if ( column == DataFields.TITLE_COL ) { obj = item._displayTitle; }
+		if ( column == DataFields.TITLE_COL ) { obj = item._displayTitle; }
 		else if ( column == DataFields.TIME_COL ) { obj = item._updatedDate; }
 		else if ( column == DataFields.PLACE_COL ) { obj = item._id > 0 ? item._updatedPlace : null; }
 		else if ( column == DataFields.RATING_COL ) { obj = item._rating; }

@@ -20,6 +20,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
+import com.purplecat.bookmarker.view.swing.renderers.ITableRowRenderer;
 import com.purplecat.commons.Point;
 import com.purplecat.commons.TTableColumn;
 import com.purplecat.commons.swing.IRowActionListener.ClickType;
@@ -33,6 +34,14 @@ public class TTable<T> extends JTable {
 	protected int				mHighlightRow	= -1;
 //	protected Color				mHighlightColor	= null;
 	protected ICellRendererFactory mFactory;
+	protected ITableRowRenderer<T> _renderer = null;
+	
+	public TTable(ICellRendererFactory factory, ITableRowRenderer<T> renderer) {
+		mFactory = factory;
+		new TableMouseListener(); 
+		this.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+		_renderer = renderer;
+	}
 
 	public TTable(ICellRendererFactory factory) {
 		mFactory = factory;
@@ -112,6 +121,11 @@ public class TTable<T> extends JTable {
 			else if ( !this.isRowSelected(row) ) {			
 				String bgColorId = ( row % 2 == 0 ? AwtColor.TABLE_BACKGROUND : AwtColor.TABLE_BACKGROUND_GRID ); 
 				c.setBackground(UIManager.getColor(bgColorId));	
+				
+				if ( _renderer !=null && !this.isRowSelected(row) ) {
+					T view = mTemplateModel.getItemAt(convertRowIndexToModel(row));
+					_renderer.renderRow(this, c, view, (row % 2 == 1));
+				}
 			}
 		}
 		return(c);
@@ -286,6 +300,5 @@ public class TTable<T> extends JTable {
 	}
 	
 	public static abstract class TAbstractTableModel<T> extends AbstractTableModel implements TTableModel<T> {
-
 	}
 }

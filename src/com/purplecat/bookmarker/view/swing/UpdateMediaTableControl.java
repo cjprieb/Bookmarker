@@ -12,6 +12,7 @@ import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.view.swing.actions.UpdateMediaFromItemAction;
 import com.purplecat.bookmarker.view.swing.renderers.DataFields;
+import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.TTableColumn;
 import com.purplecat.commons.swing.TTable;
 import com.purplecat.commons.swing.TablePopupCreator;
@@ -26,7 +27,7 @@ public class UpdateMediaTableControl {
 	private final Controller _controller;
 	
 	@Inject
-	public UpdateMediaTableControl(ICellRendererFactory factory, Controller ctrl) {
+	public UpdateMediaTableControl(ICellRendererFactory factory, Controller ctrl, IResourceService resources) {
 		_controller = ctrl;
 		_columns = new TTableColumn[] {
 				DataFields.TIME_COL,
@@ -34,7 +35,7 @@ public class UpdateMediaTableControl {
 				DataFields.TITLE_COL,
 				DataFields.PLACE_COL
 		};
-		_model = new UpdateMediaTableModel(_columns);		
+		_model = new UpdateMediaTableModel(_columns, resources);		
 		_table = new TTable<OnlineMediaItem>(factory);
 		_table.setTemplateModel(_model);		
 		_scroll = new JScrollPane(_table);

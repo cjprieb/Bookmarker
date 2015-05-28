@@ -12,6 +12,8 @@ import javax.swing.table.TableRowSorter;
 import com.purplecat.bookmarker.models.EFavoriteState.FavoriteComparor;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.view.swing.renderers.DataFields;
+import com.purplecat.bookmarker.view.swing.renderers.UpdatedMediaRowRenderer;
+import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.TTableColumn;
 import com.purplecat.commons.extensions.DateTimeFormats.ReverseDateComparor;
 import com.purplecat.commons.swing.TTable;
@@ -25,7 +27,7 @@ public class MediaTableControl {
 	private final TableRowSorter<MediaTableModel> _sorter;
 	private final TTableColumn[] _columns;
 	
-	public MediaTableControl(ICellRendererFactory factory) {
+	public MediaTableControl(ICellRendererFactory factory, IResourceService resources) {
 		_columns = new TTableColumn[] {
 				//DataFields.FLAG_COL,
 				DataFields.MEDIA_STATE_COL,
@@ -34,9 +36,9 @@ public class MediaTableControl {
 				DataFields.PLACE_COL,
 				DataFields.DATE_COL
 		};
-		_model = new MediaTableModel(_columns);		
-		_table = new TTable<Media>(factory);
-		_table.setTemplateModel(_model);		
+		_model = new MediaTableModel(_columns, resources);		
+		_table = new TTable<Media>(factory, new UpdatedMediaRowRenderer());
+		_table.setTemplateModel(_model);
 		_scroll = new JScrollPane(_table);
 		_sorter = new SavedBookmarkSorter(_model);
 		_table.setRowSorter(_sorter);

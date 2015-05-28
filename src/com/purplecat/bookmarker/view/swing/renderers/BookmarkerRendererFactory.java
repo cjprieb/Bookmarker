@@ -6,6 +6,7 @@ import javax.swing.table.TableCellRenderer;
 import com.google.inject.Inject;
 import com.purplecat.bookmarker.models.Place;
 import com.purplecat.bookmarker.view.swing.BookmarkerImages;
+import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.TTableColumn;
 import com.purplecat.commons.swing.EnablableTableCellRenderer;
 import com.purplecat.commons.swing.IImageRepository;
@@ -14,15 +15,17 @@ import com.purplecat.commons.swing.renderer.ICellRendererFactory;
 public class BookmarkerRendererFactory implements ICellRendererFactory {
 	
 	final IImageRepository _repository;
+	final IResourceService _resources;
 	
 	@Inject 
-	public BookmarkerRendererFactory(IImageRepository repository) {
+	public BookmarkerRendererFactory(IImageRepository repository, IResourceService resources) {
 		_repository = repository;
+		_resources = resources;
 	}
 	
 	@Override
 	public Object getHeaderValue(TTableColumn column) {
-		Object obj = column.getName();
+		Object obj = _resources.getString(column.getNameId());
 		if ( column == DataFields.FAVORITE_COL ) {
 			obj = _repository.getImage(BookmarkerImages.imgEmblemHeartId);
 		}

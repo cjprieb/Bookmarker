@@ -16,11 +16,13 @@ import com.purplecat.bookmarker.services.databases.IOnlineMediaRepository;
 import com.purplecat.bookmarker.test.modules.TestBookmarkerModule;
 import com.purplecat.bookmarker.view.swing.UpdateMediaTableModel;
 import com.purplecat.bookmarker.view.swing.renderers.DataFields;
+import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.TTableColumn;
 import com.purplecat.commons.tests.GetRandom;
 
 public class OnlineTableViews {
 	IOnlineMediaRepository _repository;
+	IResourceService _resources;
 	TTableColumn[] _columns;
 	WebsiteInfo _site;
 	
@@ -37,11 +39,12 @@ public class OnlineTableViews {
 		
 		Injector injector = Guice.createInjector(new TestBookmarkerModule());
 		_repository = injector.getInstance(IOnlineMediaRepository.class);
+		_resources = injector.getInstance(IResourceService.class);
 	}
 	
 	@Test 
 	public void onlineTableModel_SiteStarted() {
-		UpdateMediaTableModel model = new UpdateMediaTableModel(_columns);
+		UpdateMediaTableModel model = new UpdateMediaTableModel(_columns, _resources);
 		
 		model.getObserver().notifySiteStarted(_site);		
 		assertEquals(1, model.getRowCount());
@@ -56,7 +59,7 @@ public class OnlineTableViews {
 	
 	@Test 
 	public void onlineTableModel_SiteParsed() {
-		UpdateMediaTableModel model = new UpdateMediaTableModel(_columns);
+		UpdateMediaTableModel model = new UpdateMediaTableModel(_columns, _resources);
 
 		model.getObserver().notifySiteStarted(_site);
 		model.getObserver().notifySiteParsed(_site);
@@ -68,7 +71,7 @@ public class OnlineTableViews {
 	
 	@Test 
 	public void onlineTableModel_ItemParsed() {
-		UpdateMediaTableModel model = new UpdateMediaTableModel(_columns);
+		UpdateMediaTableModel model = new UpdateMediaTableModel(_columns, _resources);
 		OnlineMediaItem item = getRandomItem();
 
 		model.getObserver().notifySiteStarted(_site);

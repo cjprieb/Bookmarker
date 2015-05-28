@@ -33,24 +33,18 @@ public class BookmarkerStart extends MyApplication {
 		injector.getInstance(MyApplication.class).startApplication();
 	}
 	
-	protected final Controller _controller;
-	protected final ICellRendererFactory _renderer;	
-	protected final IImageRepository _imageRepository;	
+	@Inject protected Controller _controller;
+	@Inject protected ICellRendererFactory _renderer;	
+	@Inject protected IImageRepository _imageRepository;	
+
+	@Inject protected MainPanel _mainPanel;
 	
 	protected GlassTimerPanel _timerGlassPane;
-	
-	@Inject
-	public BookmarkerStart(ILoggingService logging, Toolbox toolbox, Controller controller, ICellRendererFactory renderer, IImageRepository repository) {
-		super(logging, toolbox);
-		_controller = controller;
-		_renderer = renderer;
-		_imageRepository = repository;
-	}
 
 	@Override
 	protected void setupMainPanel(JFrame frame) {
 		_timerGlassPane = new GlassTimerPanel(_imageRepository, frame);
-		frame.getContentPane().add(MainPanel.create(_controller, _renderer, _timerGlassPane));
+		frame.getContentPane().add(_mainPanel.create(_timerGlassPane));
 	}
 
 	@Override

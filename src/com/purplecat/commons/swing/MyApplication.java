@@ -34,14 +34,8 @@ public abstract class MyApplication implements IQuitAction {
 	protected JFrame 					mFrame 			= null;
 	protected IDragDropAction			mDragDropAction	= null;
 	
-	public final ILoggingService _logging;
-	public final Toolbox _toolbox;
-	
-	@Inject 
-	public MyApplication(ILoggingService logging, Toolbox toolbox) {
-		_logging = logging;
-		_toolbox = toolbox;
-	}
+	@Inject ILoggingService _logging;
+	@Inject Toolbox _toolbox;
 		
 	/**
 	 * This function allows the application to setup the main

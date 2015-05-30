@@ -1,7 +1,10 @@
 package com.purplecat.commons.swing;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.net.MalformedURLException;
 import java.util.HashMap;
@@ -45,6 +48,50 @@ public class SwingImageRepository implements IImageRepository {
 	@Override
 	public ImageIcon getImage(String fileName) {
 		return getImageResource(fileName);
+	}
+	
+	@Override
+	public ImageIcon getScaledImage(int imageKey, double scale) {
+		String key = _resources.getImageFile(imageKey);
+		String scaledKey = key;
+		if ( scale > AppIcons.MEDIUM_DOCK_IMAGE_SCALE ) {
+			scaledKey = AppIcons.LARGE_KEY_WORD + key;
+			scale = AppIcons.LARGE_DOCK_IMAGE_SCALE;
+		}
+		else if ( scale < AppIcons.MEDIUM_DOCK_IMAGE_SCALE ) {
+			scaledKey = AppIcons.SMALL_KEY_WORD + key;
+			scale = AppIcons.SMALL_DOCK_IMAGE_SCALE;
+		}
+		
+		ImageIcon icon = getImageResource(scaledKey);
+		if ( icon == null ) {
+			icon = getImageResource(key);
+			if ( icon != null ) {
+				icon = scaleImageIcon(icon, scale);
+			}
+			if ( icon != null ) {
+				_map.put(scaledKey, icon);
+			}
+		}
+		return(icon);
+	}
+
+	@Override
+	public ImageIcon getDockImage(int imageKey, Color c, String text) {
+		ImageIcon icon = getImageResource(_resources.getImageFile(imageKey));
+		int width = icon.getIconWidth();
+		int height = icon.getIconHeight();
+		
+		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage updateImage = getUpdateNumber(14, 9, c, text, (c != Color.red) );
+		Graphics g = image.getGraphics();	
+		
+		int xStart = width - updateImage.getWidth();
+
+		g.drawImage(icon.getImage(), 0, 0, null);
+		g.drawImage(updateImage, xStart, 0, null);
+		
+		return(new ImageIcon(image, "updated" + text));
 	}
 
 	@Override
@@ -140,6 +187,29 @@ public class SwingImageRepository implements IImageRepository {
 		}
 		
 		return(_timerIcons[x][y]);
+	}
+	
+	private BufferedImage getUpdateNumber(int width, int fontSize, Color c, String text, boolean blackText) {
+		int height = width;
+		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		Graphics graphics = image.getGraphics();
+		
+		graphics.setColor(c);
+		graphics.fillOval(0, 0, width, height);
+		
+		if ( text.length() > 0 ) {
+			graphics.setColor(blackText ? Color.black : Color.white);
+			graphics.setFont(Font.decode(Font.SANS_SERIF + "-BOLD-" + fontSize));
+	
+			Rectangle2D rect = graphics.getFontMetrics().getStringBounds(text, graphics);
+			int stringWidth = graphics.getFontMetrics().stringWidth(text);
+			int stringHeight = (int)( rect.getY() < 0 ? -rect.getY() : rect.getY() );
+	
+			int xStart = (width/2) - (stringWidth/2);
+			int yStart = (height/2) + (stringHeight/2);
+			graphics.drawString(text, xStart, yStart);
+		}
+		return(image);
 	}
 
 }

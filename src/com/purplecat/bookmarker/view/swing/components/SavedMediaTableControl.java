@@ -1,4 +1,4 @@
-package com.purplecat.bookmarker.view.swing;
+package com.purplecat.bookmarker.view.swing.components;
 
 import java.awt.Component;
 import java.util.LinkedList;
@@ -11,6 +11,7 @@ import javax.swing.table.TableRowSorter;
 
 import com.purplecat.bookmarker.models.EFavoriteState.FavoriteComparor;
 import com.purplecat.bookmarker.models.Media;
+import com.purplecat.bookmarker.view.swing.models.SavedMediaTableModel;
 import com.purplecat.bookmarker.view.swing.renderers.DataFields;
 import com.purplecat.bookmarker.view.swing.renderers.UpdatedMediaRowRenderer;
 import com.purplecat.commons.IResourceService;
@@ -20,14 +21,14 @@ import com.purplecat.commons.swing.TTable;
 import com.purplecat.commons.swing.renderer.ICellRendererFactory;
 import com.purplecat.commons.utils.ListUtils;
 
-public class MediaTableControl {
-	private final MediaTableModel _model;
+public class SavedMediaTableControl {
+	private final SavedMediaTableModel _model;
 	private final TTable<Media> _table;
 	private final JScrollPane _scroll;
-	private final TableRowSorter<MediaTableModel> _sorter;
+	private final TableRowSorter<SavedMediaTableModel> _sorter;
 	private final TTableColumn[] _columns;
 	
-	public MediaTableControl(ICellRendererFactory factory, IResourceService resources) {
+	public SavedMediaTableControl(ICellRendererFactory factory, IResourceService resources) {
 		_columns = new TTableColumn[] {
 				//DataFields.FLAG_COL,
 				DataFields.MEDIA_STATE_COL,
@@ -36,7 +37,7 @@ public class MediaTableControl {
 				DataFields.PLACE_COL,
 				DataFields.DATE_COL
 		};
-		_model = new MediaTableModel(_columns, resources);		
+		_model = new SavedMediaTableModel(_columns, resources);		
 		_table = new TTable<Media>(factory, new UpdatedMediaRowRenderer());
 		_table.setTemplateModel(_model);
 		_scroll = new JScrollPane(_table);
@@ -49,7 +50,7 @@ public class MediaTableControl {
 		//_sorter.sort();
 	}
 	
-	public MediaTableModel getModel() {
+	public SavedMediaTableModel getModel() {
 		return _model;
 	}
 	
@@ -57,8 +58,8 @@ public class MediaTableControl {
 		return _scroll;
 	}
 	
-	public class SavedBookmarkSorter extends TableRowSorter<MediaTableModel> {
-		SavedBookmarkSorter(MediaTableModel model) {
+	public class SavedBookmarkSorter extends TableRowSorter<SavedMediaTableModel> {
+		SavedBookmarkSorter(SavedMediaTableModel model) {
 			super(model);
 
 			int index = ListUtils.indexOf(_columns, DataFields.FAVORITE_COL);

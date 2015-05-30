@@ -1,4 +1,4 @@
-package com.purplecat.bookmarker.view.swing;
+package com.purplecat.bookmarker.view.swing.panels;
 
 import java.awt.Color;
 import java.awt.Dimension;

@@ -1,4 +1,4 @@
-package com.purplecat.bookmarker.view.swing;
+package com.purplecat.bookmarker.view.swing.components;
 
 import java.awt.Component;
 
@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.view.swing.actions.UpdateMediaFromItemAction;
+import com.purplecat.bookmarker.view.swing.models.OnlineUpdateItemTableModel;
 import com.purplecat.bookmarker.view.swing.renderers.DataFields;
 import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.TTableColumn;
@@ -18,16 +19,16 @@ import com.purplecat.commons.swing.TTable;
 import com.purplecat.commons.swing.TablePopupCreator;
 import com.purplecat.commons.swing.renderer.ICellRendererFactory;
 
-public class UpdateMediaTableControl {
-	private final UpdateMediaTableModel _model;
+public class OnlineUpdateItemTableControl {
+	private final OnlineUpdateItemTableModel _model;
 	private final TTable<OnlineMediaItem> _table;
 	private final JScrollPane _scroll;
-	private final TableRowSorter<UpdateMediaTableModel> _sorter;
+	private final TableRowSorter<OnlineUpdateItemTableModel> _sorter;
 	private final TTableColumn[] _columns;
 	private final Controller _controller;
 	
 	@Inject
-	public UpdateMediaTableControl(ICellRendererFactory factory, Controller ctrl, IResourceService resources) {
+	public OnlineUpdateItemTableControl(ICellRendererFactory factory, Controller ctrl, IResourceService resources) {
 		_controller = ctrl;
 		_columns = new TTableColumn[] {
 				DataFields.TIME_COL,
@@ -35,7 +36,7 @@ public class UpdateMediaTableControl {
 				DataFields.TITLE_COL,
 				DataFields.PLACE_COL
 		};
-		_model = new UpdateMediaTableModel(_columns, resources);		
+		_model = new OnlineUpdateItemTableModel(_columns, resources);		
 		_table = new TTable<OnlineMediaItem>(factory);
 		_table.setTemplateModel(_model);		
 		_scroll = new JScrollPane(_table);
@@ -45,7 +46,7 @@ public class UpdateMediaTableControl {
 		setupPopupMenu();
 	}
 	
-	public UpdateMediaTableModel getModel() {
+	public OnlineUpdateItemTableModel getModel() {
 		return _model;
 	}
 	
@@ -61,8 +62,8 @@ public class UpdateMediaTableControl {
 		return _scroll;
 	}
 	
-	public class OnlineBookmarkSorter extends TableRowSorter<UpdateMediaTableModel> {
-		OnlineBookmarkSorter(UpdateMediaTableModel model) {
+	public class OnlineBookmarkSorter extends TableRowSorter<OnlineUpdateItemTableModel> {
+		OnlineBookmarkSorter(OnlineUpdateItemTableModel model) {
 			super(model);
 
 			//int index = ListUtils.indexOf(_columns, DataFields.ONLINE_STATE_COL);

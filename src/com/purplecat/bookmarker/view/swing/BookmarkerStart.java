@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.purplecat.bookmarker.Resources;
 import com.purplecat.bookmarker.controller.Controller;
+import com.purplecat.bookmarker.view.swing.panels.GlassTimerPanel;
 import com.purplecat.commons.swing.IImageRepository;
 import com.purplecat.commons.swing.MyApplication;
 import com.purplecat.commons.swing.renderer.ICellRendererFactory;

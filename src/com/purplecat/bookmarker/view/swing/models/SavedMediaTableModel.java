@@ -1,4 +1,4 @@
-package com.purplecat.bookmarker.view.swing;
+package com.purplecat.bookmarker.view.swing.models;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -14,12 +14,12 @@ import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.TTableColumn;
 import com.purplecat.commons.swing.TTable.TAbstractTableModel;
 
-public class MediaTableModel extends TAbstractTableModel<Media> {
+public class SavedMediaTableModel extends TAbstractTableModel<Media> {
 	List<Media> _backingList = new LinkedList<Media>();
 	TTableColumn[] _columns;
 	IResourceService _resources;
 	
-	public MediaTableModel(TTableColumn[] columns, IResourceService resources) {
+	public SavedMediaTableModel(TTableColumn[] columns, IResourceService resources) {
 		_columns = columns;
 		_resources = resources;
 	}
@@ -91,7 +91,7 @@ public class MediaTableModel extends TAbstractTableModel<Media> {
 		for ( Media existingItem : _backingList ) {
 			if ( existingItem._id == item._id ) {
 				_backingList.set(iIndex, item);
-				MediaTableModel.this.fireTableRowsUpdated(iIndex, iIndex);
+				SavedMediaTableModel.this.fireTableRowsUpdated(iIndex, iIndex);
 				break;
 			}
 			iIndex++;
@@ -104,7 +104,7 @@ public class MediaTableModel extends TAbstractTableModel<Media> {
 		public void notifyListLoaded(List<Media> list) {
 			_backingList.clear();
 			_backingList.addAll(list);
-			MediaTableModel.this.fireTableDataChanged();
+			SavedMediaTableModel.this.fireTableDataChanged();
 		}
 
 		@Override
@@ -132,7 +132,7 @@ public class MediaTableModel extends TAbstractTableModel<Media> {
 			for ( Media existingItem : _backingList ) {
 				if ( existingItem._id == item._mediaId ) {
 					existingItem.updateFrom(item);
-					MediaTableModel.this.fireTableRowsUpdated(iIndex, iIndex);
+					SavedMediaTableModel.this.fireTableRowsUpdated(iIndex, iIndex);
 					break;
 				}
 				iIndex++;

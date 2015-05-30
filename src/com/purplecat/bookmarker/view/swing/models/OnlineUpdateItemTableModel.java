@@ -1,4 +1,4 @@
-package com.purplecat.bookmarker.view.swing;
+package com.purplecat.bookmarker.view.swing.models;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -15,12 +15,12 @@ import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.TTableColumn;
 import com.purplecat.commons.swing.TTable.TAbstractTableModel;
 
-public class UpdateMediaTableModel extends TAbstractTableModel<OnlineMediaItem> {
+public class OnlineUpdateItemTableModel extends TAbstractTableModel<OnlineMediaItem> {
 	List<OnlineMediaItem> _backingList = new LinkedList<OnlineMediaItem>();
 	TTableColumn[] _columns;
 	IResourceService _resources;
 	
-	public UpdateMediaTableModel(TTableColumn[] columns, IResourceService resources) {
+	public OnlineUpdateItemTableModel(TTableColumn[] columns, IResourceService resources) {
 		_columns = columns;
 		_resources = resources;
 	}
@@ -100,7 +100,7 @@ public class UpdateMediaTableModel extends TAbstractTableModel<OnlineMediaItem> 
 			siteItem._titleUrl = site._website;
 			int size = _backingList.size();
 			_backingList.add(siteItem);
-			UpdateMediaTableModel.this.fireTableRowsInserted(size, size);
+			OnlineUpdateItemTableModel.this.fireTableRowsInserted(size, size);
 		}
 	}
 	
@@ -116,12 +116,12 @@ public class UpdateMediaTableModel extends TAbstractTableModel<OnlineMediaItem> 
 		}
 		if ( bFound ) {
 			_backingList.set(iIndex, updatedItem);
-			UpdateMediaTableModel.this.fireTableRowsUpdated(iIndex, iIndex);
+			OnlineUpdateItemTableModel.this.fireTableRowsUpdated(iIndex, iIndex);
 		}
 		else {
 			iIndex = _backingList.size();
 			_backingList.add(updatedItem);
-			UpdateMediaTableModel.this.fireTableRowsInserted(iIndex, iIndex);
+			OnlineUpdateItemTableModel.this.fireTableRowsInserted(iIndex, iIndex);
 		}
 	}
 	
@@ -130,7 +130,7 @@ public class UpdateMediaTableModel extends TAbstractTableModel<OnlineMediaItem> 
 		for ( OnlineMediaItem onlineItem : _backingList ) {
 			if ( onlineItem._mediaId == item._id ) {
 				onlineItem.updateFrom(item);
-				UpdateMediaTableModel.this.fireTableRowsUpdated(iIndex, iIndex);
+				OnlineUpdateItemTableModel.this.fireTableRowsUpdated(iIndex, iIndex);
 				break;
 			}
 			iIndex++;

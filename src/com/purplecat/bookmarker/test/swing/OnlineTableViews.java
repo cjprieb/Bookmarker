@@ -14,7 +14,7 @@ import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.WebsiteInfo;
 import com.purplecat.bookmarker.services.databases.IOnlineMediaRepository;
 import com.purplecat.bookmarker.test.modules.TestBookmarkerModule;
-import com.purplecat.bookmarker.view.swing.UpdateMediaTableModel;
+import com.purplecat.bookmarker.view.swing.models.OnlineUpdateItemTableModel;
 import com.purplecat.bookmarker.view.swing.renderers.DataFields;
 import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.TTableColumn;
@@ -44,7 +44,7 @@ public class OnlineTableViews {
 	
 	@Test 
 	public void onlineTableModel_SiteStarted() {
-		UpdateMediaTableModel model = new UpdateMediaTableModel(_columns, _resources);
+		OnlineUpdateItemTableModel model = new OnlineUpdateItemTableModel(_columns, _resources);
 		
 		model.getObserver().notifySiteStarted(_site);		
 		assertEquals(1, model.getRowCount());
@@ -59,7 +59,7 @@ public class OnlineTableViews {
 	
 	@Test 
 	public void onlineTableModel_SiteParsed() {
-		UpdateMediaTableModel model = new UpdateMediaTableModel(_columns, _resources);
+		OnlineUpdateItemTableModel model = new OnlineUpdateItemTableModel(_columns, _resources);
 
 		model.getObserver().notifySiteStarted(_site);
 		model.getObserver().notifySiteParsed(_site, 10);
@@ -71,7 +71,7 @@ public class OnlineTableViews {
 	
 	@Test 
 	public void onlineTableModel_ItemParsed() {
-		UpdateMediaTableModel model = new UpdateMediaTableModel(_columns, _resources);
+		OnlineUpdateItemTableModel model = new OnlineUpdateItemTableModel(_columns, _resources);
 		OnlineMediaItem item = getRandomItem();
 
 		model.getObserver().notifySiteStarted(_site);

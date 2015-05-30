@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import com.purplecat.bookmarker.controller.observers.IListLoadedObserver;
 import com.purplecat.bookmarker.extensions.FavoriteStateExt;
 import com.purplecat.bookmarker.extensions.PlaceExt;
 import com.purplecat.bookmarker.extensions.StoryStateExt;
@@ -27,6 +28,10 @@ public class MediaDatabaseRepository implements IMediaRepository {
 	private static final String SELECT_MEDIA = "SELECT Media._id _id, MdDisplayTitle _displayTitle, MdIsComplete _isComplete, SvdIsSaved _isSaved, "
 			+ " SvdStoryState _storyState, SvdRating _rating, SvdIsFlagged _isFlagged, SvdNotes _notes, "
 										+ " hist.svhstDate _lastReadDate, hist.svhstPlace _lastReadPlace"
+										+ " FROM MEDIA" + 
+										" LEFT JOIN savedhistory hist on hist._id = media.svdhistory_id";
+	
+	private static final String COUNT_MEDIA = "SELECT COUNT(*) AS total_rows"
 										+ " FROM MEDIA" + 
 										" LEFT JOIN savedhistory hist on hist._id = media.svdhistory_id";
 	
@@ -77,15 +82,27 @@ public class MediaDatabaseRepository implements IMediaRepository {
 	}
 
 	@Override
-	public List<Media> querySavedMedia() throws ServiceException {
+	public List<Media> querySavedMedia(IListLoadedObserver<Media> observer) throws ServiceException {
 		List<Media> list = new LinkedList<Media>();
-		String sql = SELECT_MEDIA + " WHERE SvdIsSaved = 1";
+		String whereClause = " WHERE SvdIsSaved = 1";
+		String countSql = COUNT_MEDIA + whereClause;
+		String sql = SELECT_MEDIA + whereClause;
 		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
+			Statement countStmt = conn.createStatement();
+			NamedResultSet countResult = new NamedResultSet(countStmt.executeQuery(countSql));
+			int total = countResult.next() ? countResult.getInt("total_rows") : 0;
+			
 			Statement stmt = conn.createStatement();
 			NamedResultSet result = new NamedResultSet(stmt.executeQuery(sql));
+			int index = 0;
 			while ( result.next() ) {
 				Media item = loadMediaFromResultSet(result);
+				
 				list.add(item);
+				index++;
+				if ( observer != null ) {
+					observer.notifyItemLoaded(item, index, total);
+				}
 			}
 		} catch (SQLException e) {
 			_logging.error(TAG, "Query for saved failed: " + sql, e);

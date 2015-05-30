@@ -101,11 +101,18 @@ public class MainPanel {
 		
 		public GlassPanelListObserver(GlassTimerPanel glassPanel) {
 			_glassPanel = glassPanel;
+			_glassPanel.setProgress(0, 0);
+		}
+
+		@Override
+		public void notifyItemLoaded(Media item, int index, int total) {
+			_glassPanel.setProgress(index, total);
 		}
 
 		@Override
 		public void notifyListLoaded(List<Media> list) {
 			_glassPanel.stopTimer();
+			_glassPanel.setProgress(0, 0);
 			_glassPanel.setVisible(false);
 		}		
 	}

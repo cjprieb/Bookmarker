@@ -14,6 +14,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 
 import com.google.inject.Inject;
@@ -24,6 +25,8 @@ public class GlassTimerPanel extends JPanel {
 	private JFrame			mFrame;
 	private JComponent		mCoverPanel;
 	private AnimatorLabel 	mTimer;
+	private JProgressBar	mProgressBar;
+	
 	private IImageRepository _imageRepository;
 	
 	private CoverPanelBoundsListener mBoundsListener = new CoverPanelBoundsListener();
@@ -34,6 +37,7 @@ public class GlassTimerPanel extends JPanel {
 		_imageRepository = repository;
 		mFrame = frame;		
 		mFrame.getLayeredPane().add(this, JLayeredPane.PALETTE_LAYER);
+		mProgressBar = new JProgressBar();
 		
 		initGui();
 	}
@@ -64,12 +68,21 @@ public class GlassTimerPanel extends JPanel {
 			.addGap(0, 10, Short.MAX_VALUE)
 			.addComponent(mTimer.getComponent(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 			.addGap(0, 10, Short.MAX_VALUE)
+			.addComponent(mProgressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
+			.addContainerGap()
 		);
 		
 		layout.setHorizontalGroup(layout.createSequentialGroup()
-			.addGap(0, 10, Short.MAX_VALUE)
-			.addComponent(mTimer.getComponent(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-			.addGap(0, 10, Short.MAX_VALUE)
+			.addContainerGap()
+			.addGroup(layout.createParallelGroup()
+				.addGroup(layout.createSequentialGroup()
+					.addGap(0, 10, Short.MAX_VALUE)
+					.addComponent(mTimer.getComponent(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(0, 10, Short.MAX_VALUE)
+				)
+					.addComponent(mProgressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
+			)
+			.addContainerGap()
 		);
 	}
 	
@@ -95,7 +108,12 @@ public class GlassTimerPanel extends JPanel {
 
 	public void stopTimer() {
 		mTimer.stopAnimation();
-	}	
+	}
+	
+	public void setProgress(int progress, int max) {
+		mProgressBar.setValue(progress);
+		mProgressBar.setMaximum(max);
+	}
 	
 	public void updateBounds() {		
 		Dimension size = mCoverPanel.getSize();

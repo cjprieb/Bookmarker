@@ -8,9 +8,10 @@ import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.services.SavedMediaService;
 import com.purplecat.bookmarker.services.ServiceException;
 import com.purplecat.commons.logs.ILoggingService;
+import com.purplecat.commons.threads.IThreadPool;
 import com.purplecat.commons.threads.IThreadTask;
 
-public class SavedMediaLoadTask implements IThreadTask {
+public class SavedMediaLoadTask implements IThreadTask, IListLoadedObserver<Media> {
 	public static final String TAG = "SavedMediaLoadTask";
 	
 	@Inject public ILoggingService _logging;
@@ -19,8 +20,10 @@ public class SavedMediaLoadTask implements IThreadTask {
 	ServiceException _error;
 	Iterable<IListLoadedObserver<Media>> _observers;
 	SavedMediaService _mediaService;
+	IThreadPool _threadPool;
 	
-	public SavedMediaLoadTask(SavedMediaService service, Iterable<IListLoadedObserver<Media>> obs) {
+	public SavedMediaLoadTask(IThreadPool thread, SavedMediaService service, Iterable<IListLoadedObserver<Media>> obs) {
+		_threadPool = thread;
 		_observers = obs;
 		_mediaService = service;
 	}
@@ -35,10 +38,37 @@ public class SavedMediaLoadTask implements IThreadTask {
 	@Override
 	public void workerTaskStart() {		
 		try {
-			_resultList = _mediaService.getSavedList();
+			_resultList = _mediaService.getSavedList(this);
 		} catch (ServiceException e) {
 			_error = e;
 			_logging.error(TAG, "Could not load saved list", e);
+		}
+	}
+
+	@Override
+	public void notifyItemLoaded(Media item, int index, int total) {
+		_threadPool.runOnUIThread(new NotifyItemLoaded(item, index, total));
+	}
+
+	@Override
+	public void notifyListLoaded(List<Media> list) {}
+	
+	private class NotifyItemLoaded implements Runnable {
+		final Media _item;
+		final int _index;
+		final int _total;
+		
+		public NotifyItemLoaded(Media item, int index, int total) {
+			_item =item;
+			_index = index;
+			_total= total;
+		}
+		
+		@Override
+		public void run() {
+			for ( IListLoadedObserver<Media> obs : _observers ) {
+				obs.notifyItemLoaded(_item, _index, _total);
+			}			
 		}
 	}
 }

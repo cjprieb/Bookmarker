@@ -5,6 +5,7 @@ import java.util.List;
 import org.joda.time.DateTime;
 
 import com.google.inject.Inject;
+import com.purplecat.bookmarker.controller.observers.IListLoadedObserver;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.UrlPatternResult;
@@ -81,8 +82,8 @@ public class SavedMediaService {
 		return media;
 	}
 
-	public List<Media> getSavedList() throws ServiceException {
-		return _database.querySavedMedia();
+	public List<Media> getSavedList(IListLoadedObserver<Media> observer) throws ServiceException {
+		return _database.querySavedMedia(observer);
 	}
 
 	public Media updateFromOnlineItem(OnlineMediaItem onlineItem) throws ServiceException  {		

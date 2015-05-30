@@ -13,6 +13,7 @@ import javax.json.JsonReader;
 
 import org.joda.time.DateTime;
 
+import com.purplecat.bookmarker.controller.observers.IListLoadedObserver;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.Place;
 import com.purplecat.bookmarker.services.ServiceException;
@@ -86,7 +87,7 @@ public class SampleMangaDatabase extends SampleDatabaseService<Media> implements
 	}
 	
 	@Override
-	public List<Media> querySavedMedia() throws ServiceException {
+	public List<Media> querySavedMedia(IListLoadedObserver<Media> observer) throws ServiceException {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -86,6 +86,19 @@ public class MediaTableModel extends TAbstractTableModel<Media> {
 		return new MediaListObserver();
 	}
 	
+	protected void updateItem(Media item) {
+		int iIndex = 0;
+		for ( Media existingItem : _backingList ) {
+			if ( existingItem._id == item._id ) {
+				_backingList.set(iIndex, item);
+				MediaTableModel.this.fireTableRowsUpdated(iIndex, iIndex);
+				break;
+			}
+			iIndex++;
+		}
+		
+	}
+	
 	public class MediaListObserver implements IItemChangedObserver<Media>, IListLoadedObserver<Media>, IWebsiteLoadObserver {
 		@Override
 		public void notifyListLoaded(List<Media> list) {
@@ -93,18 +106,15 @@ public class MediaTableModel extends TAbstractTableModel<Media> {
 			_backingList.addAll(list);
 			MediaTableModel.this.fireTableDataChanged();
 		}
+
+		@Override
+		public void notifyItemLoaded(Media item, int index, int total) {
+			updateItem(item);
+		}
 		
 		@Override
 		public void notifyItemUpdated(Media item) {
-			int iIndex = 0;
-			for ( Media existingItem : _backingList ) {
-				if ( existingItem._id == item._id ) {
-					_backingList.set(iIndex, item);
-					MediaTableModel.this.fireTableRowsUpdated(iIndex, iIndex);
-					break;
-				}
-				iIndex++;
-			}
+			updateItem(item);
 		}
 		
 		@Override

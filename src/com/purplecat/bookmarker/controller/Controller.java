@@ -56,7 +56,7 @@ public class Controller {
 	}
 	
 	public void loadSavedMedia() {
-		_threadPool.runOnWorkerThread(new SavedMediaLoadTask(_mediaService, _mediaLoadObservers));
+		_threadPool.runOnWorkerThread(new SavedMediaLoadTask(_threadPool, _mediaService, _mediaLoadObservers));
 	}
 
 	/*------Run/Stop Update Thread action-------*/

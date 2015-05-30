@@ -71,8 +71,5 @@ public class NamedResultSet {
 
 	public boolean next() throws SQLException {
 		return _result.next();
-	}
-	
-	
-	
+	}	
 }

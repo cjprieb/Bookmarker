@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.purplecat.bookmarker.controller.observers.IListLoadedObserver;
 import com.purplecat.bookmarker.models.EFavoriteState;
 import com.purplecat.bookmarker.models.EStoryState;
 import com.purplecat.bookmarker.models.Media;
@@ -32,7 +33,7 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 		_database = injector.getInstance(MediaDatabaseRepository.class);
 		//_database._log = new ConsoleLog();
 		
-		_randomSavedMedia = _database.querySavedMedia();
+		_randomSavedMedia = _database.querySavedMedia(new TestMediaObserver());
 		Assert.assertNotNull("List is null", _randomSavedMedia);
 		Assert.assertTrue("List has no elements", _randomSavedMedia.size() > 0);
 		Assert.assertTrue("item not marked as saved: ", _randomSavedMedia.get(0)._isSaved);
@@ -54,9 +55,13 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	@Test
 	public void testQueryForSaved() {
 		try {
-			List<Media> list = _database.querySavedMedia();
+			TestMediaObserver obs = new TestMediaObserver();
+			List<Media> list = _database.querySavedMedia(obs);
 			Assert.assertNotNull("List is null", list);
 			Assert.assertTrue("List has no elements", list.size() > 0);
+			Assert.assertTrue(obs.iTotal > 0);
+			Assert.assertTrue(obs.iTotal == obs.iIndex);
+			Assert.assertTrue(obs.bValidTotal);
 			checkSavedMediaItem(GetRandom.getItem(list));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -240,5 +245,25 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 		Assert.assertEquals("updated mismatch", expected._rating, actual._rating);
 		Assert.assertEquals("updated mismatch", expected._storyState, actual._storyState);
 		Assert.assertEquals("updated mismatch", expected._isComplete, actual._isComplete);
+	}
+	
+	public static class TestMediaObserver implements IListLoadedObserver<Media> {
+		int iIndex;
+		int iTotal;
+		boolean bValidTotal;
+
+		@Override
+		public void notifyItemLoaded(Media item, int index, int total) {
+			iIndex = index;
+			iTotal = total;
+			bValidTotal = iTotal >= iIndex && iTotal > 0;
+		}
+
+		@Override
+		public void notifyListLoaded(List<Media> list) {
+			// TODO Auto-generated method stub
+			
+		}
+		
 	}
 }

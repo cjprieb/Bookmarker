@@ -11,9 +11,9 @@ public interface IWebsiteLoadObserver {
 	
 	public void notifySiteStarted(WebsiteInfo site);
 	
-	public void notifySiteParsed(WebsiteInfo site);
+	public void notifySiteParsed(WebsiteInfo site, int itemsFound);
 	
-	public void notifyItemParsed(OnlineMediaItem item);
+	public void notifyItemParsed(OnlineMediaItem item, int itemsParsed, int totalUpdateCount);
 	
 	public void notifySiteFinished(WebsiteInfo site);
 	

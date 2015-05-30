@@ -16,6 +16,9 @@ public class DummyThreadObserver implements IWebsiteLoadObserver {
 	private boolean _siteFinished;
 	private boolean _loadFinished;
 	private List<OnlineMediaItem> _list;
+	private int _itemsFound;
+	private int _itemsParsed;
+	private int _itemsUpdated;
 	
 	public boolean loadStartedCalled() { return _loadStarted; }
 	public boolean siteStartedCalled() { return _siteStarted; }
@@ -24,6 +27,9 @@ public class DummyThreadObserver implements IWebsiteLoadObserver {
 	public boolean siteFinishedCalled() { return _siteFinished; }
 	public boolean loadFinishedCalled() { return _loadFinished; }
 	public List<OnlineMediaItem> getList() { return _list; }
+	public int getItemsFound() { return _itemsFound; }
+	public int getItemsParsed() { return _itemsParsed; }
+	public int getItemsUpdated() { return _itemsUpdated; }
 	
 	@Override
 	public void notifyLoadStarted() {
@@ -36,13 +42,16 @@ public class DummyThreadObserver implements IWebsiteLoadObserver {
 	}
 	
 	@Override
-	public void notifySiteParsed(WebsiteInfo site) {
+	public void notifySiteParsed(WebsiteInfo site, int itemsFound) {
 		_siteLoaded = true;
+		_itemsFound = itemsFound;
 	}
 	
 	@Override
-	public void notifyItemParsed(OnlineMediaItem item) {
+	public void notifyItemParsed(OnlineMediaItem item, int itemsParsed, int updateCount) {
 		_itemLoaded = true;
+		_itemsParsed = itemsParsed;
+		_itemsUpdated = updateCount;
 	}
 	
 	@Override

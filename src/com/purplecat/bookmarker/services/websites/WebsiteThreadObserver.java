@@ -62,13 +62,13 @@ public class WebsiteThreadObserver implements IWebsiteLoadObserver, Runnable {
 	}
 
 	@Override
-	public void notifySiteParsed(WebsiteInfo site) {
-		_threadPool.runOnUIThread(new RunSiteParsed(site));
+	public void notifySiteParsed(WebsiteInfo site, int itemsFound) {
+		_threadPool.runOnUIThread(new RunSiteParsed(site, itemsFound));
 	}
 
 	@Override
-	public void notifyItemParsed(OnlineMediaItem item) {
-		_threadPool.runOnUIThread(new RunItemParsed(item));
+	public void notifyItemParsed(OnlineMediaItem item, int itemsParsed, int itemsUpdated) {
+		_threadPool.runOnUIThread(new RunItemParsed(item, itemsParsed, itemsUpdated));
 	}
 
 	@Override
@@ -108,29 +108,35 @@ public class WebsiteThreadObserver implements IWebsiteLoadObserver, Runnable {
 
 	public class RunSiteParsed extends IWebsiteThreadTask {
 		WebsiteInfo _info;
+		int _itemsFound;
 		
-		public RunSiteParsed(WebsiteInfo info) {
+		public RunSiteParsed(WebsiteInfo info, int itemsFound) {
 			super(_observers);
 			_info = info;
+			_itemsFound = itemsFound;
 		}
 		
 		@Override
 		public void run(IWebsiteLoadObserver obs) {
-			obs.notifySiteParsed(_info);
+			obs.notifySiteParsed(_info, _itemsFound);
 		}
 	}
 
 	public class RunItemParsed extends IWebsiteThreadTask {
 		OnlineMediaItem _item;
+		int _itemsParsed;
+		int _itemsUpdated;
 		
-		public RunItemParsed(OnlineMediaItem item) {
+		public RunItemParsed(OnlineMediaItem item, int itemsParsed, int itemsUpdated) {
 			super(_observers);
 			_item = item;
+			_itemsParsed = itemsParsed;
+			_itemsUpdated = itemsUpdated;
 		}
 		
 		@Override
 		public void run(IWebsiteLoadObserver obs) {
-			obs.notifyItemParsed(_item);
+			obs.notifyItemParsed(_item, _itemsParsed, _itemsUpdated);
 		}
 	}
 

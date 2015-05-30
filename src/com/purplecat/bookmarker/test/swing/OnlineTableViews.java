@@ -62,7 +62,7 @@ public class OnlineTableViews {
 		UpdateMediaTableModel model = new UpdateMediaTableModel(_columns, _resources);
 
 		model.getObserver().notifySiteStarted(_site);
-		model.getObserver().notifySiteParsed(_site);
+		model.getObserver().notifySiteParsed(_site, 10);
 		assertEquals(1, model.getRowCount());
 		assertEquals(_site._name, model.getItemAt(0)._displayTitle);
 		assertEquals(_site._website, model.getItemAt(0)._titleUrl);
@@ -75,7 +75,7 @@ public class OnlineTableViews {
 		OnlineMediaItem item = getRandomItem();
 
 		model.getObserver().notifySiteStarted(_site);
-		model.getObserver().notifyItemParsed(item);
+		model.getObserver().notifyItemParsed(item, 1, 1);
 		
 		assertEquals(2, model.getRowCount());
 		assertEquals(item, model.getItemAt(1));

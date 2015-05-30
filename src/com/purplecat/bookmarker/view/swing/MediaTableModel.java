@@ -114,10 +114,10 @@ public class MediaTableModel extends TAbstractTableModel<Media> {
 		public void notifySiteStarted(WebsiteInfo site) {}
 
 		@Override
-		public void notifySiteParsed(WebsiteInfo site) {}
+		public void notifySiteParsed(WebsiteInfo site, int itemsFound) {}
 
 		@Override
-		public void notifyItemParsed(OnlineMediaItem item) {
+		public void notifyItemParsed(OnlineMediaItem item, int itemsParsed, int updateCount) {
 			int iIndex = 0;
 			for ( Media existingItem : _backingList ) {
 				if ( existingItem._id == item._mediaId ) {

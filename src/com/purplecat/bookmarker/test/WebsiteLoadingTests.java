@@ -66,6 +66,10 @@ public class WebsiteLoadingTests extends DatabaseConnectorTestBase {
 		List<OnlineMediaItem> list = _observer.getList();
 		Assert.assertNotNull("list is null", list);
 		Assert.assertTrue("list has no items", list.size() > 0);
+		Assert.assertTrue(_observer.getItemsFound() > 0);
+		Assert.assertEquals(_observer.getItemsParsed(), _observer.getItemsFound());
+		Assert.assertTrue(_observer.getItemsUpdated() > 0);
+		Assert.assertTrue(_observer.getItemsUpdated() < _observer.getItemsFound());
 	}
 
 }

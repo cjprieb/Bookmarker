@@ -162,6 +162,10 @@
   <string name="menuSaveUrl">Save Url...</string>
   <string name="menuStopUpdates">Stop</string>
   <string name="menuUpload">Upload</string>
+  <string name="notifyUpdatesStarted">Updates Started</string>
+  <string name="notifyLoadingSite">Loading %s...</string>
+  <string name="notifySiteLoaded">%s Loaded</string>
+  <string name="notifyLoadingGenres">Loading genres from %s</string>
   <string name="titleErrorCannotUpload">Cannot complete FTP upload.</string>
   <string name="titleErrorCannotDownload">Cannot complete FTP download.</string>
   <string name="tooltipNoWeekDay">No weekday</string>

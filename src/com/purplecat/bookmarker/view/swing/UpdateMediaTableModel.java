@@ -156,12 +156,12 @@ public class UpdateMediaTableModel extends TAbstractTableModel<OnlineMediaItem> 
 		}
 
 		@Override
-		public void notifySiteParsed(WebsiteInfo site) {
+		public void notifySiteParsed(WebsiteInfo site, int itemsFound) {
 			updateSite(site, true);
 		}
 
 		@Override
-		public void notifyItemParsed(OnlineMediaItem item) {
+		public void notifyItemParsed(OnlineMediaItem item, int itemsParsed, int updateCount) {
 			updateItem(item);
 		}
 

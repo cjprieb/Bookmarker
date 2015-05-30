@@ -1,7 +1,9 @@
 package com.purplecat.bookmarker.controller.tasks;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import com.google.inject.Inject;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
@@ -57,6 +59,7 @@ public class OnlineUpdateTask {
 		started();
 		
 		List<OnlineMediaItem> list = new LinkedList<OnlineMediaItem>();
+		Set<Long> updatedMediaIds = new HashSet<Long>();
 		_observer.notifyLoadStarted();
 		
 		for ( IWebsiteParser scraper : _websites.getList() ) {
@@ -71,33 +74,40 @@ public class OnlineUpdateTask {
 				
 				//NOTE: check for duplicates and such here?
 				
-				_observer.notifySiteParsed(scraper.getInfo());
+				_observer.notifySiteParsed(scraper.getInfo(), siteList.size());
 				_logging.debug(0, TAG, "Site parsed: " + scraper.getInfo()._name);
 				
+				int iItemsParsed = 0;
 				for ( OnlineMediaItem item : siteList ) {
 					OnlineMediaItem found = _repository.findOrCreate(item);
+					iItemsParsed++;
 					if ( found != null ) {
 						_logging.debug(2, TAG, "DB Item found: " + found);
 						list.add(found);
-						_observer.notifyItemParsed(found);
+						if ( found._isSaved && found.isUpdated() ) { 
+							updatedMediaIds.add(item._mediaId); 
+						}
+						_observer.notifyItemParsed(found, iItemsParsed, updatedMediaIds.size());
 					}
 					else {
 						_logging.debug(2, TAG, "No match for: " + item);
 					}
 				}
-				
+								
 				//NOTE: reorder list here?
 
 				_logging.debug(1, TAG, "All items retrieved from databased: " + list.size());
+				iItemsParsed = 0;
 				for ( OnlineMediaItem item : list ) { //use found items, not parsed items.
 					if ( isStopped() ) {
 						break;
 					}
 					OnlineMediaItem newItem = scraper.loadItem(item);
+					iItemsParsed++;
 					if ( newItem != null ) {
 						_logging.debug(2, TAG, "Item parsed: " + item);
 						_repository.update(newItem);
-						_observer.notifyItemParsed(newItem);
+						_observer.notifyItemParsed(newItem, iItemsParsed, updatedMediaIds.size());
 					}
 					else {
 						_logging.debug(2, TAG, "Updated Item was null after load: " + item);

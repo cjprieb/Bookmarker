@@ -1,5 +1,7 @@
 package com.purplecat.bookmarker.extensions;
 
+import java.util.List;
+
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 
 public class OnlineMediaItemExt {
@@ -30,5 +32,19 @@ public class OnlineMediaItemExt {
 			existing._updatedPlace = newItem._updatedPlace;
 		}
 		existing._updatedDate = newItem._updatedDate;		
+	}
+	
+	public static long getIdWithMaxPlace(List<OnlineMediaItem> list, OnlineMediaItem item) {
+		OnlineMediaItem maxItem = item;
+		System.out.println("  new place: " + maxItem._updatedPlace);
+		for ( OnlineMediaItem existing : list ) {
+			//TODO: find max online media item from preferred website order and last updated date 
+			System.out.println("  comparing place: " + existing._updatedPlace);
+			if ( maxItem == null || existing._updatedPlace.compareTo(maxItem._updatedPlace) > 0 ) {
+				maxItem = existing;
+			}
+		}
+		System.out.println("  max place: " + maxItem._updatedPlace);
+		return maxItem._id;
 	}
 }

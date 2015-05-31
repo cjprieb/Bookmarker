@@ -27,13 +27,13 @@ public class MediaDatabaseRepository implements IMediaRepository {
 	
 	private static final String SELECT_MEDIA = "SELECT Media._id _id, MdDisplayTitle _displayTitle, MdIsComplete _isComplete, SvdIsSaved _isSaved, "
 			+ " SvdStoryState _storyState, SvdRating _rating, SvdIsFlagged _isFlagged, SvdNotes _notes, "
-										+ " hist.svhstDate _lastReadDate, hist.svhstPlace _lastReadPlace"
+										+ " hist.svhstDate _lastReadDate, hist.svhstPlace _lastReadPlace, "
+										+ " CASE WHEN svdisSaved THEN upbkchapterUrl ELSE upbktitleUrl END _updatedUrl, upbkdate _updatedDate, upbkplace _updatedPlace"
 										+ " FROM MEDIA" + 
-										" LEFT JOIN savedhistory hist on hist._id = media.svdhistory_id";
+										" LEFT JOIN savedhistory hist on hist._id = media.svdhistory_id" +
+										" LEFT JOIN updateBookmark upbk on upbk._id = media.uponline_id";
 	
-	private static final String COUNT_MEDIA = "SELECT COUNT(*) AS total_rows"
-										+ " FROM MEDIA" + 
-										" LEFT JOIN savedhistory hist on hist._id = media.svdhistory_id";
+	private static final String COUNT_MEDIA = "SELECT COUNT(*) AS total_rows FROM MEDIA ";
 	
 		
 	
@@ -63,6 +63,9 @@ public class MediaDatabaseRepository implements IMediaRepository {
 		media._storyState = StoryStateExt.parse(result.getInt("_storyState"));
 		media._rating= FavoriteStateExt.parse(result.getInt("_rating"));
 		media._notes = result.getString("_notes");
+		media._updatedUrl = result.getString("_updatedUrl");
+		media._updatedDate = result.getDateFromString("_updatedDate");
+		media._updatedPlace = PlaceExt.parse(result.getString("_updatedPlace"));
 		return media;
 	}
 

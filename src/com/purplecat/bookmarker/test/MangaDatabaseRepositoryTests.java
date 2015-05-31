@@ -59,10 +59,18 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			List<Media> list = _database.querySavedMedia(obs);
 			Assert.assertNotNull("List is null", list);
 			Assert.assertTrue("List has no elements", list.size() > 0);
-			Assert.assertTrue(obs.iTotal > 0);
-			Assert.assertTrue(obs.iTotal == obs.iIndex);
-			Assert.assertTrue(obs.bValidTotal);
+			Assert.assertTrue("total not found", obs.iTotal > 0);
+			Assert.assertTrue("total doesn't equal last index", obs.iTotal == obs.iIndex);
+			Assert.assertTrue("total was not valid", obs.bValidTotal);
 			checkSavedMediaItem(GetRandom.getItem(list));
+			
+			boolean hasUpdatedItem = false;
+			for ( Media item : list ) {
+				if ( item.isUpdated() ) {
+					hasUpdatedItem = true;
+				}
+			}
+			Assert.assertTrue("no updated item", hasUpdatedItem);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail("Exception occurred");

@@ -28,6 +28,8 @@ public class Media extends BaseDatabaseItem implements Comparable<Media> {
 
 	public Place _updatedPlace;
 	
+	public String _updatedUrl;
+	
 	public Media() {
 		_lastReadPlace = new Place();
 	}

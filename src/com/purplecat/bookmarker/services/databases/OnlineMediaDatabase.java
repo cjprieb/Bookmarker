@@ -82,33 +82,33 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 	@Override
 	public OnlineMediaItem queryById(long id) {
 		OnlineMediaItem item = null;
-		String sql = SELECT_ITEMS + " WHERE UpdateBookmark._id = @id";
 		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
-			NamedStatement stmt = new NamedStatement(conn, sql);
-			stmt.setLong("@id", id);
-			NamedResultSet result = stmt.executeQuery();
-			while ( result.next() ) {
-				item = loadOnlineMediaFromResultSet(result);
-				break;
-			}
+			item = queryById(conn, id);
 		} catch (SQLException e) {
-			_logging.error(TAG, "Query for id failed: " + sql, e);
+			_logging.error(TAG, "Query for id failed", e);
 		} 
 		return item;
 	}
 
 	@Override
 	public OnlineMediaItem findOrCreate(OnlineMediaItem item) {
+		System.out.println("creating: " + item._id);
 		OnlineMediaItem result = null;
+		List<OnlineMediaItem> existingList = null;
 		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
 			List<Media> matches = _mediaDatabase.queryByTitle(conn, item._displayTitle);
+			//TODO: don't assume first is best title match
 			if ( matches.size() > 0 ) {
-				//TODO: don't assume first is best title match
 				item._mediaId = matches.get(0)._id;
-				result = findExistingOnlineItem(conn, item);
-				if ( result != null ) {
-					OnlineMediaItemExt.copyNewToExisting(item, result);
-				} 
+				existingList = findExistingOnlineItems(conn, item._mediaId);
+				
+				System.out.println("  new place: " + item._updatedPlace);
+				for ( OnlineMediaItem existing : existingList ) {
+					if ( existing._websiteName.equals(item._websiteName) ) {
+						result = existing;
+						OnlineMediaItemExt.copyNewToExisting(item, result);
+					}
+				}
 			}
 			
 			conn.setAutoCommit(false);
@@ -126,12 +126,17 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 				if ( item._mediaId > 0 ) {
 					//matching media was found, but not matching online media, 
 					// so reload after insert to load media-specific fields
-					result = findExistingOnlineItem(conn, item);
+					result = queryById(conn, item._id);
 				}
 				else {
 					result = item;
 				}
 			}
+			long maxId = result._id;
+			if ( existingList != null ) {
+				maxId = OnlineMediaItemExt.getIdWithMaxPlace(existingList, item);
+			}
+			updateMedia(conn, item._mediaId, maxId > 0 ? maxId : result._id);
 			
 			conn.commit();
 		} catch (SQLException e) {
@@ -139,15 +144,48 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 		} 
 		return result;
 	}
+
+	@Override
+	public void insert(OnlineMediaItem item) {
+		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
+			insert(conn, item);
+			List<OnlineMediaItem> existingList = findExistingOnlineItems(conn, item._mediaId);
+			updateMedia(conn, item._mediaId, OnlineMediaItemExt.getIdWithMaxPlace(existingList, item));
+		} catch (SQLException e) {
+			_logging.error(TAG, "Insert failed", e);
+		} 
+	}
+
+	@Override
+	public void update(OnlineMediaItem item) {
+		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
+			update(conn, item);			
+			List<OnlineMediaItem> existingList = findExistingOnlineItems(conn, item._mediaId);
+			updateMedia(conn, item._mediaId, OnlineMediaItemExt.getIdWithMaxPlace(existingList, item));
+		} catch (SQLException e) {
+			_logging.error(TAG, "Update failed", e);
+		} 
+	}
+
+	@Override
+	public void delete(long id) {
+		String sql = "DELETE FROM UpdateBookmark WHERE _id = @id";
+		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
+			NamedStatement stmt = new NamedStatement(conn, sql);
+			stmt.setLong("@id", id);
+			stmt.execute();
+		} catch (SQLException e) {
+			_logging.error(TAG, "Delete failed: " + sql, e);
+		} 
+	}
 	
-	private OnlineMediaItem findExistingOnlineItem(Connection conn, OnlineMediaItem item) throws SQLException {
-		OnlineMediaItem existing = null;
-		NamedStatement stmt = new NamedStatement(conn, SELECT_ITEMS + " WHERE UpbkMedia_ID = @mediaId AND UpbkWebsiteName = @website");
-		stmt.setLong("@mediaId", item._mediaId);
-		stmt.setString("@website", item._websiteName);
+	private List<OnlineMediaItem> findExistingOnlineItems(Connection conn, long mediaId) throws SQLException {
+		List<OnlineMediaItem> existing = new LinkedList<OnlineMediaItem>();;
+		NamedStatement stmt = new NamedStatement(conn, SELECT_ITEMS + " WHERE UpbkMedia_ID = @mediaId");
+		stmt.setLong("@mediaId", mediaId);
 		NamedResultSet result = stmt.executeQuery();
 		while ( result.next() ) {
-			existing = loadOnlineMediaFromResultSet(result);
+			existing.add(loadOnlineMediaFromResultSet(result));
 			break;
 		}
 		return existing;
@@ -161,16 +199,20 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 		return stmt.executeInsert();
 	}
 
-	@Override
-	public void insert(OnlineMediaItem item) {
-		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
-			insert(conn, item);
-		} catch (SQLException e) {
-			_logging.error(TAG, "Insert failed", e);
-		} 
+	private OnlineMediaItem queryById(Connection conn, long id) throws SQLException {
+		OnlineMediaItem item = null;
+		String sql = SELECT_ITEMS + " WHERE UpdateBookmark._id = @id";
+		NamedStatement stmt = new NamedStatement(conn, sql);
+		stmt.setLong("@id", id);
+		NamedResultSet result = stmt.executeQuery();
+		while ( result.next() ) {
+			item = loadOnlineMediaFromResultSet(result);
+			break;
+		}
+		return item;
 	}
 
-	public void insert(Connection conn, OnlineMediaItem item) throws SQLException {
+	private void insert(Connection conn, OnlineMediaItem item) throws SQLException {
 		String sql = "INSERT INTO UpdateBookmark (UpbkMedia_ID, UpbkChapterUrl, UpbkTitleUrl, UpbkWebsiteName, UpbkDate, UpbkRating, UpbkIsIgnored, "
 				+ " UpbkPlace, UpbkNewlyAdded, UpbkVolume, UpbkChapter, UpbkSubChapter, UpbkExtra) "
 				+ " VALUES (@mediaId, @chapterUrl, @titleUrl, @websiteName, @date, @rating, @isIgnored, "
@@ -192,16 +234,7 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 		item._id = stmt.executeInsert();
 	}
 
-	@Override
-	public void update(OnlineMediaItem item) {
-		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
-			update(conn, item);
-		} catch (SQLException e) {
-			_logging.error(TAG, "Update failed", e);
-		} 
-	}
-
-	public void update(Connection conn, OnlineMediaItem item) throws SQLException {
+	private void update(Connection conn, OnlineMediaItem item) throws SQLException {
 		String sql = "UPDATE UpdateBookmark SET UpbkMedia_ID=@mediaId, UpbkChapterUrl=@chapterUrl, UpbkTitleUrl=@titleUrl, UpbkWebsiteName=@websiteName, "
 				+ " UpbkDate=@date, UpbkRating=@rating, UpbkIsIgnored=@isIgnored, "
 				+ " UpbkPlace=@place, UpbkNewlyAdded=@newlyAdded, UpbkVolume=@volume, UpbkChapter=@chapter, UpbkSubChapter=@sub, UpbkExtra=@extra"
@@ -224,15 +257,12 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 		stmt.executeUpdate();
 	}
 
-	@Override
-	public void delete(long id) {
-		String sql = "DELETE FROM UpdateBookmark WHERE _id = @id";
-		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
-			NamedStatement stmt = new NamedStatement(conn, sql);
-			stmt.setLong("@id", id);
-			stmt.execute();
-		} catch (SQLException e) {
-			_logging.error(TAG, "Delete failed: " + sql, e);
-		} 
+	private void updateMedia(Connection conn, long mediaId, long updatedId) throws SQLException {
+		System.out.println("  updating media: " + mediaId + " for update item " + updatedId);
+		String sql = "UPDATE Media SET UpOnline_Id=@upId WHERE _id = @mediaId";
+		NamedStatement stmt = new NamedStatement(conn, sql);
+		stmt.setLong("@upId", updatedId);
+		stmt.setLong("@mediaId", mediaId);
+		stmt.executeUpdate();
 	}
 }

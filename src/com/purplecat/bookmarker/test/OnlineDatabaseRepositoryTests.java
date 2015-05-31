@@ -1,5 +1,6 @@
 package com.purplecat.bookmarker.test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -20,7 +21,8 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	
 	private static IOnlineMediaRepository _database;
 	private static MediaDatabaseRepository _savedDatabase;
-	private static List<OnlineMediaItem> _randomItems;
+	private static List<OnlineMediaItem> _randomSavedItems = new ArrayList<OnlineMediaItem>();
+	private static List<OnlineMediaItem> _randomUnsavedItems = new ArrayList<OnlineMediaItem>();
 
 	@BeforeClass
 	public static void setUpBeforeTest() throws Exception {
@@ -28,24 +30,25 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 		_database = injector.getInstance(IOnlineMediaRepository.class);
 		_savedDatabase = injector.getInstance(MediaDatabaseRepository.class);
 		
-		_randomItems = _database.query();
-		Assert.assertNotNull("List is null", _randomItems);
-		Assert.assertTrue("List has no elements", _randomItems.size() > 0);
+		List<OnlineMediaItem> randomItems = _database.query();
+		Assert.assertNotNull("List is null", randomItems);
+		Assert.assertTrue("List has no elements", randomItems.size() > 0);
 		
-		boolean hasSaved = false;
-		for(OnlineMediaItem item : _randomItems) {
+		for(OnlineMediaItem item : randomItems) {
 			if ( item._isSaved ) {
-				hasSaved = true;
-				break;
+				_randomSavedItems.add(item);
+			}
+			else {
+				_randomUnsavedItems.add(item);
 			}
 		}
-		Assert.assertTrue("List has no saved elements", hasSaved);
+		Assert.assertTrue("List has no saved elements", _randomSavedItems.size() > 0);
 	}
 
 	@Test
 	public void testQueryById() {
 		try {
-			OnlineMediaItem expected = GetRandom.getItem(_randomItems);
+			OnlineMediaItem expected = GetRandom.getItem(_randomSavedItems);
 			OnlineMediaItem actual = _database.queryById(expected._id);
 			Assert.assertNotNull("Query for id list is null", actual);
 			Assert.assertEquals("Element doesn't match id", expected._id, actual._id);
@@ -93,9 +96,10 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	@Test
 	public void testUpdate() {
 		try {
-			OnlineMediaItem item = GetRandom.getItem(_randomItems);
-			item._updatedPlace._volume = 1;
-			item._updatedPlace._chapter = 12;
+			OnlineMediaItem item = GetRandom.getItem(_randomSavedItems);
+			Media media = this._savedDatabase.queryById(item._mediaId);
+			item._updatedPlace._volume = 10;
+			item._updatedPlace._chapter = 38;
 			item._chapterUrl = "http://bato.to/read/_/319045/shana-oh-yoshitsune_v10_ch38_by_easy-going-scans";
 			item._titleUrl = "http://bato.to/comic/_/comics/shana-oh-yoshitsune-r5256";
 			item._updatedDate = new DateTime();
@@ -110,6 +114,14 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			Assert.assertNotNull("Item is null", actual);
 			checkItem(actual);
 			checkEquals(item, actual);
+			
+			Media updatedMedia = _savedDatabase.queryById(item._mediaId);
+			if ( updatedMedia._updatedPlace.compareTo(item._updatedPlace) == 0 ) { 
+				Assert.assertTrue("old place was greater", media._updatedPlace.compareTo(updatedMedia._updatedPlace) <= 0);
+			}
+			else {
+				Assert.assertTrue("current place is greater", media._updatedPlace.compareTo(item._updatedPlace) > 0);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail("Exception occurred");
@@ -119,7 +131,7 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	@Test
 	public void testFindOrCreate() {
 		try {					
-			OnlineMediaItem item = GetRandom.getItem(_randomItems);
+			OnlineMediaItem item = GetRandom.getItem(_randomUnsavedItems);
 			item._id = 0;
 			item._mediaId = 0;
 			item._updatedPlace._chapter++;
@@ -131,6 +143,40 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			Assert.assertNotNull("Item is null", result);			
 			Assert.assertTrue("Invalid id", result._id > 0);
 			Assert.assertTrue("Invalid media id", result._mediaId > 0);
+			
+			Media mediaItem = _savedDatabase.queryById(item._mediaId);
+			Assert.assertEquals("url not matched: " + item._mediaId, item._titleUrl, mediaItem._updatedUrl);
+			Assert.assertEquals(item._updatedPlace, mediaItem._updatedPlace);
+			Assert.assertEquals(item._updatedDate, mediaItem._updatedDate);
+			
+			checkItem(result);
+			checkEquals(item, result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail("Exception occurred");
+		}
+	}
+
+	@Test
+	public void testSavedFindOrCreate() {
+		try {					
+			OnlineMediaItem item = GetRandom.getItem(_randomSavedItems);
+			item._id = 0;
+			item._mediaId = 0;
+			item._updatedPlace._chapter++;
+			item._chapterUrl = "http://bato.to/read/_/319045/shana-oh-yoshitsune_v10_ch38_by_easy-going-scans";
+			item._titleUrl = "http://bato.to/comic/_/comics/shana-oh-yoshitsune-r5256";
+			item._updatedDate = new DateTime();
+			OnlineMediaItem result = _database.findOrCreate(item);
+			
+			Assert.assertNotNull("Item is null", result);			
+			Assert.assertTrue("Invalid id", result._id > 0);
+			Assert.assertTrue("Invalid media id", result._mediaId > 0);
+			
+			Media mediaItem = _savedDatabase.queryById(item._mediaId);
+			Assert.assertEquals(item._chapterUrl, mediaItem._updatedUrl);
+			Assert.assertEquals(item._updatedPlace, mediaItem._updatedPlace);
+			Assert.assertEquals(item._updatedDate, mediaItem._updatedDate);
 			
 			checkItem(result);
 			checkEquals(item, result);
@@ -144,12 +190,12 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	@Test
 	public void testRemove() {
 		try {
-			OnlineMediaItem media = GetRandom.getItem(_randomItems);
+			OnlineMediaItem media = GetRandom.getItem(_randomUnsavedItems);
 			_database.delete(media._id);
 
 			OnlineMediaItem actual = _database.queryById(media._id);
 			Assert.assertNull("Item is null: " + media._id, actual);
-			_randomItems.remove(media);
+			_randomUnsavedItems.remove(media);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail("Exception occurred");

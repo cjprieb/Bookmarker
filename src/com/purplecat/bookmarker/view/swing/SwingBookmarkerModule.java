@@ -14,6 +14,10 @@ import com.purplecat.bookmarker.services.websites.DefaultWebsiteList;
 import com.purplecat.bookmarker.services.websites.IWebsiteList;
 import com.purplecat.bookmarker.services.websites.IWebsiteLoadObserver;
 import com.purplecat.bookmarker.services.websites.WebsiteThreadObserver;
+import com.purplecat.bookmarker.view.swing.components.HtmlEditorPane;
+import com.purplecat.bookmarker.view.swing.observers.SavedMediaSummaryObserver;
+import com.purplecat.bookmarker.view.swing.panels.SavedMediaSummaryPanel;
+import com.purplecat.bookmarker.view.swing.panels.SummaryPanel;
 import com.purplecat.bookmarker.view.swing.renderers.BookmarkerRendererFactory;
 import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.logs.ConsoleLog;
@@ -47,13 +51,19 @@ public class SwingBookmarkerModule extends AbstractModule {
 		bind(IWebsiteList.class).to(DefaultWebsiteList.class);
 		bind(String.class).annotatedWith(Names.named("JDBC URL")).toInstance("jdbc:sqlite:../BookmarkView/databases/bookmarker.db");
 		
-		//Swing Items
-		bind(Toolbox.class);
-		bind(MainPanel.class);
+		//Swing Interface Items
 		bind(IThreadPool.class).to(SwingThreadPool.class);
 		bind(ICellRendererFactory.class).to(BookmarkerRendererFactory.class);
 		bind(IImageRepository.class).to(SwingImageRepository.class);
 		bind(IResourceService.class).to(SwingResourceService.class);
+		
+		//Swing GUI Items
+		bind(Toolbox.class);
+		bind(MainPanel.class);
+		bind(HtmlEditorPane.class);
+		bind(SummaryPanel.class);
+		bind(SavedMediaSummaryPanel.class);
+		bind(SavedMediaSummaryObserver.class);
 		
 		//Main Class
 		bind(MyApplication.class).to(BookmarkerStart.class);

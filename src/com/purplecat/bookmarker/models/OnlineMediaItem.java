@@ -54,7 +54,7 @@ public class OnlineMediaItem extends BaseDatabaseItem implements Comparable<Onli
 	public String _websiteName;
 	
 	public boolean isUpdated() {
-		if ( _lastReadPlace != null ) {
+		if ( _isSaved && _lastReadPlace != null ) {
 			return _lastReadPlace.compareTo(_updatedPlace) < 0;
 		}
 		else {

@@ -5,6 +5,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
+import com.google.inject.Inject;
 import com.purplecat.bookmarker.Resources;
 import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.view.swing.actions.LoadUpdatesAction;
@@ -18,19 +19,24 @@ public class OnlineUpdateTab {
 	
 	private JPanel _panel;
 	
-	public JPanel create(Controller controller, ICellRendererFactory rendererFactory, IResourceService resources) {		
-		OnlineUpdateItemTableControl updateMediaTableControl = new OnlineUpdateItemTableControl(rendererFactory, controller, resources);
-		controller.observeOnlineThreadLoading(updateMediaTableControl.getModel().getObserver());
-		controller.observeSavedMediaUpdate(updateMediaTableControl.getModel().getObserver());
+	@Inject Controller _controller;
+	@Inject ICellRendererFactory _rendererFactory;
+	@Inject IResourceService _resources;
+	@Inject SummaryPanel _summaryPanel;
+	
+	public JPanel create() {		
+		OnlineUpdateItemTableControl updateMediaTableControl = new OnlineUpdateItemTableControl(_rendererFactory, _controller, _resources);
+		_controller.observeOnlineThreadLoading(updateMediaTableControl.getModel().getObserver());
+		_controller.observeSavedMediaUpdate(updateMediaTableControl.getModel().getObserver());
 		
-		UpdateMediaObserverControl updateObserver = new UpdateMediaObserverControl(resources);
-		controller.observeOnlineThreadLoading(updateObserver);
+		UpdateMediaObserverControl updateObserver = new UpdateMediaObserverControl(_resources);
+		_controller.observeOnlineThreadLoading(updateObserver);
 		
-		JButton loadUpdatesButton = new JButton(resources.getString(Resources.string.lblLoadUpdates));
-		loadUpdatesButton.addActionListener(new LoadUpdatesAction(controller));
+		JButton loadUpdatesButton = new JButton(_resources.getString(Resources.string.lblLoadUpdates));
+		loadUpdatesButton.addActionListener(new LoadUpdatesAction(_controller));
 		
-		JButton stopUpdatesButton = new JButton(resources.getString(Resources.string.lblStopUpdates));
-		stopUpdatesButton.addActionListener(new StopUpdatesAction(controller));
+		JButton stopUpdatesButton = new JButton(_resources.getString(Resources.string.lblStopUpdates));
+		stopUpdatesButton.addActionListener(new StopUpdatesAction(_controller));
 
 		_panel = new JPanel();
 		GroupLayout layout = new GroupLayout(_panel);

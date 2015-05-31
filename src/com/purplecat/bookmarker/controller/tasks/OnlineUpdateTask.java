@@ -84,7 +84,7 @@ public class OnlineUpdateTask {
 					if ( found != null ) {
 						_logging.debug(2, TAG, "DB Item found: " + found);
 						list.add(found);
-						if ( found._isSaved && found.isUpdated() ) { 
+						if ( found.isUpdated() ) { 
 							updatedMediaIds.add(item._mediaId); 
 						}
 						_observer.notifyItemParsed(found, iItemsParsed, updatedMediaIds.size());

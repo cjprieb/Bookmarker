@@ -35,8 +35,17 @@ public class Media extends BaseDatabaseItem implements Comparable<Media> {
 	}
 	
 	public boolean isUpdated() {
-		if ( _updatedPlace != null ) {
+		if ( _isSaved && _updatedPlace != null ) {
 			return _lastReadPlace.compareTo(_updatedPlace) < 0;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	public boolean isRead() {
+		if ( _updatedPlace != null ) {
+			return _lastReadPlace.compareTo(_updatedPlace) >= 0;
 		}
 		else {
 			return false;

@@ -50,6 +50,10 @@ public class SavedMediaTableControl {
 		//_sorter.sort();
 	}
 	
+	public TTable<Media> getTable() {
+		return _table;
+	}
+	
 	public SavedMediaTableModel getModel() {
 		return _model;
 	}

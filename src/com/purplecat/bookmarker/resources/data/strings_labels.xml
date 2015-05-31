@@ -4,6 +4,7 @@
   <string name="lblAdd">Add</string>
   <string name="lblAll">All</string>
   <string name="lblAllSites">All</string>  
+  <string name="lblAltTitles">Alt. Titles</string>
   <string name="lblAuthor">Author</string>
   <string name="lblBookmarks">Bookmarks</string>
   <string name="lblBookmarkFileUrl">Bookmark File URL:</string>
@@ -12,6 +13,7 @@
   <string name="lblChapter">Chapter</string>
   <string name="lblChapterUrl">Chapter URL</string>
   <string name="lblCompleted">Completed?</string>
+  <string name="lblCopyUrl">Copy URL</string>
   <string name="lblDate">Date</string>
   <string name="lblDefault">Default</string>
   <string name="lblDelete">Delete</string>
@@ -45,6 +47,7 @@
   <string name="lblIndex">Index</string>
   <string name="lblKeyword">Keyword</string>
   <string name="lblLastUpdated">Last Updated</string>
+  <string name="lblLinks">Links</string>
   <string name="lblLoaded">Loaded</string>
   <string name="lblLoading">Loading</string>
   <string name="lblLoadUpdates">Load Updates</string>
@@ -66,6 +69,7 @@
   <string name="lblOnline">Online</string>
   <string name="lblOnlyNullAuthors">Show only media with null authors</string>
   <string name="lblOnlyTitlesStartingWith">only titles starting with...</string>
+  <string name="lblOpenUrl">Open URL</string>
   <string name="lblOrderBy">Order by</string>
   <string name="lblOverideMockSave">Override mock save</string>
   <string name="lblPageViewerDir">Page Viewer Directory:</string>
@@ -92,6 +96,7 @@
   <string name="lblStop">Stop</string>
   <string name="lblStopUpdates">Stop Updates</string>
   <string name="lblStoryState">Story State</string>
+  <string name="lblSummary">Summary</string>
   <string name="lblTest">Test</string>
   <string name="lblTime">Time</string>
   <string name="lblTitle">Title</string>
@@ -128,6 +133,7 @@
   <string name="htmlLastWatched">Last Watched</string>
   <string name="htmlNextChapter">Next Chapter</string>
   <string name="htmlNextEpisode">Next Episode</string>
+  <string name="htmlPlaceAndDate">%s on %s</string>
   <string name="htmlRating">Rating</string>
   <string name="htmlTitlePage">Title Page</string>
   <string name="htmlUpdatedChapter">Updated Chapter</string>

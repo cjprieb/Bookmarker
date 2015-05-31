@@ -1,6 +1,11 @@
 package com.purplecat.bookmarker.extensions;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+
+import com.purplecat.bookmarker.Resources;
 import com.purplecat.bookmarker.models.Place;
+import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.extensions.Numbers;
 
 public class PlaceExt {
@@ -127,5 +132,19 @@ public class PlaceExt {
 			builder.append('*');
 		}
 		return builder.toString();
+	}
+	
+	public static String formatPlaceAndDate(IResourceService resources, Place place, DateTime date) {
+		if ( place == null ) {
+			return "";
+		}
+		if ( date != null ) {
+			return String.format(resources.getString(Resources.string.htmlPlaceAndDate), 
+					render(place), 
+					date.toString(DateTimeFormat.mediumDate()));
+		}
+		else {
+			return render(place);
+		}		
 	}
 }

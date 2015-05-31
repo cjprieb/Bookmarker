@@ -46,6 +46,10 @@ public class OnlineUpdateItemTableControl {
 		setupPopupMenu();
 	}
 	
+	public TTable<OnlineMediaItem> getTable() {
+		return _table;
+	}
+	
 	public OnlineUpdateItemTableModel getModel() {
 		return _model;
 	}

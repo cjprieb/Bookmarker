@@ -14,7 +14,7 @@ import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.view.swing.panels.GlassTimerPanel;
 import com.purplecat.bookmarker.view.swing.panels.OnlineUpdateTab;
 import com.purplecat.bookmarker.view.swing.panels.SavedMediaTab;
-import com.purplecat.bookmarker.view.swing.panels.SummaryPanel;
+import com.purplecat.bookmarker.view.swing.panels.SummarySidebar;
 import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.swing.renderer.ICellRendererFactory;
 
@@ -27,7 +27,7 @@ public class MainPanel {
 	
 	@Inject SavedMediaTab _savedMediaTab;
 	@Inject OnlineUpdateTab _onlineUpdateTab;	
-	@Inject SummaryPanel _summaryPanel;
+	@Inject SummarySidebar _summaryPanel;
 	
 	public JPanel _panel;
 

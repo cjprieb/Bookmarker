@@ -1,11 +1,11 @@
 package com.purplecat.bookmarker.view.swing.panels;
 
 import com.google.inject.Singleton;
-import com.purplecat.bookmarker.models.Media;
+import com.purplecat.bookmarker.models.OnlineMediaItem;
 
 @Singleton
-public class SavedMediaSummaryPanel extends MediaSummaryPanel {
-	public void update(Media view) {
+public class OnlineMediaSummaryPanel extends MediaSummaryPanel {
+	public void update(OnlineMediaItem view) {
 		_dataTitle.setText(view._displayTitle);		
 //		setAltTitles(view._altTitles);
 		setUpdateColor(view._isSaved && view.isUpdated(), view.isRead());
@@ -16,11 +16,9 @@ public class SavedMediaSummaryPanel extends MediaSummaryPanel {
 		_dataRating.setVisible(false);
 //		setType(view._type);
 //		setSummary(view._summary);
-		setDescription(view._notes);
-		setLink(_dataChapterLink, view._chapterURL);
-		_dataSiteLink._textControl.setVisible(false);
-//		setLink(_dataSiteLink, view._titleUrl);
-		setLink(_dataUpdatedLink, view._updatedUrl);		
+		setLink(_dataChapterLink, "");
+		setLink(_dataSiteLink, view._titleUrl);
+		setLink(_dataUpdatedLink, view._chapterUrl);
 	}
 
 }

@@ -16,7 +16,7 @@ public class SavedMediaTab {
 	@Inject Controller _controller;
 	@Inject ICellRendererFactory _rendererFactory;
 	@Inject IResourceService _resources;
-	@Inject SummaryPanel _summaryPanel;
+	@Inject SummarySidebar _summaryPanel;
 	@Inject SavedMediaSummaryObserver _summaryObserver;
 	
 	public JPanel create() {

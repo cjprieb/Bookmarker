@@ -62,6 +62,15 @@ public class OnlineMediaItem extends BaseDatabaseItem implements Comparable<Onli
 		}
 	}
 	
+	public boolean isRead() {
+		if ( _isSaved && _lastReadPlace != null ) {
+			return _lastReadPlace.compareTo(_updatedPlace) >= 0;
+		}
+		else {
+			return false;
+		}
+	}
+	
 	@Override
 	public String toString() {
 		return String.format("[OnlineMediaItem-%d [title=%s][url=%s][place=%s]]", _id, _displayTitle, _chapterUrl, _updatedPlace.toString());

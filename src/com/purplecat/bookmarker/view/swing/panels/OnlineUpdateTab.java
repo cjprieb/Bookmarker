@@ -11,6 +11,7 @@ import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.view.swing.actions.LoadUpdatesAction;
 import com.purplecat.bookmarker.view.swing.actions.StopUpdatesAction;
 import com.purplecat.bookmarker.view.swing.components.OnlineUpdateItemTableControl;
+import com.purplecat.bookmarker.view.swing.observers.OnlineMediaSummaryObserver;
 import com.purplecat.bookmarker.view.swing.observers.UpdateMediaObserverControl;
 import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.swing.renderer.ICellRendererFactory;
@@ -22,12 +23,14 @@ public class OnlineUpdateTab {
 	@Inject Controller _controller;
 	@Inject ICellRendererFactory _rendererFactory;
 	@Inject IResourceService _resources;
-	@Inject SummaryPanel _summaryPanel;
+	@Inject SummarySidebar _summaryPanel;
+	@Inject OnlineMediaSummaryObserver _summaryObserver;
 	
 	public JPanel create() {		
 		OnlineUpdateItemTableControl updateMediaTableControl = new OnlineUpdateItemTableControl(_rendererFactory, _controller, _resources);
 		_controller.observeOnlineThreadLoading(updateMediaTableControl.getModel().getObserver());
 		_controller.observeSavedMediaUpdate(updateMediaTableControl.getModel().getObserver());
+		updateMediaTableControl.getTable().addRowSelectionListener(_summaryObserver);
 		
 		UpdateMediaObserverControl updateObserver = new UpdateMediaObserverControl(_resources);
 		_controller.observeOnlineThreadLoading(updateObserver);

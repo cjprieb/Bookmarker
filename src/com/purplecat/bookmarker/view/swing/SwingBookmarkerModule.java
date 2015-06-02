@@ -17,7 +17,7 @@ import com.purplecat.bookmarker.services.websites.WebsiteThreadObserver;
 import com.purplecat.bookmarker.view.swing.components.HtmlEditorPane;
 import com.purplecat.bookmarker.view.swing.observers.SavedMediaSummaryObserver;
 import com.purplecat.bookmarker.view.swing.panels.SavedMediaSummaryPanel;
-import com.purplecat.bookmarker.view.swing.panels.SummaryPanel;
+import com.purplecat.bookmarker.view.swing.panels.SummarySidebar;
 import com.purplecat.bookmarker.view.swing.renderers.BookmarkerRendererFactory;
 import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.logs.ConsoleLog;
@@ -59,11 +59,6 @@ public class SwingBookmarkerModule extends AbstractModule {
 		
 		//Swing GUI Items
 		bind(Toolbox.class);
-		bind(MainPanel.class);
-		bind(HtmlEditorPane.class);
-		bind(SummaryPanel.class);
-		bind(SavedMediaSummaryPanel.class);
-		bind(SavedMediaSummaryObserver.class);
 		
 		//Main Class
 		bind(MyApplication.class).to(BookmarkerStart.class);

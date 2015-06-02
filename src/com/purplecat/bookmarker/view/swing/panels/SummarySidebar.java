@@ -11,12 +11,10 @@ import javax.swing.border.BevelBorder;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.purplecat.bookmarker.view.swing.components.HtmlEditorPane;
-import com.purplecat.bookmarker.view.swing.observers.SummaryHyperlinkObserver;
 import com.purplecat.commons.swing.Toolbox;
 
 @Singleton
-public class SummaryPanel {
+public class SummarySidebar {
 	private JPanel _panel;
 	private JScrollPane _scrollPane;
 	
@@ -25,12 +23,9 @@ public class SummaryPanel {
 	public JPanel create() {
 		_panel = new JPanel();
 		_panel.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
-		_panel.setPreferredSize(new Dimension(300, 400));
-		
-		//_htmlEditorPane.addHyperlinkListener(new SummaryHyperlinkObserver(_toolbox, _panel));			
+		_panel.setPreferredSize(new Dimension(300, 400));	
 
 		_scrollPane = new JScrollPane();
-		//_scrollPane.setViewportView(_htmlEditorPane);
 		_scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		_scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
@@ -51,11 +46,7 @@ public class SummaryPanel {
 	
 	public void setSummaryView(JPanel panel) {
 		if ( panel != null ) {
-			//panel.setHyperlinkListener(this);
 			_scrollPane.setViewportView(panel);
-		}		
-		else {
-			//setTextEx(new HtmlElement("html").getHtml());
 		}
 	}
 }

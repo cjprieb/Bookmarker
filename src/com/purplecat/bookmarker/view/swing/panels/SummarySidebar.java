@@ -20,7 +20,7 @@ public class SummarySidebar {
 	
 	@Inject Toolbox _toolbox;
 	
-	public JPanel create() {
+	public void create() {
 		_panel = new JPanel();
 		_panel.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
 		_panel.setPreferredSize(new Dimension(300, 400));	
@@ -41,6 +41,9 @@ public class SummarySidebar {
 				.addComponent(_scrollPane, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 100, Short.MAX_VALUE)
 				.addComponent(editPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE));
 		}
+	}
+	
+	public JPanel getPanel() {
 		return _panel;
 	}
 	

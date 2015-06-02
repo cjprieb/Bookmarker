@@ -155,7 +155,7 @@ public class SwingImageRepository implements IImageRepository {
 					throw (new MalformedURLException());
 				}
 			} catch (MalformedURLException e) {
-				_logger.error(TAG, "MalformedURLException: Couldn't find image \"" + fullPath + "\"", e);
+				_logger.error(TAG, "MalformedURLException: Couldn't find image \"" + fullPath + "\"");
 			}
 		}
 		return null;

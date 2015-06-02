@@ -5,9 +5,13 @@ import java.util.List;
 
 import javax.swing.GroupLayout;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.purplecat.bookmarker.Resources;
 import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.controller.observers.IListLoadedObserver;
 import com.purplecat.bookmarker.models.Media;
@@ -19,7 +23,7 @@ import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.swing.renderer.ICellRendererFactory;
 
 @Singleton
-public class MainPanel {
+public class MainPanel implements ChangeListener {
 	
 	@Inject Controller _controller;
 	@Inject ICellRendererFactory _rendererFactory;
@@ -30,38 +34,54 @@ public class MainPanel {
 	@Inject SummarySidebar _summaryPanel;
 	
 	public JPanel _panel;
+	public JTabbedPane _tabbedPane;
 
 	public JPanel create(GlassTimerPanel timerGlassPane) {
 		_panel = new JPanel();
-		_panel.setPreferredSize(new Dimension(1300, 600));
+		_panel.setPreferredSize(new Dimension(850, 600));
+		
+		_tabbedPane = new JTabbedPane();
+		_tabbedPane.addChangeListener(this);
 
 		timerGlassPane.setCoverPanel(_panel);		
 		_controller.observeSavedMediaLoading(new GlassPanelListObserver(timerGlassPane));
 		
-		JPanel summaryPanel = _summaryPanel.create();		
-		JPanel savedMediaPanel = _savedMediaTab.create();
-		JPanel onlineUpdatePanel = _onlineUpdateTab.create();
+		_summaryPanel.create();
+		_savedMediaTab.create();
+		_onlineUpdateTab.create();
 		
+		_tabbedPane.addTab(_resources.getString(Resources.string.lblBookmarks), _savedMediaTab.getPanel());		
+		_tabbedPane.addTab(_resources.getString(Resources.string.lblUpdated), _onlineUpdateTab.getPanel());	
 		
 		GroupLayout layout = new GroupLayout(_panel);
 		_panel.setLayout(layout);
 		layout.setHorizontalGroup(layout.createSequentialGroup()
 				.addContainerGap()
-				.addComponent(savedMediaPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
-				.addComponent(onlineUpdatePanel, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
-				.addComponent(summaryPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
+				.addComponent(_tabbedPane, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
+				.addComponent(_summaryPanel.getPanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
 				.addContainerGap());
 		
 		layout.setVerticalGroup(layout.createSequentialGroup()
 				.addContainerGap()
 				.addGroup(layout.createParallelGroup()
-					.addComponent(savedMediaPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
-					.addComponent(onlineUpdatePanel, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
-					.addComponent(summaryPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
+					.addComponent(_tabbedPane, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
+					.addComponent(_summaryPanel.getPanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
 				)
 				.addContainerGap());
 		
 		return _panel;
+	}
+	
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		if ( e.getSource() == _tabbedPane ) {
+			if ( _tabbedPane.getSelectedComponent() == _savedMediaTab.getPanel() ) {
+				_savedMediaTab.updateSummaryPanel();
+			}
+			else if ( _tabbedPane.getSelectedComponent() == _onlineUpdateTab.getPanel() ) {
+				_onlineUpdateTab.updateSummaryPanel();
+			}
+		}
 	}
 	
 	public static class GlassPanelListObserver implements IListLoadedObserver<Media> {

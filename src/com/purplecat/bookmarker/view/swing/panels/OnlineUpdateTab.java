@@ -26,7 +26,7 @@ public class OnlineUpdateTab {
 	@Inject SummarySidebar _summaryPanel;
 	@Inject OnlineMediaSummaryObserver _summaryObserver;
 	
-	public JPanel create() {		
+	public void create() {		
 		OnlineUpdateItemTableControl updateMediaTableControl = new OnlineUpdateItemTableControl(_rendererFactory, _controller, _resources);
 		_controller.observeOnlineThreadLoading(updateMediaTableControl.getModel().getObserver());
 		_controller.observeSavedMediaUpdate(updateMediaTableControl.getModel().getObserver());
@@ -77,7 +77,13 @@ public class OnlineUpdateTab {
 				.addPreferredGap(ComponentPlacement.RELATED)
 				.addComponent(updateObserver.getProgressBar(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)				
 				.addContainerGap());
-		
+	}
+	
+	public JPanel getPanel() {
 		return _panel;
+	}
+	
+	public void updateSummaryPanel() {
+		_summaryPanel.setSummaryView(_summaryObserver.getSummaryPanel());
 	}
 }

@@ -19,8 +19,7 @@ public class SavedMediaTab {
 	@Inject SummarySidebar _summaryPanel;
 	@Inject SavedMediaSummaryObserver _summaryObserver;
 	
-	public JPanel create() {
-		
+	public void create() {		
 		SavedMediaTableControl savedMediaTableControl = new SavedMediaTableControl(_rendererFactory, _resources);
 		_controller.observeSavedMediaLoading(savedMediaTableControl.getModel().getObserver());
 		_controller.observeOnlineThreadLoading(savedMediaTableControl.getModel().getObserver());
@@ -40,7 +39,13 @@ public class SavedMediaTab {
 			.addContainerGap()
 			.addComponent(savedMediaTableControl.getComponent(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)				
 			.addContainerGap());
-		
+	}
+	
+	public JPanel getPanel() {
 		return _panel;
+	}
+	
+	public void updateSummaryPanel() {
+		_summaryPanel.setSummaryView(_summaryObserver.getSummaryPanel());
 	}
 }

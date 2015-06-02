@@ -2,7 +2,6 @@ package com.purplecat.bookmarker.view.swing;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
-import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.services.UrlPatternService;
 import com.purplecat.bookmarker.services.databases.IMediaRepository;
 import com.purplecat.bookmarker.services.databases.IOnlineMediaRepository;
@@ -14,10 +13,6 @@ import com.purplecat.bookmarker.services.websites.DefaultWebsiteList;
 import com.purplecat.bookmarker.services.websites.IWebsiteList;
 import com.purplecat.bookmarker.services.websites.IWebsiteLoadObserver;
 import com.purplecat.bookmarker.services.websites.WebsiteThreadObserver;
-import com.purplecat.bookmarker.view.swing.components.HtmlEditorPane;
-import com.purplecat.bookmarker.view.swing.observers.SavedMediaSummaryObserver;
-import com.purplecat.bookmarker.view.swing.panels.SavedMediaSummaryPanel;
-import com.purplecat.bookmarker.view.swing.panels.SummarySidebar;
 import com.purplecat.bookmarker.view.swing.renderers.BookmarkerRendererFactory;
 import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.logs.ConsoleLog;
@@ -46,7 +41,6 @@ public class SwingBookmarkerModule extends AbstractModule {
 		bind(IOnlineMediaRepository.class).to(OnlineMediaDatabase.class);
 		bind(IMediaRepository.class).to(MediaDatabaseRepository.class);
 		bind(UrlPatternService.class);
-		bind(Controller.class);
 		bind(IWebsiteLoadObserver.class).to(WebsiteThreadObserver.class);
 		bind(IWebsiteList.class).to(DefaultWebsiteList.class);
 		bind(String.class).annotatedWith(Names.named("JDBC URL")).toInstance("jdbc:sqlite:../BookmarkView/databases/bookmarker.db");

@@ -2,6 +2,8 @@ package com.purplecat.bookmarker.view.swing.observers;
 
 import java.util.List;
 
+import javax.swing.JPanel;
+
 import com.google.inject.Inject;
 import com.purplecat.bookmarker.controller.observers.IItemChangedObserver;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
@@ -16,6 +18,10 @@ public class OnlineMediaSummaryObserver implements IRowSelectionListener<OnlineM
 	@Inject SummarySidebar _parentSummaryPanel;
 	
 	OnlineMediaItem _currentMedia;
+	
+	public JPanel getSummaryPanel() {
+		return _mediaSummaryPanel.getPanel();
+	}
 
 	@Override
 	public void rowSelected(RowSelectionEvent<OnlineMediaItem> e) {

@@ -28,6 +28,7 @@ public class NamedStatement {
 	
 	private Connection _connection;
 	private String _preparedSql;
+	private PreparedStatement _statement;
 	private HashMap<String, NamedParameter> _namedParameters = new HashMap<String, NamedParameter>();
 	
 	public NamedStatement(Connection conn, String sql) {
@@ -82,6 +83,16 @@ public class NamedStatement {
 		return id;
 	}
 	
+	public void addBatch() throws SQLException {
+		prepareStatement(true);
+	}
+	
+	public void executeBatchUpdate() throws SQLException {
+		if ( _statement != null ) {
+			_statement.executeBatch();
+		}
+	}
+	
 	public void executeUpdate() throws SQLException {
 		prepareStatement().executeUpdate();
 	}
@@ -105,33 +116,42 @@ public class NamedStatement {
 	}
 	
 	private PreparedStatement prepareStatement() throws SQLException {
-		PreparedStatement stmt = _connection.prepareStatement(_preparedSql);
+		return prepareStatement(false);		
+	}
+	
+	private PreparedStatement prepareStatement(boolean isBatch) throws SQLException {
+		if ( _statement == null || !isBatch ) {
+			_statement = _connection.prepareStatement(_preparedSql);
+		}
 		for ( String key : _namedParameters.keySet() ) {
 			NamedParameter param = _namedParameters.get(key);
 			for ( Integer index : param._indices ) {
 				switch ( param._type ) {
 				case INTEGER:
-					stmt.setInt(index, (int)param._value);
+					_statement.setInt(index, (int)param._value);
 					break;
 				case LONG:
-					stmt.setLong(index, (long)param._value);
+					_statement.setLong(index, (long)param._value);
 					break;
 				case STRING:
-					stmt.setString(index, (String)param._value);
+					_statement.setString(index, (String)param._value);
 					break;
 				case BOOLEAN:
-					stmt.setBoolean(index, (boolean)param._value);
+					_statement.setBoolean(index, (boolean)param._value);
 					break;
 				case DATE:
-					stmt.setString(index, ((DateTime)param._value).toString(DateTimeFormats.SQLITE_DATE_FORMAT));
+					_statement.setString(index, ((DateTime)param._value).toString(DateTimeFormats.SQLITE_DATE_FORMAT));
 					break;
 				case DOUBLE:
-					stmt.setDouble(index, (double)param._value);
+					_statement.setDouble(index, (double)param._value);
 					break;
 				}
 			}
 		}
-		return stmt;
+		if ( isBatch ) {
+			_statement.addBatch();
+		}
+		return _statement;
 	}
 	
 	private void parseSQL(String sql) {

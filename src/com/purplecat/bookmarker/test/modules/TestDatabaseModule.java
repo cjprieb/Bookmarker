@@ -4,6 +4,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.services.UrlPatternService;
+import com.purplecat.bookmarker.services.databases.GenreDatabaseRepository;
+import com.purplecat.bookmarker.services.databases.IGenreRepository;
 import com.purplecat.bookmarker.services.databases.IMediaRepository;
 import com.purplecat.bookmarker.services.databases.IOnlineMediaRepository;
 import com.purplecat.bookmarker.services.databases.IUrlPatternDatabase;
@@ -33,6 +35,7 @@ public class TestDatabaseModule extends AbstractModule {
 		bind(IOnlineMediaRepository.class).to(OnlineMediaDatabase.class);
 		bind(UrlPatternService.class);
 		bind(IMediaRepository.class).to(MediaDatabaseRepository.class);
+		bind(IGenreRepository.class).to(GenreDatabaseRepository.class);
 		bind(Controller.class);
 		bind(IWebsiteLoadObserver.class).to(WebsiteThreadObserver.class);
 		bind(IWebsiteList.class).to(DefaultWebsiteList.class);

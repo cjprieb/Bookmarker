@@ -1,6 +1,8 @@
 package com.purplecat.bookmarker.models;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 import org.joda.time.DateTime;
 
@@ -30,8 +32,11 @@ public class Media extends BaseDatabaseItem implements Comparable<Media> {
 	
 	public String _updatedUrl;
 	
+	public List<Genre> _genres;
+	
 	public Media() {
 		_lastReadPlace = new Place();
+		_genres = new ArrayList<Genre>();
 	}
 	
 	public boolean isUpdated() {
@@ -96,6 +101,8 @@ public class Media extends BaseDatabaseItem implements Comparable<Media> {
 		media._notes = this._notes;
 		media._rating = this._rating;
 		media._isComplete = this._isComplete;
+		media._genres.clear();
+		media._genres.addAll(this._genres);
 		return media;
 	}
 

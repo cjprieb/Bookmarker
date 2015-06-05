@@ -1,6 +1,7 @@
 package com.purplecat.bookmarker.view.swing.panels;
 
 import java.awt.Color;
+import java.text.DecimalFormat;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -15,6 +16,7 @@ import org.joda.time.DateTime;
 import com.google.inject.Inject;
 import com.purplecat.bookmarker.Resources;
 import com.purplecat.bookmarker.extensions.PlaceExt;
+import com.purplecat.bookmarker.models.Genre;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.Place;
 import com.purplecat.bookmarker.view.swing.DefaultColors;
@@ -27,34 +29,38 @@ import com.purplecat.commons.logs.ILoggingService;
 import com.purplecat.commons.utils.StringUtils;
 
 public class MediaSummaryPanel {
+	private static double 			MAX_RATING		= 10.0;
+	private static DecimalFormat 	RATING_FORMAT 	= new DecimalFormat("#.00");
 
 	protected static String TAG = "SavedMediaSummaryPanel";
-	@Inject
-	IResourceService _resources;
-	@Inject
-	protected ILoggingService _logger;
-	@Inject
-	LinkClickObserver.Factory _factory;
+	@Inject IResourceService _resources;
+	@Inject ILoggingService _logger;
+	@Inject LinkClickObserver.Factory _factory;
+	
 	JPanel _panel;
 	Media _currentMedia;
-	protected SummaryTextArea _dataTitle;
+	
+	SummaryTextArea _dataTitle;
 	SummaryTextRow _dataAltTitles;
 	SummaryTextRow _dataAuthor;
 	SummaryTextRow _dataLastRead;
 	SummaryTextRow _dataUpdated;
 	SummaryTextRow _dataGenres;
 	SummaryTextRow _dataCategories;
-	protected SummaryTextRow _dataRating;
+	SummaryTextRow _dataRating;
 	SummaryTextRow _dataDescription;
 	SummaryTextRow _dataSummary;
 	SummaryTextRow _dataStatus;
 	SummaryTextRow _dataType;
 	SummaryTextRow _dataLinks;
+	
 	JProgressBar _progress;
+	
 	LinkClickObserver _dataAuthorLink;
-	protected LinkClickObserver _dataChapterLink;
-	protected LinkClickObserver _dataSiteLink;
-	protected LinkClickObserver _dataUpdatedLink;
+	LinkClickObserver _dataChapterLink;
+	LinkClickObserver _dataSiteLink;
+	LinkClickObserver _dataUpdatedLink;
+	
 	JPopupMenu _popup = null;
 	TextAction _copyLinkURLAction;
 	TextAction _openLinkAction;
@@ -264,5 +270,27 @@ public class MediaSummaryPanel {
 			ctrl._textControl.setVisible(false);
 		}
 	}
-
+	
+	protected void setRating(double dRating) {
+		if ( dRating > 0 ) {
+			StringBuilder ratingStr = new StringBuilder();		
+			ratingStr.append(RATING_FORMAT.format(MAX_RATING * dRating));
+			ratingStr.append(" / ");
+			ratingStr.append(RATING_FORMAT.format(MAX_RATING));
+			_dataRating.setText(ratingStr.toString());
+			_dataRating.setVisible(true);
+		}
+		else {
+			_dataRating.setText("");			
+		}		
+	}
+	
+	protected void setGenres(Iterable<Genre> genreList) {
+		StringBuilder genres = new StringBuilder();
+		for ( Genre genre : genreList ) {
+			if ( genres.length() > 0 ) { genres.append(", "); }
+			genres.append(genre._name);
+		}
+		_dataGenres.setText(genres.toString());		
+	}
 }

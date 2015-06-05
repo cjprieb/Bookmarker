@@ -5,8 +5,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -15,6 +19,7 @@ import com.purplecat.bookmarker.extensions.FavoriteStateExt;
 import com.purplecat.bookmarker.extensions.PlaceExt;
 import com.purplecat.bookmarker.extensions.StoryStateExt;
 import com.purplecat.bookmarker.extensions.TitleExt;
+import com.purplecat.bookmarker.models.Genre;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.services.ServiceException;
 import com.purplecat.bookmarker.sql.DBUtils;
@@ -35,15 +40,15 @@ public class MediaDatabaseRepository implements IMediaRepository {
 	
 	private static final String COUNT_MEDIA = "SELECT COUNT(*) AS total_rows FROM MEDIA ";
 	
-		
-	
 	public final ILoggingService _logging;
 	public final String _connectionPath;
+	public final GenreDatabaseRepository _genreDatabase;
 	 
 	@Inject
-	public MediaDatabaseRepository(ILoggingService logger, @Named("JDBC URL") String dbPath) {
+	public MediaDatabaseRepository(ILoggingService logger, @Named("JDBC URL") String dbPath, GenreDatabaseRepository genreDatabase) {
 		_logging = logger;
 		_connectionPath = dbPath;
+		_genreDatabase = genreDatabase;
 	}
 	
 	/**
@@ -78,6 +83,7 @@ public class MediaDatabaseRepository implements IMediaRepository {
 			while ( result.next() ) {
 				list.add(loadMediaFromResultSet(result));
 			}
+			loadGenres(conn, list, null);
 		} catch (SQLException e) {
 			_logging.error(TAG, "Query failed", e);
 		} 
@@ -107,6 +113,7 @@ public class MediaDatabaseRepository implements IMediaRepository {
 					observer.notifyItemLoaded(item, index, total);
 				}
 			}
+			loadGenres(conn, list, observer);
 		} catch (SQLException e) {
 			_logging.error(TAG, "Query for saved failed: " + sql, e);
 			throw new ServiceException("Query for saved media failed", ServiceException.SQL_ERROR);
@@ -124,6 +131,9 @@ public class MediaDatabaseRepository implements IMediaRepository {
 			NamedResultSet result = stmt.executeQuery();
 			while ( result.next() ) {
 				media = loadMediaFromResultSet(result);
+			}
+			if ( media != null ) {
+				loadGenres(conn, Collections.singleton(media), null);
 			}
 		} catch (SQLException e) {
 			_logging.error(TAG, "Query for id failed: " + sql, e);
@@ -164,6 +174,7 @@ public class MediaDatabaseRepository implements IMediaRepository {
 				list.add(loadMediaFromResultSet(result));
 			}
 		}
+		loadGenres(conn, list, null);
 		return list;
 	}
 
@@ -234,9 +245,29 @@ public class MediaDatabaseRepository implements IMediaRepository {
 			NamedStatement stmt = new NamedStatement(conn, sql);
 			stmt.setLong("@id", id);
 			stmt.execute();
+			
+			stmt = new NamedStatement(conn, "DELETE FROM GenreMap WHERE GenMedia_ID = @mediaId");
+			stmt.setLong("@mediaId", id);
+			stmt.execute();			
 		} catch (SQLException e) {
 			_logging.error(TAG, "Delete failed: " + sql, e);
 		}	
+	}
+	
+	private void loadGenres(Connection conn, Collection<Media> list, IListLoadedObserver<Media> observer) throws SQLException {
+		Map<Long, Set<Genre>> map = _genreDatabase.loadAllMediaGenres(conn);
+		int index = 1;
+		int total = list.size();
+		for ( Media media : list ) {
+			if ( map.containsKey(media._id)) {
+				media._genres.clear();
+				media._genres.addAll(map.get(media._id));
+				if ( observer != null ) {
+					observer.notifyItemLoaded(media, index, total);
+				}
+			}
+			index++;
+		}
 	}
 	
 	private void updateHistory(Connection conn, Media item) throws SQLException {

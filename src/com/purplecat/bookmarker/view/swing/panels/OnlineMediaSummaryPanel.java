@@ -13,7 +13,8 @@ public class OnlineMediaSummaryPanel extends MediaSummaryPanel {
 		setPlaceAndDateTime(view._lastReadPlace, view._lastReadDate, view._updatedPlace, view._updatedDate);
 //		setGenres(view._genres);
 //		setCategories(view._categories);
-		_dataRating.setVisible(false);
+		_dataRating.setVisible(true);
+		setRating(view._rating);
 //		setType(view._type);
 //		setSummary(view._summary);
 		setLink(_dataChapterLink, "");

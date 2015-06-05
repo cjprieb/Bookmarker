@@ -12,8 +12,10 @@ import com.google.inject.Injector;
 import com.purplecat.bookmarker.controller.observers.IListLoadedObserver;
 import com.purplecat.bookmarker.models.EFavoriteState;
 import com.purplecat.bookmarker.models.EStoryState;
+import com.purplecat.bookmarker.models.Genre;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.services.ServiceException;
+import com.purplecat.bookmarker.services.databases.GenreDatabaseRepository;
 import com.purplecat.bookmarker.services.databases.MediaDatabaseRepository;
 import com.purplecat.bookmarker.test.modules.TestDatabaseModule;
 import com.purplecat.commons.extensions.DateTimeFormats;
@@ -22,6 +24,7 @@ import com.purplecat.commons.tests.GetRandom;
 public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	
 	private static MediaDatabaseRepository _database;
+	private static GenreDatabaseRepository _genreDatabase;
 	private static List<Media> _randomSavedMedia;
 	private static String[] _sampleTitles = { "360° material", "chihayafuru", "7 centi!", "gozen 3-ji no muhouchitai", "chikutaku bonbon", 
 		"d. n. angel", "yume no shizuku ougon no torikago" };
@@ -31,6 +34,7 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 		Injector injector = Guice.createInjector(new TestDatabaseModule());
 		
 		_database = injector.getInstance(MediaDatabaseRepository.class);
+		_genreDatabase = injector.getInstance(GenreDatabaseRepository.class);
 		//_database._log = new ConsoleLog();
 		
 		_randomSavedMedia = _database.querySavedMedia(new TestMediaObserver());
@@ -46,6 +50,7 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			Assert.assertNotNull("List is null", list);
 			Assert.assertTrue("List has no elements", list.size() > 0);
 			checkMediaItem(list.get(0));
+			Assert.assertTrue("no genres", list.get(0)._genres.size() > 0);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail("Exception occurred");
@@ -62,7 +67,9 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			Assert.assertTrue("total not found", obs.iTotal > 0);
 			Assert.assertTrue("total doesn't equal last index", obs.iTotal == obs.iIndex);
 			Assert.assertTrue("total was not valid", obs.bValidTotal);
-			checkSavedMediaItem(GetRandom.getItem(list));
+			Media media = GetRandom.getItem(list);
+			checkSavedMediaItem(media);
+			Assert.assertTrue("no genres", media._genres.size() > 0);
 			
 			boolean hasUpdatedItem = false;
 			for ( Media item : list ) {
@@ -85,6 +92,7 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			Assert.assertNotNull("List is null", item);
 			Assert.assertEquals("Element doesn't match id", media._id, item._id);
 			checkSavedMediaItem(item);
+			Assert.assertTrue("no genres", media._genres.size() > 0);
 			checkEquals(media, item);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -157,6 +165,7 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			Media item = _database.queryById(media._id);
 			Assert.assertNotNull("item is null", item);
 			checkSavedMediaItem(item);
+			Assert.assertTrue("no genres", media._genres.size() > 0);
 			checkEquals(media, item);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -181,6 +190,7 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			Media item = _database.queryById(media._id);
 			Assert.assertNotNull("item is null", item);
 			checkSavedMediaItem(item);
+			Assert.assertTrue("no genres", media._genres.size() > 0);
 			checkEquals(media, item);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -193,11 +203,13 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 		try {
 			Media media = GetRandom.getItem(_randomSavedMedia);
 			_database.delete(media._id);
-
 			
 			Media item = _database.queryById(media._id);
 			Assert.assertNull("item is not null", item);
 			_randomSavedMedia.remove(media);
+			
+			List<Genre> genres = _genreDatabase.queryByMediaId(media._id);
+			Assert.assertEquals("genres not removed", 0, genres.size());
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail("Exception occurred");

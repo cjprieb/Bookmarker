@@ -17,21 +17,25 @@ import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.Place;
 import com.purplecat.bookmarker.models.WebsiteInfo;
 import com.purplecat.bookmarker.services.ServiceException;
+import com.purplecat.bookmarker.services.databases.IGenreRepository;
 import com.purplecat.commons.extensions.Numbers;
 import com.purplecat.commons.logs.ILoggingService;
+import com.purplecat.commons.utils.StringUtils;
 
 public class BatotoWebsite implements IWebsiteParser {
 	final String TAG = "BatotoWebsite";
 	
 	private final WebsiteInfo _info;
 	private final ILoggingService _logging;
+	private final IGenreRepository _genreDatabase;
 	private final Pattern _chapterRegex;
 	private final Pattern _daysAgoRegex;
 	private final Pattern _dateRegex;
 	
 	@Inject
-	public BatotoWebsite(ILoggingService logging) {
+	public BatotoWebsite(ILoggingService logging, IGenreRepository genres) {
 		_logging = logging;
+		_genreDatabase = genres;
 		_info = new WebsiteInfo("Batoto", "http://bato.to/");
 		
 		//	http://bato.to/read/_/320356/world-trigger_ch101_by_glorious-scanlations
@@ -202,7 +206,33 @@ public class BatotoWebsite implements IWebsiteParser {
 
 	@Override
 	public OnlineMediaItem loadItem(OnlineMediaItem item) throws ServiceException {
-		// TODO Auto-generated method stub
+		if ( StringUtils.isNullOrEmpty(item._titleUrl) ) {
+			return item;
+		}
+		
+		try {
+			Document doc = Jsoup.connect(item._titleUrl).get();
+			Elements rows = doc.select("table.ipb_table tr");
+			for ( Element row : rows ) {
+				//Each row has at least 2 columns
+				if ( row.select("td").size() >= 2 ) {
+					String label = row.select("td").get(0).text();
+					
+					if ( label.equalsIgnoreCase("genres") ) {
+						for ( Element genreLink : row.select("a") ) {							
+							item._genres.add(_genreDatabase.find(genreLink.text()));
+						}
+					}
+					else if ( label.equalsIgnoreCase("description") ) {
+						item._summary = row.select("td").html();
+					}
+				}
+			}
+			
+		} catch (IOException e) {
+			_logging.error(TAG, "Error loading item: " + item, e);
+			throw new ServiceException("Error loading Batoto", ServiceException.WEBSITE_ERROR);
+		}
 		return item;
 	}
 

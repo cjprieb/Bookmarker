@@ -18,6 +18,7 @@ import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.Place;
 import com.purplecat.bookmarker.models.WebsiteInfo;
 import com.purplecat.bookmarker.services.ServiceException;
+import com.purplecat.bookmarker.services.databases.IGenreRepository;
 import com.purplecat.bookmarker.services.websites.BatotoWebsite;
 import com.purplecat.bookmarker.services.websites.IWebsiteParser;
 import com.purplecat.bookmarker.test.modules.TestBookmarkerModule;
@@ -28,15 +29,19 @@ public class WebsiteParsingTests {
 	@Inject
 	public ILoggingService _logging;
 	
+	@Inject 
+	public IGenreRepository _genreDatabase;
+	
 	@Before
 	public void beforeTest() {
 		Injector injector = Guice.createInjector(new TestBookmarkerModule());
 		_logging = injector.getInstance(ILoggingService.class);
+		_genreDatabase = injector.getInstance(IGenreRepository.class);
 	}
 
 	@Test
 	public void batotoInfoTest() {
-		IWebsiteParser site = new BatotoWebsite(_logging);
+		IWebsiteParser site = new BatotoWebsite(_logging, _genreDatabase);
 		WebsiteInfo info = site.getInfo();
 		assertEquals(info._name, "Batoto");
 		assertEquals(info._website, "http://bato.to/");
@@ -44,7 +49,7 @@ public class WebsiteParsingTests {
 
 	@Test
 	public void batotoParseTest() {
-		IWebsiteParser site = new BatotoWebsite(_logging);		
+		IWebsiteParser site = new BatotoWebsite(_logging, _genreDatabase);		
 		try {
 			List<OnlineMediaItem> items = site.load();
 			assertNotNull(items);

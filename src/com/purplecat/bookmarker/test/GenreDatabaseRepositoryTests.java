@@ -116,6 +116,7 @@ public class GenreDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 				list.add(_randomGenres.get(GetRandom.getInteger(0, _randomGenres.size()-1)));
 			}
 			list.add(list.get(0));//making sure the list has a duplicate to see if it is handled gracefully
+			list.add(new Genre("Sample Name"));
 			boolean bSuccess = _genreDatabase.updateGenreList(list, id);
 			Assert.assertTrue("not successful", bSuccess);
 
@@ -124,7 +125,7 @@ public class GenreDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			for (Genre newGenre : newList) {
 				boolean bFound = false;
 				for ( Genre genre : list ) {
-					if ( genre._id == newGenre._id ) {
+					if ( (genre._id == 0 && genre._name.equals(newGenre._name)) || genre._id == newGenre._id) {
 						bFound = true; break;
 					}
 				}
@@ -133,12 +134,37 @@ public class GenreDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			for (Genre genre : list ) {
 				boolean bFound = false;
 				for ( Genre newGenre : newList ) {
-					if ( genre._id == newGenre._id ) {
+					if ( (genre._id == 0 && genre._name.equals(newGenre._name)) || genre._id == newGenre._id) {
 						bFound = true; break;
 					}
 				}
 				Assert.assertTrue("no match found for " + genre, bFound);
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail("Exception occurred");
+		}		
+	}
+	
+	@Test
+	public void testFindGenreName() {
+		try {
+			Genre actual = GetRandom.getItem(_randomGenres);
+			Genre genre = _genreDatabase.find(actual._name.toLowerCase());
+			Assert.assertNotNull("Genre is null", genre);
+			Assert.assertEquals("Genre has invalid id", actual._id, genre._id);
+			Assert.assertEquals("Genre doesn't match name", actual._name, genre._name);
+			
+			genre = _genreDatabase.find("Computers");
+			Assert.assertNotNull("Genre is null", genre);
+			Assert.assertTrue("Genre has valid id", genre._id == 0);
+			Assert.assertEquals("Genre doesn't match name", "Computers", genre._name);
+			
+			genre = _genreDatabase.find("webtoons");
+			Assert.assertNotNull("Genre is null", genre);
+			Assert.assertTrue("Genre has invalid id", genre._id > 0);
+			Assert.assertEquals("Genre doesn't match name", "Webtoon", genre._name);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail("Exception occurred");

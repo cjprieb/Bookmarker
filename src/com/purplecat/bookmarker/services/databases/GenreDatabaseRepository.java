@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -102,6 +103,22 @@ public class GenreDatabaseRepository implements IGenreRepository {
 		return bSuccess;
 	}
 	
+	@Override
+	public Genre find(String text) {
+		if ( _genreCache.size() == 0 ) {
+			//assume has not been loaded yet if empty
+			query();
+		}
+		for ( Genre existing : _genreCache.values() ) {
+			if ( existing._name.equalsIgnoreCase(text) || existing._altName.equalsIgnoreCase(text) ) {
+				return existing;
+			}
+		}
+		Genre genre = new Genre();
+		genre._name = text;
+		return genre;
+	}
+	
 	public List<Genre> queryByMediaId(Connection conn, long id) throws SQLException {
 		List<Genre> list = new LinkedList<Genre>();
 		NamedStatement stmt = new NamedStatement(conn, SELECT_MEDIA_GENRE);
@@ -149,7 +166,7 @@ public class GenreDatabaseRepository implements IGenreRepository {
 		return map;		
 	}
 	
-	public boolean updateGenreList(Connection conn, List<Genre> list, long mediaId) throws SQLException {
+	public boolean updateGenreList(Connection conn, Collection<Genre> list, long mediaId) throws SQLException {
 		Set<Long> existingIds = new HashSet<Long>();
 		NamedStatement stmt = new NamedStatement(conn, "SELECT GenGenre_ID FROM GenreMap WHERE GenMedia_ID = " + mediaId);
 		NamedResultSet result = stmt.executeQuery();
@@ -158,8 +175,12 @@ public class GenreDatabaseRepository implements IGenreRepository {
 		}
 
 		Set<Long> includeIds = new HashSet<Long>();
+		Set<Genre> insertItems = new HashSet<Genre>();
 		for ( Genre genre : list ) {
-			if ( !existingIds.contains(genre._id) ) {
+			if ( genre._id == 0 ) {
+				insertItems.add(genre);
+			}
+			else if ( !existingIds.contains(genre._id) ) {
 				includeIds.add(genre._id);
 			}
 		}
@@ -175,6 +196,16 @@ public class GenreDatabaseRepository implements IGenreRepository {
 			if ( !bFound ) {
 				removeIds.add(id);
 			}
+		}
+
+		stmt = new NamedStatement(conn, "INSERT INTO Genre (GenName, GenAltName, GenInclude) VALUES (@name, @alt, @include)");
+		for ( Genre genre : insertItems ) {
+			stmt.setString("@name", genre._name);
+			stmt.setString("@alt", genre._altName != null ? genre._altName : "");
+			stmt.setBoolean("@include", true);
+			genre._id = stmt.executeInsert();
+			_genreCache.put(genre._id, genre);
+			includeIds.add(genre._id);
 		}
 
 		stmt = new NamedStatement(conn, "INSERT INTO GenreMap (GenGenre_ID, GenMedia_ID) VALUES (@genreId, @mediaId)");

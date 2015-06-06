@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.purplecat.bookmarker.models.BaseDatabaseItem;
+import com.purplecat.bookmarker.models.Genre;
 import com.purplecat.bookmarker.models.UrlPattern;
+import com.purplecat.bookmarker.services.databases.IGenreRepository;
 import com.purplecat.bookmarker.services.databases.IUrlPatternDatabase;
 import com.purplecat.commons.tests.Utils;
 
@@ -65,6 +67,53 @@ public abstract class SampleDatabaseService<T extends BaseDatabaseItem> {
 		@Override
 		public UrlPattern copy(UrlPattern item) {
 			return item.copy();
+		}
+	}
+	
+	public static class SampleGenreDatabase implements IGenreRepository {
+		Map<Long, Genre> _genres = new HashMap<Long, Genre>();
+		
+		public SampleGenreDatabase() {
+//			List<String> lines = Utils.getFile(getClass(), "/resources/SampleGenres.txt");
+//			for (String line : lines) {
+//				String[] tokens = line.split("\t");
+//				UrlPattern item = new UrlPattern();
+//				item._patternString = tokens[0];
+//				for (int i = 1; i < tokens.length; i++) {
+//					item._map.put(tokens[i], i-1);
+//				}
+//				insert(item);
+//			}
+		}
+
+		@Override
+		public List<Genre> query() {
+			List<Genre> list = new ArrayList<Genre>();
+			list.addAll(_genres.values());
+			return list;
+		}
+
+		@Override
+		public List<Genre> queryByMediaId(long id) {
+			return new ArrayList<Genre>();
+		}
+
+		@Override
+		public boolean updateGenreList(List<Genre> list, long mediaId) {
+			return false;
+		}
+
+		@Override
+		public Genre find(String text) {
+			for ( Genre genre : _genres.values() ) {
+				if ( genre._name.equalsIgnoreCase(text) ) {
+					return genre;
+				}
+			}
+			Genre genre = new Genre();
+			genre._id = 0;
+			genre._name = text;
+			return genre;
 		}
 	}
 

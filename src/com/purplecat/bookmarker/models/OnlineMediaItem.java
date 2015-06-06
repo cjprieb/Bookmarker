@@ -1,7 +1,7 @@
 package com.purplecat.bookmarker.models;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 
@@ -17,7 +17,7 @@ public class OnlineMediaItem extends BaseDatabaseItem implements Comparable<Onli
 	 */
 	public String _displayTitle = "";
 	
-	public final List<Genre> _genres;
+	public final Set<Genre> _genres;
 	
 	public long _id = -1;
 	
@@ -64,7 +64,7 @@ public class OnlineMediaItem extends BaseDatabaseItem implements Comparable<Onli
 	public String _websiteName;
 	
 	public OnlineMediaItem() {
-		_genres = new ArrayList<Genre>();
+		_genres = new HashSet<Genre>();
 	}
 	
 	public boolean isUpdated() {

@@ -28,6 +28,8 @@ public class TestBookmarkerModule extends AbstractModule {
 	protected void configure() {
 		//Utility Items
 		bind(ILoggingService.class).to(ConsoleLog.class);
+		bind(String.class).annotatedWith(Names.named("Resource File")).toInstance("com.purplecat.bookmarker.Resources");
+		bind(String.class).annotatedWith(Names.named("Project Path")).toInstance("/com/purplecat/bookmarker/");
 		
 		//Database/Repository items
 		bind(IUrlPatternDatabase.class).to(SamplePatternDatabase.class);

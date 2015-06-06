@@ -10,8 +10,10 @@ import org.junit.Test;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.purplecat.bookmarker.models.Genre;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
+import com.purplecat.bookmarker.services.databases.GenreDatabaseRepository;
 import com.purplecat.bookmarker.services.databases.IOnlineMediaRepository;
 import com.purplecat.bookmarker.services.databases.MediaDatabaseRepository;
 import com.purplecat.bookmarker.test.modules.TestDatabaseModule;
@@ -21,14 +23,19 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	
 	private static IOnlineMediaRepository _database;
 	private static MediaDatabaseRepository _savedDatabase;
+	private static GenreDatabaseRepository _genreDatabase;
 	private static List<OnlineMediaItem> _randomSavedItems = new ArrayList<OnlineMediaItem>();
 	private static List<OnlineMediaItem> _randomUnsavedItems = new ArrayList<OnlineMediaItem>();
+	private static List<Genre> _randomGenres = new ArrayList<Genre>();
 
 	@BeforeClass
 	public static void setUpBeforeTest() throws Exception {
 		Injector injector = Guice.createInjector(new TestDatabaseModule());	
 		_database = injector.getInstance(IOnlineMediaRepository.class);
 		_savedDatabase = injector.getInstance(MediaDatabaseRepository.class);
+		_genreDatabase = injector.getInstance(GenreDatabaseRepository.class);
+		
+		_randomGenres = _genreDatabase.query();
 		
 		List<OnlineMediaItem> randomItems = _database.query();
 		Assert.assertNotNull("List is null", randomItems);
@@ -52,6 +59,8 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			OnlineMediaItem actual = _database.queryById(expected._id);
 			Assert.assertNotNull("Query for id list is null", actual);
 			Assert.assertEquals("Element doesn't match id", expected._id, actual._id);
+			Assert.assertTrue("no genres", actual._genres.size() > 0);
+			Assert.assertEquals("Element doesn't match genre size", expected._genres.size(), actual._genres.size());
 			checkItem(actual);
 			checkEquals(expected, actual);
 		} catch (Exception e) {
@@ -108,12 +117,37 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			item._rating = .75;
 			item._websiteName = "Batoto";
 			
+			item._genres.clear();
+			for ( int i = 0; i < GetRandom.getInteger(0, 10); i++ ) {
+				item._genres.add(GetRandom.getItem(_randomGenres));
+			}
+			
 			_database.update(item);
 			System.out.println("looking up " + item._id + " after update");
 			OnlineMediaItem actual = _database.queryById(item._id);
 			Assert.assertNotNull("Item is null", actual);
+			Assert.assertTrue("no genres", item._genres.size() > 0);
 			checkItem(actual);
 			checkEquals(item, actual);
+
+			for (Genre newGenre : actual._genres) {
+				boolean bFound = false;
+				for ( Genre genre : item._genres ) {
+					if ( genre._id == newGenre._id ) {
+						bFound = true; break;
+					}
+				}
+				Assert.assertTrue("no match found for " + newGenre, bFound);
+			}
+			for (Genre genre : item._genres ) {
+				boolean bFound = false;
+				for ( Genre newGenre : actual._genres ) {
+					if ( genre._id == newGenre._id ) {
+						bFound = true; break;
+					}
+				}
+				Assert.assertTrue("no match found for " + genre, bFound);
+			}
 			
 			Media updatedMedia = _savedDatabase.queryById(item._mediaId);
 			if ( updatedMedia._updatedPlace.compareTo(item._updatedPlace) == 0 ) { 
@@ -172,6 +206,7 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			Assert.assertNotNull("Item is null", result);			
 			Assert.assertTrue("Invalid id", result._id > 0);
 			Assert.assertTrue("Invalid media id", result._mediaId > 0);
+			Assert.assertTrue("no genres", result._genres.size() > 0);
 			
 			Media mediaItem = _savedDatabase.queryById(item._mediaId);
 			Assert.assertEquals(item._chapterUrl, mediaItem._updatedUrl);
@@ -204,7 +239,7 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	
 	protected void checkItem(OnlineMediaItem pattern) {
 		Assert.assertTrue("id is not valid", pattern._id > 0);
-		Assert.assertTrue("no chapter url", pattern._chapterUrl != null && pattern._chapterUrl.length() > 0);
+		//Assert.assertTrue("no chapter url", pattern._chapterUrl != null && pattern._chapterUrl.length() > 0);
 		Assert.assertNotNull("no date", pattern._updatedDate);
 	}
 	

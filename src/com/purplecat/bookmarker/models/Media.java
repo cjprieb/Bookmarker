@@ -12,6 +12,8 @@ public class Media extends BaseDatabaseItem implements Comparable<Media> {
 
 	public String _displayTitle;
 	
+	public final List<Genre> _genres;
+	
 	public boolean _isComplete;
 
 	public boolean _isSaved;
@@ -31,8 +33,6 @@ public class Media extends BaseDatabaseItem implements Comparable<Media> {
 	public Place _updatedPlace;
 	
 	public String _updatedUrl;
-	
-	public List<Genre> _genres;
 	
 	public Media() {
 		_lastReadPlace = new Place();
@@ -109,6 +109,8 @@ public class Media extends BaseDatabaseItem implements Comparable<Media> {
 	public void updateFrom(OnlineMediaItem item) {
 		this._updatedDate = item._updatedDate;
 		this._updatedPlace = item._updatedPlace;
+		this._genres.clear();
+		this._genres.addAll(item._genres);
 	}
 	
 	public static class FavoriteComparor implements Comparator<EFavoriteState> {

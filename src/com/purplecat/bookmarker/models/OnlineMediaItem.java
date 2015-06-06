@@ -1,5 +1,8 @@
 package com.purplecat.bookmarker.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.joda.time.DateTime;
 
 public class OnlineMediaItem extends BaseDatabaseItem implements Comparable<OnlineMediaItem> {
@@ -13,6 +16,8 @@ public class OnlineMediaItem extends BaseDatabaseItem implements Comparable<Onli
 	 * Loaded from website
 	 */
 	public String _displayTitle = "";
+	
+	public final List<Genre> _genres;
 	
 	public long _id = -1;
 	
@@ -32,6 +37,11 @@ public class OnlineMediaItem extends BaseDatabaseItem implements Comparable<Onli
 	 * Loaded from website
 	 */
 	public double _rating;
+	
+	/**
+	 * Loaded from website
+	 */
+	public String _summary = "";
 
 	/**
 	 * Loaded from website
@@ -52,6 +62,10 @@ public class OnlineMediaItem extends BaseDatabaseItem implements Comparable<Onli
 	 * Loaded from website
 	 */
 	public String _websiteName;
+	
+	public OnlineMediaItem() {
+		_genres = new ArrayList<Genre>();
+	}
 	
 	public boolean isUpdated() {
 		if ( _isSaved && _lastReadPlace != null ) {
@@ -115,6 +129,8 @@ public class OnlineMediaItem extends BaseDatabaseItem implements Comparable<Onli
 		//media._notes = this._notes;
 		media._rating = this._rating;
 		//media._isComplete = this._isComplete;
+		media._genres.clear();
+		media._genres.addAll(this._genres);
 		return media;
 	}
 
@@ -122,6 +138,8 @@ public class OnlineMediaItem extends BaseDatabaseItem implements Comparable<Onli
 		this._isSaved = item._isSaved;
 		this._lastReadDate = item._lastReadDate;
 		this._lastReadPlace = (item._lastReadPlace != null ? item._lastReadPlace.copy() : null);
+		this._genres.clear();
+		this._genres.addAll(item._genres);
 	}
 
 }

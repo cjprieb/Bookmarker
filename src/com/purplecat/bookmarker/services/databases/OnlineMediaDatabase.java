@@ -4,13 +4,18 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import com.purplecat.bookmarker.controller.observers.IListLoadedObserver;
 import com.purplecat.bookmarker.extensions.OnlineMediaItemExt;
 import com.purplecat.bookmarker.extensions.PlaceExt;
+import com.purplecat.bookmarker.models.Genre;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.sql.NamedResultSet;
@@ -31,12 +36,14 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 	public final ILoggingService _logging;
 	public final String _connectionPath;
 	public final MediaDatabaseRepository _mediaDatabase;
+	public final GenreDatabaseRepository _genreDatabase;
 	 
 	@Inject
-	public OnlineMediaDatabase(ILoggingService logger, @Named("JDBC URL") String dbPath, MediaDatabaseRepository mediaDb) {
+	public OnlineMediaDatabase(ILoggingService logger, @Named("JDBC URL") String dbPath, MediaDatabaseRepository mediaDb, GenreDatabaseRepository genreDb) {
 		_logging = logger;
 		_connectionPath = dbPath;
 		_mediaDatabase = mediaDb;
+		_genreDatabase = genreDb;
 	}
 	
 	/**
@@ -73,6 +80,7 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 			while ( result.next() ) {
 				list.add(loadOnlineMediaFromResultSet(result));
 			}
+			loadGenres(conn, list);
 		} catch (SQLException e) {
 			_logging.error(TAG, "Query failed", e);
 		}
@@ -92,7 +100,6 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 
 	@Override
 	public OnlineMediaItem findOrCreate(OnlineMediaItem item) {
-		System.out.println("creating: " + item._id);
 		OnlineMediaItem result = null;
 		List<OnlineMediaItem> existingList = null;
 		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
@@ -100,9 +107,9 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 			//TODO: don't assume first is best title match
 			if ( matches.size() > 0 ) {
 				item._mediaId = matches.get(0)._id;
+				item._genres.addAll(matches.get(0)._genres);
 				existingList = findExistingOnlineItems(conn, item._mediaId);
 				
-				System.out.println("  new place: " + item._updatedPlace);
 				for ( OnlineMediaItem existing : existingList ) {
 					if ( existing._websiteName.equals(item._websiteName) ) {
 						result = existing;
@@ -180,12 +187,15 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 	}
 	
 	private List<OnlineMediaItem> findExistingOnlineItems(Connection conn, long mediaId) throws SQLException {
-		List<OnlineMediaItem> existing = new LinkedList<OnlineMediaItem>();;
+		List<Genre> genres = _genreDatabase.queryByMediaId(conn, mediaId);
+		List<OnlineMediaItem> existing = new LinkedList<OnlineMediaItem>();
 		NamedStatement stmt = new NamedStatement(conn, SELECT_ITEMS + " WHERE UpbkMedia_ID = @mediaId");
 		stmt.setLong("@mediaId", mediaId);
 		NamedResultSet result = stmt.executeQuery();
 		while ( result.next() ) {
-			existing.add(loadOnlineMediaFromResultSet(result));
+			OnlineMediaItem item = loadOnlineMediaFromResultSet(result);
+			item._genres.addAll(genres);
+			existing.add(item);
 			break;
 		}
 		return existing;
@@ -209,7 +219,20 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 			item = loadOnlineMediaFromResultSet(result);
 			break;
 		}
+		if ( item != null ) {
+			item._genres.addAll(_genreDatabase.queryByMediaId(conn, item._mediaId));
+		}
 		return item;
+	}
+	
+	private void loadGenres(Connection conn, Collection<OnlineMediaItem> list) throws SQLException {
+		Map<Long, Set<Genre>> map = _genreDatabase.loadAllMediaGenres(conn);
+		for ( OnlineMediaItem item : list ) {
+			if ( map.containsKey(item._mediaId)) {
+				item._genres.clear();
+				item._genres.addAll(map.get(item._mediaId));
+			}
+		}
 	}
 
 	private void insert(Connection conn, OnlineMediaItem item) throws SQLException {
@@ -255,6 +278,8 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 		stmt.setInt("@sub", item._updatedPlace._subChapter);
 		stmt.setBoolean("@extra", item._updatedPlace._extra);
 		stmt.executeUpdate();
+
+		_genreDatabase.updateGenreList(conn, item._genres, item._mediaId);
 	}
 
 	private void updateMedia(Connection conn, long mediaId, long updatedId) throws SQLException {

@@ -49,8 +49,15 @@ public class WebsiteParsingTests {
 			List<OnlineMediaItem> items = site.load();
 			assertNotNull(items);
 			assertTrue(items.size() > 0);
+			int iCount =0;
 			for ( OnlineMediaItem item : items ) {
+				iCount++;
 				checkItem(item);
+
+				if (iCount < 15 ) { 
+					site.loadItem(item);
+					checkFullItemLoaded(item);					
+				}
 			}
 		} catch (ServiceException e) {
 			// TODO Auto-generated catch block
@@ -71,6 +78,13 @@ public class WebsiteParsingTests {
 		if ( item._chapterUrl != null && item._chapterUrl.length() > 0) {
 			Assert.assertTrue("invalid place", item._updatedPlace.compareTo(new Place()) > 0);
 		}
+	}
+	
+	protected void checkFullItemLoaded(OnlineMediaItem item) {
+		System.out.println("checking " + item);
+		
+		Assert.assertTrue("no genres", item._genres != null && item._genres.size() > 0);
+		Assert.assertTrue("no summary", item._summary != null && item._summary.length() > 0);
 	}
 
 }

@@ -22,6 +22,12 @@ public class DatabaseException extends Exception {
 		mValues = null;
 	}
 	
+	public DatabaseException(String desc, Exception e) {
+		super(desc + " \n(" + e.getMessage() + ")", e);
+		mSqlString = "";
+		mValues = null;
+	}
+	
 	public DatabaseException(String desc, String sql, Exception e, Object ... values) {
 		super(desc + " \n(" + e.getMessage() + ")", e);
 		mSqlString = sql;

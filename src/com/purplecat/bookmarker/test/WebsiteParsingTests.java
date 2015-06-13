@@ -54,7 +54,7 @@ public class WebsiteParsingTests {
 			List<OnlineMediaItem> items = site.load();
 			assertNotNull(items);
 			assertTrue(items.size() > 0);
-			int iCount =0;
+			int iCount = 0;
 			for ( OnlineMediaItem item : items ) {
 				iCount++;
 				checkItem(item);
@@ -80,7 +80,7 @@ public class WebsiteParsingTests {
 		Assert.assertNotNull("date is null", item._updatedDate);
 		Assert.assertTrue("invalid date", item._updatedDate.isAfter(date));
 		
-		if ( item._chapterUrl != null && item._chapterUrl.length() > 0) {
+		if ( item._chapterUrl != null && item._chapterUrl.length() > 0 && ( item._chapterName == null || !item._chapterName.contains("Oneshot") )  ) {
 			Assert.assertTrue("invalid place", item._updatedPlace.compareTo(new Place()) > 0);
 		}
 	}

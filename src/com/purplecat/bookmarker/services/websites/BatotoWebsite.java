@@ -3,6 +3,7 @@ package com.purplecat.bookmarker.services.websites;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -180,12 +181,14 @@ public class BatotoWebsite implements IWebsiteParser {
 				else if ( currentItem != null ) {
 					//chapter rows: place, link to chapter, and date/time
 					String chapterUrl = row.select("a").first().attr("href");
+					String chapterName = row.select("a").first().text();
 					String stringDate = row.select("td").last().text();
 					Place place = parsePlace(chapterUrl);
 					DateTime date = parseDate(now, stringDate);
 					
 					if ( currentItem._updatedPlace.compareTo(place) <= 0 ) {
 						currentItem._chapterUrl = chapterUrl;
+						currentItem._chapterName = chapterName;
 						currentItem._updatedPlace = place;
 						currentItem._updatedDate = date;
 					}
@@ -216,14 +219,14 @@ public class BatotoWebsite implements IWebsiteParser {
 			for ( Element row : rows ) {
 				//Each row has at least 2 columns
 				if ( row.select("td").size() >= 2 ) {
-					String label = row.select("td").get(0).text();
+					String label = row.select("td").get(0).text().toLowerCase(Locale.ENGLISH);
 					
-					if ( label.equalsIgnoreCase("genres") ) {
+					if ( label.startsWith("genres") ) {
 						for ( Element genreLink : row.select("a") ) {							
 							item._genres.add(_genreDatabase.find(genreLink.text()));
 						}
 					}
-					else if ( label.equalsIgnoreCase("description") ) {
+					else if ( label.startsWith("description") ) {
 						item._summary = row.select("td").html();
 					}
 				}

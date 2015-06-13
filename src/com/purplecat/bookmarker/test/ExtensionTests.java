@@ -42,6 +42,7 @@ public class ExtensionTests {
 		_placeCompareTests.add(new PlaceComparePair(new Place(12, 64, 1, 48, false), new Place(12, 64, 0, 48, false), 1));
 		_placeCompareTests.add(new PlaceComparePair(new Place(12, 64, 1, 48, false), new Place(12, 64, 3, 48, false), -1));
 		_placeCompareTests.add(new PlaceComparePair(new Place(12, 64, 1, 48, true), new Place(12, 64, 1, 48, false), 1));
+		_placeCompareTests.add(new PlaceComparePair(new Place(12, 64, 1, 48, true), new Place(10, 70, 1, 48, false), 1));
 		_placeCompareTests.add(new PlaceComparePair(new Place(2, 0, 0, 0, false), new Place(), 1));
 		
 		_placeRenderTests = new ArrayList<PlacePair>(100);
@@ -89,6 +90,12 @@ public class ExtensionTests {
 		for ( PlaceComparePair pair : _placeCompareTests ) {
 			System.out.println("Compareing: " + pair._place1 + " to " + pair._place2);
 			Assert.assertEquals(pair._place1.compareTo(pair._place2), pair._expectedResult);
+			if ( pair._expectedResult == 0 ) {
+				Assert.assertEquals(pair._place2.compareTo(pair._place1), pair._expectedResult);
+			}
+			else {
+				Assert.assertEquals(pair._place2.compareTo(pair._place1), -pair._expectedResult);				
+			}
 		}		
 	}
 	

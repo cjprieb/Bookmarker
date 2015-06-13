@@ -10,6 +10,11 @@ public class OnlineMediaItem extends BaseDatabaseItem implements Comparable<Onli
 	/**
 	 * Loaded from website
 	 */
+	public String _chapterName = "";
+
+	/**
+	 * Loaded from website
+	 */
 	public String _chapterUrl = "";
 
 	/**
@@ -119,6 +124,7 @@ public class OnlineMediaItem extends BaseDatabaseItem implements Comparable<Onli
 		OnlineMediaItem media = new OnlineMediaItem();
 		media._id = this._id;
 		media._chapterUrl = this._chapterUrl;
+		media._chapterName = this._chapterName;
 		media._displayTitle = this._displayTitle;
 		media._isSaved = this._isSaved;
 		media._lastReadDate = this._lastReadDate;

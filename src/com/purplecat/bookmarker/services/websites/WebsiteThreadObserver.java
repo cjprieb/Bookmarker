@@ -8,6 +8,7 @@ import com.purplecat.bookmarker.controller.tasks.OnlineUpdateTask;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.WebsiteInfo;
 import com.purplecat.bookmarker.services.databases.IOnlineMediaRepository;
+import com.purplecat.bookmarker.sql.IConnectionManager;
 import com.purplecat.commons.logs.ILoggingService;
 import com.purplecat.commons.threads.IThreadPool;
 
@@ -27,12 +28,12 @@ public class WebsiteThreadObserver implements IWebsiteLoadObserver, Runnable {
 	private OnlineUpdateTask _task; 
 	
 	@Inject
-	public WebsiteThreadObserver(IThreadPool threadPool, IWebsiteList websites, IOnlineMediaRepository onlineRepository, ILoggingService logging) {
+	public WebsiteThreadObserver(IThreadPool threadPool, IWebsiteList websites, IOnlineMediaRepository onlineRepository, ILoggingService logging, IConnectionManager mgr) {
 		_threadPool = threadPool;
 		_websites = websites;
 		_onlineRepository = onlineRepository;
 		_observers = new LinkedList<IWebsiteLoadObserver>();
-		_task = new OnlineUpdateTask(_websites, this, _onlineRepository, logging);
+		_task = new OnlineUpdateTask(_websites, this, _onlineRepository, logging, mgr);
 	}
 	
 	public void addWebsiteLoadObserver(IWebsiteLoadObserver obs) {

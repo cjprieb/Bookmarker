@@ -16,12 +16,14 @@ import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.services.SavedMediaService;
 import com.purplecat.bookmarker.services.websites.IWebsiteLoadObserver;
 import com.purplecat.bookmarker.services.websites.WebsiteThreadObserver;
+import com.purplecat.commons.logs.ILoggingService;
 import com.purplecat.commons.threads.IThreadPool;
 
 @Singleton
 public class Controller {
 	public static final String TAG = "Controller";
-	
+
+	private final ILoggingService _logging;	
 	private final IThreadPool _threadPool;	
 	private final SavedMediaService _mediaService;
 	private final WebsiteThreadObserver _observer;
@@ -31,7 +33,8 @@ public class Controller {
 	private final List<IItemChangedObserver<Media>> _mediaUpdateObservers;
 	
 	@Inject
-	public Controller(IThreadPool threadPool, SavedMediaService mangaService, WebsiteThreadObserver observer) {
+	public Controller(ILoggingService logging, IThreadPool threadPool, SavedMediaService mangaService, WebsiteThreadObserver observer) {
+		_logging = logging;
 		_threadPool = threadPool;		
 		_mediaService = mangaService;
 		_observer = observer;
@@ -56,7 +59,7 @@ public class Controller {
 	}
 	
 	public void loadSavedMedia() {
-		_threadPool.runOnWorkerThread(new SavedMediaLoadTask(_threadPool, _mediaService, _mediaLoadObservers));
+		_threadPool.runOnWorkerThread(new SavedMediaLoadTask(_logging, _threadPool, _mediaService, _mediaLoadObservers));
 	}
 
 	/*------Run/Stop Update Thread action-------*/

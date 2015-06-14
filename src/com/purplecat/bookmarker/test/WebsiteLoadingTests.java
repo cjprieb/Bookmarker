@@ -12,6 +12,8 @@ import com.google.inject.name.Names;
 import com.purplecat.bookmarker.controller.tasks.OnlineUpdateTask;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.services.UrlPatternService;
+import com.purplecat.bookmarker.services.databases.GenreDatabaseRepository;
+import com.purplecat.bookmarker.services.databases.IGenreRepository;
 import com.purplecat.bookmarker.services.databases.IMediaRepository;
 import com.purplecat.bookmarker.services.databases.IOnlineMediaRepository;
 import com.purplecat.bookmarker.services.databases.IUrlPatternDatabase;
@@ -21,6 +23,8 @@ import com.purplecat.bookmarker.services.databases.UrlPatternDatabase;
 import com.purplecat.bookmarker.services.websites.DefaultWebsiteList;
 import com.purplecat.bookmarker.services.websites.IWebsiteList;
 import com.purplecat.bookmarker.services.websites.IWebsiteLoadObserver;
+import com.purplecat.bookmarker.sql.ConnectionManager;
+import com.purplecat.bookmarker.sql.IConnectionManager;
 import com.purplecat.bookmarker.test.dummies.DummyThreadObserver;
 import com.purplecat.commons.logs.ConsoleLog;
 import com.purplecat.commons.logs.ILoggingService;
@@ -40,9 +44,11 @@ public class WebsiteLoadingTests extends DatabaseConnectorTestBase {
 			bind(OnlineUpdateTask.class);
 			
 			//Database/Repository items
+			bind(IConnectionManager.class).to(ConnectionManager.class);
 			bind(IUrlPatternDatabase.class).to(UrlPatternDatabase.class);
 			bind(IOnlineMediaRepository.class).to(OnlineMediaDatabase.class);
 			bind(IMediaRepository.class).to(MediaDatabaseRepository.class);
+			bind(IGenreRepository.class).to(GenreDatabaseRepository.class);
 			bind(UrlPatternService.class);
 			bind(String.class).annotatedWith(Names.named("JDBC URL")).toInstance("jdbc:sqlite:" + DatabaseConnectorTestBase.TEST_DATABASE_PATH);	
 		}
@@ -51,10 +57,9 @@ public class WebsiteLoadingTests extends DatabaseConnectorTestBase {
 	@Test
 	public void loadWebsites() {
 		Injector injector = Guice.createInjector(new DatabaseWebsiteScrapingModule());		
-		OnlineUpdateTask _service = injector.getInstance(OnlineUpdateTask.class);
+		OnlineUpdateTask _service = injector.getInstance(OnlineUpdateTask.class);	
+		DummyThreadObserver _observer = injector.getInstance(DummyThreadObserver.class);
 		
-		//It's setup to be this way
-		DummyThreadObserver _observer = (DummyThreadObserver)_service._observer;
 		_service.loadOnlineUpdates();
 
 		Assert.assertTrue("load started not called", _observer.loadStartedCalled());

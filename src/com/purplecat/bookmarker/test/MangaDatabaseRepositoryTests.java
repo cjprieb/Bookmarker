@@ -3,7 +3,9 @@ package com.purplecat.bookmarker.test;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -15,14 +17,17 @@ import com.purplecat.bookmarker.models.EStoryState;
 import com.purplecat.bookmarker.models.Genre;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.services.ServiceException;
+import com.purplecat.bookmarker.services.databases.DatabaseException;
 import com.purplecat.bookmarker.services.databases.GenreDatabaseRepository;
 import com.purplecat.bookmarker.services.databases.MediaDatabaseRepository;
+import com.purplecat.bookmarker.sql.ConnectionManager;
+import com.purplecat.bookmarker.sql.IConnectionManager;
 import com.purplecat.bookmarker.test.modules.TestDatabaseModule;
 import com.purplecat.commons.extensions.DateTimeFormats;
 import com.purplecat.commons.tests.GetRandom;
 
 public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
-	
+	private static IConnectionManager _connectionManager;
 	private static MediaDatabaseRepository _database;
 	private static GenreDatabaseRepository _genreDatabase;
 	private static List<Media> _randomSavedMedia;
@@ -35,12 +40,40 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 		
 		_database = injector.getInstance(MediaDatabaseRepository.class);
 		_genreDatabase = injector.getInstance(GenreDatabaseRepository.class);
+		_connectionManager = injector.getInstance(ConnectionManager.class);
 		//_database._log = new ConsoleLog();
 		
-		_randomSavedMedia = _database.querySavedMedia(new TestMediaObserver());
-		Assert.assertNotNull("List is null", _randomSavedMedia);
-		Assert.assertTrue("List has no elements", _randomSavedMedia.size() > 0);
-		Assert.assertTrue("item not marked as saved: ", _randomSavedMedia.get(0)._isSaved);
+		try {
+			_connectionManager.open();
+			_randomSavedMedia = _database.querySavedMedia(new TestMediaObserver());
+			Assert.assertNotNull("List is null", _randomSavedMedia);
+			Assert.assertTrue("List has no elements", _randomSavedMedia.size() > 0);
+			Assert.assertTrue("item not marked as saved: ", _randomSavedMedia.get(0)._isSaved);
+		} 
+		catch (DatabaseException e) {
+			e.printStackTrace();
+			Assert.fail("Database connection failed");
+		}
+		finally {
+			_connectionManager.close();
+		}
+	}
+	
+	@Before
+	public void openConnection() {
+		try {
+			_connectionManager.open();
+		} 
+		catch (DatabaseException e) {
+			e.printStackTrace();
+			Assert.fail("Database connection failed");
+			_connectionManager.close();
+		}		
+	}
+	
+	@After
+	public void closeConnection() {
+		_connectionManager.close();	
 	}
 
 	@Test
@@ -65,7 +98,7 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			Assert.assertNotNull("List is null", list);
 			Assert.assertTrue("List has no elements", list.size() > 0);
 			Assert.assertTrue("total not found", obs.iTotal > 0);
-			Assert.assertTrue("total doesn't equal last index", obs.iTotal == obs.iIndex);
+			Assert.assertEquals("total doesn't equal last index", obs.iTotal, obs.iIndex);
 			Assert.assertTrue("total was not valid", obs.bValidTotal);
 			Media media = GetRandom.getItem(list);
 			checkSavedMediaItem(media);

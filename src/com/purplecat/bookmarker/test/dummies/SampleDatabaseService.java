@@ -1,6 +1,7 @@
 package com.purplecat.bookmarker.test.dummies;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,7 +100,7 @@ public abstract class SampleDatabaseService<T extends BaseDatabaseItem> {
 		}
 
 		@Override
-		public boolean updateGenreList(List<Genre> list, long mediaId) {
+		public boolean updateGenreList(Collection<Genre> list, long mediaId) {
 			return false;
 		}
 

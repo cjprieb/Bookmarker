@@ -6,16 +6,16 @@ import com.purplecat.bookmarker.models.OnlineMediaItem;
 
 public interface IOnlineMediaRepository {
 	
-	public List<OnlineMediaItem> query();
+	public List<OnlineMediaItem> query() throws DatabaseException;
 	
-	public OnlineMediaItem queryById(long id);
+	public OnlineMediaItem queryById(long id) throws DatabaseException;
 
-	public OnlineMediaItem findOrCreate(OnlineMediaItem item);
+	public OnlineMediaItem findOrCreate(OnlineMediaItem item) throws DatabaseException;
 
-	public void insert(OnlineMediaItem item);
+	public void insert(OnlineMediaItem item) throws DatabaseException;
 	
-	public void update(OnlineMediaItem item);
+	public void update(OnlineMediaItem item) throws DatabaseException;
 	
-	public void delete(long id);
+	public void delete(long id) throws DatabaseException;
 
 }

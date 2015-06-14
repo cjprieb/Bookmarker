@@ -1,6 +1,7 @@
 package com.purplecat.bookmarker.services.websites;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -232,7 +233,11 @@ public class BatotoWebsite implements IWebsiteParser {
 				}
 			}
 			
-		} catch (IOException e) {
+		} 
+		catch (SocketTimeoutException e) {
+			_logging.error(TAG, "Timeout loading item: " + item);			
+		}
+		catch (IOException e) {
 			_logging.error(TAG, "Error loading item: " + item, e);
 			throw new ServiceException("Error loading Batoto", ServiceException.WEBSITE_ERROR);
 		}

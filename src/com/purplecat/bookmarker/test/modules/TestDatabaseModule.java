@@ -16,6 +16,8 @@ import com.purplecat.bookmarker.services.websites.DefaultWebsiteList;
 import com.purplecat.bookmarker.services.websites.IWebsiteList;
 import com.purplecat.bookmarker.services.websites.IWebsiteLoadObserver;
 import com.purplecat.bookmarker.services.websites.WebsiteThreadObserver;
+import com.purplecat.bookmarker.sql.ConnectionManager;
+import com.purplecat.bookmarker.sql.IConnectionManager;
 import com.purplecat.bookmarker.test.DatabaseConnectorTestBase;
 import com.purplecat.commons.logs.ConsoleLog;
 import com.purplecat.commons.logs.ILoggingService;
@@ -31,6 +33,7 @@ public class TestDatabaseModule extends AbstractModule {
 		bind(ILoggingService.class).to(ConsoleLog.class);
 		
 		//Database/Repository items
+		bind(IConnectionManager.class).to(ConnectionManager.class);
 		bind(IUrlPatternDatabase.class).to(UrlPatternDatabase.class);
 		bind(IOnlineMediaRepository.class).to(OnlineMediaDatabase.class);
 		bind(UrlPatternService.class);

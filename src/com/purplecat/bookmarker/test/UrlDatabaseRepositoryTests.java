@@ -4,19 +4,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.purplecat.bookmarker.models.UrlPattern;
+import com.purplecat.bookmarker.services.databases.DatabaseException;
 import com.purplecat.bookmarker.services.databases.UrlPatternDatabase;
+import com.purplecat.bookmarker.sql.ConnectionManager;
+import com.purplecat.bookmarker.sql.IConnectionManager;
 import com.purplecat.bookmarker.test.modules.TestDatabaseModule;
 import com.purplecat.commons.tests.GetRandom;
 
 public class UrlDatabaseRepositoryTests extends DatabaseConnectorTestBase {
-	
+
+	private static IConnectionManager _connectionManager;
 	private static UrlPatternDatabase _database;
 	private static List<UrlPattern> _randomItems;
 
@@ -24,10 +30,38 @@ public class UrlDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	public static void setUpBeforeTest() throws Exception {
 		Injector injector = Guice.createInjector(new TestDatabaseModule());		
 		_database = injector.getInstance(UrlPatternDatabase.class);
+		_connectionManager = injector.getInstance(ConnectionManager.class);
 		
-		_randomItems = _database.query();
-		Assert.assertNotNull("List is null", _randomItems);
-		Assert.assertTrue("List has no elements", _randomItems.size() > 0);
+		try {
+			_connectionManager.open();
+			_randomItems = _database.query();
+			Assert.assertNotNull("List is null", _randomItems);
+			Assert.assertTrue("List has no elements", _randomItems.size() > 0);
+		} 
+		catch (DatabaseException e) {
+			e.printStackTrace();
+			Assert.fail("Database connection failed");
+		}
+		finally {
+			_connectionManager.close();
+		}
+	}
+	
+	@Before
+	public void openConnection() {
+		try {
+			_connectionManager.open();
+		} 
+		catch (DatabaseException e) {
+			e.printStackTrace();
+			Assert.fail("Database connection failed");
+			_connectionManager.close();
+		}		
+	}
+	
+	@After
+	public void closeConnection() {
+		_connectionManager.close();	
 	}
 
 	@Test

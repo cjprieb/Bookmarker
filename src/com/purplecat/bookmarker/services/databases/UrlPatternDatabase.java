@@ -1,7 +1,6 @@
 package com.purplecat.bookmarker.services.databases;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
@@ -10,9 +9,9 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import com.purplecat.bookmarker.models.UrlPattern;
 import com.purplecat.bookmarker.models.UrlPatternType;
+import com.purplecat.bookmarker.sql.IConnectionManager;
 import com.purplecat.bookmarker.sql.NamedResultSet;
 import com.purplecat.bookmarker.sql.NamedStatement;
 import com.purplecat.commons.logs.ILoggingService;
@@ -22,12 +21,12 @@ public class UrlPatternDatabase implements IUrlPatternDatabase {
 	private static String SELECT_ITEMS = "SELECT _id, PatPattern _patternString, PatGroups, PatType _type FROM UrlPattern";
 	
 	public final ILoggingService _logging;
-	public final String _connectionPath;
+	public final IConnectionManager _connectionManager;
 	 
 	@Inject
-	public UrlPatternDatabase(ILoggingService logger, @Named("JDBC URL") String dbPath) {
+	public UrlPatternDatabase(ILoggingService logger, IConnectionManager mgr) {
 		_logging = logger;
-		_connectionPath = dbPath;
+		_connectionManager = mgr;
 	}
 	
 	/**
@@ -74,25 +73,27 @@ public class UrlPatternDatabase implements IUrlPatternDatabase {
 	}
 
 	@Override
-	public List<UrlPattern> query() {
+	public List<UrlPattern> query() throws DatabaseException {
 		List<UrlPattern> list = new LinkedList<UrlPattern>();
-		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
+		try {
+			Connection conn = _connectionManager.getConnection();
 			Statement stmt = conn.createStatement();
 			NamedResultSet result = new NamedResultSet(stmt.executeQuery(SELECT_ITEMS));
 			while ( result.next() ) {
 				list.add(loadItemFromResultSet(result));
 			}
 		} catch (SQLException e) {
-			_logging.error(TAG, "Query failed", e);
+			throw new DatabaseException("query failed", SELECT_ITEMS, e);
 		} 
 		return list;
 	}
 
 	@Override
-	public UrlPattern queryById(long id) {
+	public UrlPattern queryById(long id) throws DatabaseException {
 		UrlPattern pattern = null;
 		String sql = SELECT_ITEMS + " WHERE _id = @id";
-		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
+		try {
+			Connection conn = _connectionManager.getConnection();
 			NamedStatement stmt = new NamedStatement(conn, sql);
 			stmt.setLong("@id", id);
 			NamedResultSet result = stmt.executeQuery();
@@ -100,16 +101,17 @@ public class UrlPatternDatabase implements IUrlPatternDatabase {
 				pattern = loadItemFromResultSet(result);
 			}
 		} catch (SQLException e) {
-			_logging.error(TAG, "Query for id failed: " + sql, e);
+			throw new DatabaseException("queryById failed", sql, e);
 		} 
 		return pattern;
 	}
 
 	@Override
-	public void insert(UrlPattern item) {
+	public void insert(UrlPattern item) throws DatabaseException {
 		if ( item._id <= 0 ) {
 			String sql = "";
-			try (Connection conn = DriverManager.getConnection(_connectionPath)) {				
+			try {
+				Connection conn = _connectionManager.getConnection();
 				sql = "INSERT INTO UrlPattern (PatPattern, PatGroups, PatType) VALUES (@pattern, @groups, @type)";
 				NamedStatement stmt = new NamedStatement(conn, sql);
 				stmt.setString("@pattern", item._patternString);
@@ -117,7 +119,7 @@ public class UrlPatternDatabase implements IUrlPatternDatabase {
 				stmt.setString("@type", item._type.toString());
 				item._id = stmt.executeInsert();
 			} catch (SQLException e) {
-				_logging.error(TAG, "Insert failed: " + sql, e);
+				throw new DatabaseException("insert failed", sql, e);
 			}
 		}
 		else {
@@ -126,10 +128,11 @@ public class UrlPatternDatabase implements IUrlPatternDatabase {
 	}
 
 	@Override
-	public void update(UrlPattern item) {
+	public void update(UrlPattern item) throws DatabaseException {
 		if ( item._id > 0 ) {
 			String sql = "";
-			try (Connection conn = DriverManager.getConnection(_connectionPath)) {				
+			try {	
+				Connection conn = _connectionManager.getConnection();			
 				sql = "UPDATE UrlPattern SET PatPattern = @pattern, PatGroups = @groups, PatType = @type WHERE _id = @id";
 				NamedStatement stmt = new NamedStatement(conn, sql);
 				stmt.setLong("@id", item._id);
@@ -138,7 +141,7 @@ public class UrlPatternDatabase implements IUrlPatternDatabase {
 				stmt.setString("@type", item._type.toString());
 				stmt.executeUpdate();
 			} catch (SQLException e) {
-				_logging.error(TAG, "Update failed: " + sql, e);
+				throw new DatabaseException("update failed", sql, e);
 			}
 		}
 		else {
@@ -147,14 +150,15 @@ public class UrlPatternDatabase implements IUrlPatternDatabase {
 	}
 
 	@Override
-	public void delete(long id) {
+	public void delete(long id) throws DatabaseException {
 		String sql = "DELETE FROM UrlPattern WHERE _id = @id";
-		try (Connection conn = DriverManager.getConnection(_connectionPath)) {
+		try {
+			Connection conn = _connectionManager.getConnection();
 			NamedStatement stmt = new NamedStatement(conn, sql);
 			stmt.setLong("@id", id);
 			stmt.execute();
 		} catch (SQLException e) {
-			_logging.error(TAG, "Delete failed: " + sql, e);
+			throw new DatabaseException("delete failed", sql, e);
 		}	
 	}
 

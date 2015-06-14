@@ -1,25 +1,41 @@
 package com.purplecat.bookmarker.services;
 
+import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.google.inject.Inject;
 import com.purplecat.bookmarker.models.UrlPattern;
 import com.purplecat.bookmarker.models.UrlPatternResult;
+import com.purplecat.bookmarker.services.databases.DatabaseException;
 import com.purplecat.bookmarker.services.databases.IUrlPatternDatabase;
+import com.purplecat.commons.logs.ILoggingService;
 
-public class UrlPatternService extends BaseDatabaseItemService<UrlPattern> {
+public class UrlPatternService {
+	private final static String TAG ="UrlPatternService";
+
+	private final ILoggingService _logger;
+	private final IUrlPatternDatabase _database;
 	
 	@Inject
-	public UrlPatternService(IUrlPatternDatabase database) {
-		super(database);
+	public UrlPatternService(ILoggingService logger, IUrlPatternDatabase database) {
+		_logger = logger;
+		_database = database;
 	}
 	
 	public UrlPatternResult match(String url) throws ServiceException {
 		UrlPatternResult result = new UrlPatternResult();
 		result._success = false;
 		if (url != null && url.length() > 0) {
-			for( UrlPattern pattern : list() ) {
+			Iterable<UrlPattern> patternList = new LinkedList<UrlPattern>();
+			try {
+				patternList = _database.query();
+			} 
+			catch (DatabaseException e) {
+				_logger.error(TAG, "Could not load URL patterns to match '" + url + "'", e);
+				throw new ServiceException("Could not load URL patterns", ServiceException.SQL_ERROR);
+			}
+			for( UrlPattern pattern : patternList ) {
 				if ( match(pattern, url, result) ) {
 					result._success = true;
 					break;

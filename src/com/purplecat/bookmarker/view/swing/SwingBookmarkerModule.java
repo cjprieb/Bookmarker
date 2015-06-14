@@ -15,6 +15,8 @@ import com.purplecat.bookmarker.services.websites.DefaultWebsiteList;
 import com.purplecat.bookmarker.services.websites.IWebsiteList;
 import com.purplecat.bookmarker.services.websites.IWebsiteLoadObserver;
 import com.purplecat.bookmarker.services.websites.WebsiteThreadObserver;
+import com.purplecat.bookmarker.sql.ConnectionManager;
+import com.purplecat.bookmarker.sql.IConnectionManager;
 import com.purplecat.bookmarker.view.swing.renderers.BookmarkerRendererFactory;
 import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.logs.ConsoleLog;
@@ -39,6 +41,7 @@ public class SwingBookmarkerModule extends AbstractModule {
 		bind(String.class).annotatedWith(Names.named("Project Path")).toInstance("/com/purplecat/bookmarker/");
 		
 		//Database/Repository items
+		bind(IConnectionManager.class).to(ConnectionManager.class);
 		bind(IUrlPatternDatabase.class).to(UrlPatternDatabase.class);
 		bind(IOnlineMediaRepository.class).to(OnlineMediaDatabase.class);
 		bind(IMediaRepository.class).to(MediaDatabaseRepository.class);

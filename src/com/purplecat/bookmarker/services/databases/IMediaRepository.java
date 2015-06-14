@@ -8,22 +8,17 @@ import com.purplecat.bookmarker.services.ServiceException;
 
 public interface IMediaRepository {
 
-	public List<Media> queryByTitle(String title);
+	public List<Media> queryByTitle(String title) throws DatabaseException;
 
-	public List<Media> querySavedMedia(IListLoadedObserver<Media> observer) throws ServiceException;
+	public List<Media> querySavedMedia(IListLoadedObserver<Media> observer) throws DatabaseException;
 
-	//public List<Media> queryNonSavedMedia() throws ServiceException;
+	public List<Media> query() throws DatabaseException;
 
-	public List<Media> query();
+	public Media queryById(long id) throws DatabaseException;
 
-	public Media queryById(long id);
+	public void insert(Media item) throws DatabaseException, ServiceException;
 
-	public void insert(Media item) throws ServiceException;
+	public void update(Media item) throws DatabaseException;
 
-	public void update(Media item) throws ServiceException;
-
-	public void delete(long id);
-	
-	// throws DatabaseException
-	
+	public void delete(long id) throws DatabaseException;	
 }

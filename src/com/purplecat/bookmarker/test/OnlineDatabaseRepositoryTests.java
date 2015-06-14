@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -13,14 +15,18 @@ import com.google.inject.Injector;
 import com.purplecat.bookmarker.models.Genre;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
+import com.purplecat.bookmarker.services.databases.DatabaseException;
 import com.purplecat.bookmarker.services.databases.GenreDatabaseRepository;
 import com.purplecat.bookmarker.services.databases.IOnlineMediaRepository;
 import com.purplecat.bookmarker.services.databases.MediaDatabaseRepository;
+import com.purplecat.bookmarker.sql.ConnectionManager;
+import com.purplecat.bookmarker.sql.IConnectionManager;
 import com.purplecat.bookmarker.test.modules.TestDatabaseModule;
 import com.purplecat.commons.tests.GetRandom;
 
 public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
-	
+
+	private static IConnectionManager _connectionManager;
 	private static IOnlineMediaRepository _database;
 	private static MediaDatabaseRepository _savedDatabase;
 	private static GenreDatabaseRepository _genreDatabase;
@@ -34,22 +40,50 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 		_database = injector.getInstance(IOnlineMediaRepository.class);
 		_savedDatabase = injector.getInstance(MediaDatabaseRepository.class);
 		_genreDatabase = injector.getInstance(GenreDatabaseRepository.class);
+		_connectionManager = injector.getInstance(ConnectionManager.class);
 		
-		_randomGenres = _genreDatabase.query();
-		
-		List<OnlineMediaItem> randomItems = _database.query();
-		Assert.assertNotNull("List is null", randomItems);
-		Assert.assertTrue("List has no elements", randomItems.size() > 0);
-		
-		for(OnlineMediaItem item : randomItems) {
-			if ( item._isSaved ) {
-				_randomSavedItems.add(item);
+		try {
+			_connectionManager.open();
+			_randomGenres = _genreDatabase.query();
+			
+			List<OnlineMediaItem> randomItems = _database.query();
+			Assert.assertNotNull("List is null", randomItems);
+			Assert.assertTrue("List has no elements", randomItems.size() > 0);
+			
+			for(OnlineMediaItem item : randomItems) {
+				if ( item._isSaved ) {
+					_randomSavedItems.add(item);
+				}
+				else {
+					_randomUnsavedItems.add(item);
+				}
 			}
-			else {
-				_randomUnsavedItems.add(item);
-			}
+			Assert.assertTrue("List has no saved elements", _randomSavedItems.size() > 0);
+		} 
+		catch (DatabaseException e) {
+			e.printStackTrace();
+			Assert.fail("Database connection failed");
 		}
-		Assert.assertTrue("List has no saved elements", _randomSavedItems.size() > 0);
+		finally {
+			_connectionManager.close();
+		}
+	}
+	
+	@Before
+	public void openConnection() {
+		try {
+			_connectionManager.open();
+		} 
+		catch (DatabaseException e) {
+			e.printStackTrace();
+			Assert.fail("Database connection failed");
+			_connectionManager.close();
+		}		
+	}
+	
+	@After
+	public void closeConnection() {
+		_connectionManager.close();	
 	}
 
 	@Test

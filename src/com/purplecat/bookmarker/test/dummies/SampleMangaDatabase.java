@@ -16,7 +16,6 @@ import org.joda.time.DateTime;
 import com.purplecat.bookmarker.controller.observers.IListLoadedObserver;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.Place;
-import com.purplecat.bookmarker.services.ServiceException;
 import com.purplecat.bookmarker.services.databases.IMediaRepository;
 
 public class SampleMangaDatabase extends SampleDatabaseService<Media> implements IMediaRepository {
@@ -87,7 +86,7 @@ public class SampleMangaDatabase extends SampleDatabaseService<Media> implements
 	}
 	
 	@Override
-	public List<Media> querySavedMedia(IListLoadedObserver<Media> observer) throws ServiceException {
+	public List<Media> querySavedMedia(IListLoadedObserver<Media> observer) {
 		// TODO Auto-generated method stub
 		return null;
 	}

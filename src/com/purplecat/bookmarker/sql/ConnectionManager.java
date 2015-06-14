@@ -5,11 +5,13 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.purplecat.bookmarker.services.databases.DatabaseException;
 import com.purplecat.commons.logs.ILoggingService;
 
-public class ConnectionManager {	
+@Singleton
+public class ConnectionManager implements IConnectionManager {	
 	private static String TAG = "ConnectionManager";
 	
 	private final String _connectionPath;
@@ -24,6 +26,7 @@ public class ConnectionManager {
 		_connectionPath = dbPath;
 	}
 	
+	@Override
 	public synchronized void open() throws DatabaseException {
 			try {
 				while ( _inUse ) {
@@ -40,6 +43,7 @@ public class ConnectionManager {
 		}
 	}
 	
+	@Override
 	public Connection getConnection() throws DatabaseException {
 		if ( _connection != null ) {
 			return _connection;
@@ -49,6 +53,7 @@ public class ConnectionManager {
 		}
 	}
 	
+	@Override
 	public synchronized void close() {
 		if ( _connection != null ) {
 			try {

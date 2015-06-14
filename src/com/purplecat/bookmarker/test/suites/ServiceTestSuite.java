@@ -5,12 +5,12 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.purplecat.bookmarker.test.MediaServiceTests;
-import com.purplecat.bookmarker.test.OnlineUpdateThreadTests;
 import com.purplecat.bookmarker.test.UrlPatternServiceTests;
 
 @RunWith(Suite.class)
-@SuiteClasses({ MediaServiceTests.class,
-		OnlineUpdateThreadTests.class, UrlPatternServiceTests.class })
+@SuiteClasses({ 
+	MediaServiceTests.class, 
+	UrlPatternServiceTests.class })
 public class ServiceTestSuite {
 
 }

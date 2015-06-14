@@ -2,7 +2,6 @@ package com.purplecat.bookmarker.controller.tasks;
 
 import java.util.List;
 
-import com.google.inject.Inject;
 import com.purplecat.bookmarker.controller.observers.IListLoadedObserver;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.services.SavedMediaService;
@@ -14,15 +13,15 @@ import com.purplecat.commons.threads.IThreadTask;
 public class SavedMediaLoadTask implements IThreadTask, IListLoadedObserver<Media> {
 	public static final String TAG = "SavedMediaLoadTask";
 	
-	@Inject public ILoggingService _logging;
-	
+	ILoggingService _logging;	
 	List<Media> _resultList;
 	ServiceException _error;
 	Iterable<IListLoadedObserver<Media>> _observers;
 	SavedMediaService _mediaService;
 	IThreadPool _threadPool;
 	
-	public SavedMediaLoadTask(IThreadPool thread, SavedMediaService service, Iterable<IListLoadedObserver<Media>> obs) {
+	public SavedMediaLoadTask(ILoggingService logging, IThreadPool thread, SavedMediaService service, Iterable<IListLoadedObserver<Media>> obs) {
+		_logging = logging;
 		_threadPool = thread;
 		_observers = obs;
 		_mediaService = service;

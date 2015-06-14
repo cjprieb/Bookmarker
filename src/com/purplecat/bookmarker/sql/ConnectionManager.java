@@ -43,7 +43,6 @@ public class ConnectionManager implements IConnectionManager {
 		}
 	}
 	
-	@Override
 	public Connection getConnection() throws DatabaseException {
 		if ( _connection != null ) {
 			return _connection;

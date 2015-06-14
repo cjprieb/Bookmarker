@@ -15,7 +15,7 @@ import com.purplecat.bookmarker.extensions.PlaceExt;
 import com.purplecat.bookmarker.models.Genre;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
-import com.purplecat.bookmarker.sql.IConnectionManager;
+import com.purplecat.bookmarker.sql.ConnectionManager;
 import com.purplecat.bookmarker.sql.NamedResultSet;
 import com.purplecat.bookmarker.sql.NamedStatement;
 import com.purplecat.commons.logs.ILoggingService;
@@ -32,12 +32,12 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 		
 	
 	public final ILoggingService _logging;
-	public final IConnectionManager _connectionManager;
+	public final ConnectionManager _connectionManager;
 	public final MediaDatabaseRepository _mediaDatabase;
 	public final GenreDatabaseRepository _genreDatabase;
 	 
 	@Inject
-	public OnlineMediaDatabase(ILoggingService logger, IConnectionManager mgr, MediaDatabaseRepository mediaDb, GenreDatabaseRepository genreDb) {
+	public OnlineMediaDatabase(ILoggingService logger, ConnectionManager mgr, MediaDatabaseRepository mediaDb, GenreDatabaseRepository genreDb) {
 		_logging = logger;
 		_connectionManager = mgr;
 		_mediaDatabase = mediaDb;

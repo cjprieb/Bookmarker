@@ -15,12 +15,11 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.purplecat.bookmarker.services.databases.DatabaseException;
 import com.purplecat.bookmarker.sql.ConnectionManager;
-import com.purplecat.bookmarker.sql.IConnectionManager;
 import com.purplecat.bookmarker.test.modules.TestDatabaseModule;
 
 public class SqlDatabaseTests extends DatabaseConnectorTestBase {
 	
-	static IConnectionManager _connectionManager;
+	static ConnectionManager _connectionManager;
 	static int ID_COUNT = 0;
 
 	@BeforeClass

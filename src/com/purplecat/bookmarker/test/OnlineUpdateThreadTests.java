@@ -1,6 +1,5 @@
 package com.purplecat.bookmarker.test;
 
-import java.sql.Connection;
 import java.util.List;
 
 import org.junit.Assert;
@@ -92,12 +91,6 @@ public class OnlineUpdateThreadTests {
 		public void open() throws DatabaseException {
 			// TODO Auto-generated method stub
 			
-		}
-
-		@Override
-		public Connection getConnection() throws DatabaseException {
-			// TODO Auto-generated method stub
-			return null;
 		}
 
 		@Override

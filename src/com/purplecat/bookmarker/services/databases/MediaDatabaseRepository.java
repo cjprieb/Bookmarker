@@ -20,8 +20,8 @@ import com.purplecat.bookmarker.extensions.TitleExt;
 import com.purplecat.bookmarker.models.Genre;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.services.ServiceException;
+import com.purplecat.bookmarker.sql.ConnectionManager;
 import com.purplecat.bookmarker.sql.DBUtils;
-import com.purplecat.bookmarker.sql.IConnectionManager;
 import com.purplecat.bookmarker.sql.NamedResultSet;
 import com.purplecat.bookmarker.sql.NamedStatement;
 import com.purplecat.commons.logs.ILoggingService;
@@ -40,11 +40,11 @@ public class MediaDatabaseRepository implements IMediaRepository {
 	private static final String COUNT_MEDIA = "SELECT COUNT(*) AS total_rows FROM MEDIA ";
 	
 	public final ILoggingService _logging;
-	public final IConnectionManager _connectionManager;
+	public final ConnectionManager _connectionManager;
 	public final GenreDatabaseRepository _genreDatabase;
 	 
 	@Inject
-	public MediaDatabaseRepository(ILoggingService logger, IConnectionManager mgr, GenreDatabaseRepository genreDatabase) {
+	public MediaDatabaseRepository(ILoggingService logger, ConnectionManager mgr, GenreDatabaseRepository genreDatabase) {
 		_logging = logger;
 		_connectionManager = mgr;
 		_genreDatabase = genreDatabase;
@@ -257,17 +257,17 @@ public class MediaDatabaseRepository implements IMediaRepository {
 	
 	private void loadGenres(Connection conn, Collection<Media> list, IListLoadedObserver<Media> observer) throws DatabaseException {
 		Map<Long, Set<Genre>> map = _genreDatabase.loadAllMediaGenres();
-		int index = 1;
+		int index = 0;
 		int total = list.size();
 		for ( Media media : list ) {
 			if ( map.containsKey(media._id)) {
 				media._genres.clear();
 				media._genres.addAll(map.get(media._id));
-				if ( observer != null ) {
-					observer.notifyItemLoaded(media, index, total);
-				}
 			}
 			index++;
+			if ( observer != null ) {
+				observer.notifyItemLoaded(media, index, total);
+			}
 		}
 	}
 	

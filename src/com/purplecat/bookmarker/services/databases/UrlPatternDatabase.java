@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 import com.google.inject.Inject;
 import com.purplecat.bookmarker.models.UrlPattern;
 import com.purplecat.bookmarker.models.UrlPatternType;
-import com.purplecat.bookmarker.sql.IConnectionManager;
+import com.purplecat.bookmarker.sql.ConnectionManager;
 import com.purplecat.bookmarker.sql.NamedResultSet;
 import com.purplecat.bookmarker.sql.NamedStatement;
 import com.purplecat.commons.logs.ILoggingService;
@@ -21,10 +21,10 @@ public class UrlPatternDatabase implements IUrlPatternDatabase {
 	private static String SELECT_ITEMS = "SELECT _id, PatPattern _patternString, PatGroups, PatType _type FROM UrlPattern";
 	
 	public final ILoggingService _logging;
-	public final IConnectionManager _connectionManager;
+	public final ConnectionManager _connectionManager;
 	 
 	@Inject
-	public UrlPatternDatabase(ILoggingService logger, IConnectionManager mgr) {
+	public UrlPatternDatabase(ILoggingService logger, ConnectionManager mgr) {
 		_logging = logger;
 		_connectionManager = mgr;
 	}

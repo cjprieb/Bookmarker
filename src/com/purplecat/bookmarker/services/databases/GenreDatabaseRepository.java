@@ -14,8 +14,8 @@ import java.util.Set;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.purplecat.bookmarker.models.Genre;
+import com.purplecat.bookmarker.sql.ConnectionManager;
 import com.purplecat.bookmarker.sql.DBUtils;
-import com.purplecat.bookmarker.sql.IConnectionManager;
 import com.purplecat.bookmarker.sql.NamedResultSet;
 import com.purplecat.bookmarker.sql.NamedStatement;
 import com.purplecat.commons.logs.ILoggingService;
@@ -31,12 +31,12 @@ public class GenreDatabaseRepository implements IGenreRepository {
 			+ " WHERE GenMedia_id = @mediaId ORDER BY GenName";
 	
 	public final ILoggingService _logging;
-	public final IConnectionManager _connectionManager;
+	public final ConnectionManager _connectionManager;
 	
 	private Map<Long, Genre> _genreCache;
 	 
 	@Inject
-	public GenreDatabaseRepository(ILoggingService logger, IConnectionManager mgr) {
+	public GenreDatabaseRepository(ILoggingService logger, ConnectionManager mgr) {
 		_logging = logger;
 		_connectionManager = mgr;
 		 _genreCache = new HashMap<Long, Genre>();

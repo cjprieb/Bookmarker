@@ -5,12 +5,12 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="/utilities/lib/sqlite-jdbc-3.7.2.jar"/>
 	<classpathentry kind="lib" path="/utilities/lib/OrangeExtensions-1.2.jar"/>
-	<classpathentry kind="lib" path="/utilities/lib/guice-4.0-no_aop.jar"/>
-	<classpathentry kind="lib" path="/utilities/lib/guava-16.0.1.jar"/>
-	<classpathentry kind="lib" path="/utilities/lib/javax.inject.jar"/>
-	<classpathentry kind="lib" path="/utilities/joda-time-2.7/joda-time-2.7.jar"/>
 	<classpathentry kind="lib" path="/utilities/lib/jsoup-1.8.2.jar"/>
-	<classpathentry kind="lib" path="/utilities/lib/javax.json-api-1.0.jar"/>
-	<classpathentry kind="lib" path="/utilities/lib/javax.json-1.0.4.jar"/>
+	<classpathentry kind="lib" path="/Commons/lib/OrangeExtensions-1.2.jar"/>
+	<classpathentry kind="lib" path="/Commons/joda-time-2.7/joda-time-2.7.jar"/>
+	<classpathentry kind="lib" path="/Commons/lib/guava-18.0.jar"/>
+	<classpathentry kind="lib" path="/Commons/lib/guice-4.0-no_aop.jar"/>
+	<classpathentry kind="lib" path="/Commons/lib/javax.inject.jar"/>
+	<classpathentry kind="lib" path="/Commons/lib/javax.json-1.0.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

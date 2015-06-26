@@ -20,13 +20,13 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
-import com.purplecat.bookmarker.view.swing.renderers.ITableRowRenderer;
 import com.purplecat.commons.Point;
 import com.purplecat.commons.TTableColumn;
 import com.purplecat.commons.swing.IRowActionListener.ClickType;
 import com.purplecat.commons.swing.IRowActionListener.RowClickedEvent;
 import com.purplecat.commons.swing.IRowSelectionListener.RowSelectionEvent;
 import com.purplecat.commons.swing.renderer.ICellRendererFactory;
+import com.purplecat.commons.swing.renderer.ITableRowRenderer;
 import com.purplecat.commons.swing.renderer.IconCellRenderer;
 
 public class TTable<T> extends JTable {	

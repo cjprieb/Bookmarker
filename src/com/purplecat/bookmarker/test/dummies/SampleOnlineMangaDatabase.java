@@ -2,6 +2,7 @@ package com.purplecat.bookmarker.test.dummies;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.json.Json;
@@ -11,20 +12,29 @@ import javax.json.JsonReader;
 
 import org.joda.time.DateTime;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.Place;
+import com.purplecat.bookmarker.services.databases.DatabaseException;
+import com.purplecat.bookmarker.services.databases.IMediaRepository;
 import com.purplecat.bookmarker.services.databases.IOnlineMediaRepository;
 
+@Singleton
 public class SampleOnlineMangaDatabase extends SampleDatabaseService<OnlineMediaItem> implements IOnlineMediaRepository {
 	
 	public Map<Integer, Long> _preferredOrder = new HashMap<Integer, Long>();
+	IMediaRepository _mediaRepository;
 	
-	public SampleOnlineMangaDatabase() {
+	@Inject
+	public SampleOnlineMangaDatabase(IMediaRepository mediaRepository) {
 		setup();
+		_mediaRepository = mediaRepository;
 	}
 	
 	private void setup() {
-		System.out.println("setting up");
+//		System.out.println("setting up sample online manga database");
 		String fileName = "/com/purplecat/bookmarker/test/dummies/resources/updated_sample_manga.txt";
 		try {
 			InputStream stream = getClass().getResourceAsStream(fileName);
@@ -44,7 +54,7 @@ public class SampleOnlineMangaDatabase extends SampleDatabaseService<OnlineMedia
 				media._lastReadDate = parseDate(obj.containsKey("_lastReadDate") ? obj.getString("_lastReadDate") : null);
 				media._updatedPlace = parsePlace(obj.getJsonObject("_updatedPlace"));
 				media._updatedDate = parseDate(obj.containsKey("_updatedDate") ? obj.getString("_updatedDate") : null);
-				System.out.println("Adding to list: " + media);
+//				System.out.println("Adding to list: " + media);
 				insert(media);
 				if ( media._id > this._maxIndex ) {
 					this._maxIndex = (int)media._id;
@@ -85,6 +95,18 @@ public class SampleOnlineMangaDatabase extends SampleDatabaseService<OnlineMedia
 
 	@Override
 	public OnlineMediaItem findOrCreate(OnlineMediaItem item) {
+		try {
+			List<Media> media = _mediaRepository.queryByTitle(item._displayTitle);
+			if ( media.size() > 0 ) {
+				item._mediaId = media.get(0)._id;
+				item._lastReadDate = media.get(0)._lastReadDate;
+				item._lastReadPlace = media.get(0)._lastReadPlace;
+				item._isSaved = media.get(0)._isSaved;
+			}
+		} catch (DatabaseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if ( item._mediaId <= 0 ) {
 			_maxIndex++;
 			item._mediaId = _maxIndex;

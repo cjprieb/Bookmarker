@@ -1,5 +1,6 @@
 package com.purplecat.bookmarker.extensions;
 
+import java.util.Comparator;
 import java.util.List;
 
 import com.purplecat.bookmarker.models.OnlineMediaItem;
@@ -36,15 +37,33 @@ public class OnlineMediaItemExt {
 	
 	public static long getIdWithMaxPlace(List<OnlineMediaItem> list, OnlineMediaItem item) {
 		OnlineMediaItem maxItem = item;
-		System.out.println("  new place: " + maxItem._updatedPlace);
 		for ( OnlineMediaItem existing : list ) {
 			//TODO: find max online media item from preferred website order and last updated date 
-			System.out.println("  comparing place: " + existing._updatedPlace);
 			if ( maxItem == null || existing._updatedPlace.compareTo(maxItem._updatedPlace) > 0 ) {
 				maxItem = existing;
 			}
 		}
-		System.out.println("  max place: " + maxItem._updatedPlace);
 		return maxItem._id;
+	}
+	
+	public static class OnlineBookmarkComparator implements Comparator<OnlineMediaItem> {
+		@Override
+		public int compare(OnlineMediaItem o1, OnlineMediaItem o2) {
+			if ( o1._websiteName.equals(o2._websiteName) ) {
+				if ( o1._id <= 0 || o2._id <= 0 ) {//assume it's a site bookmark if the _id is less than 0
+					return o1._id <= 0 ? -1 : 1;
+				}
+				else if ( o1.isUpdated() == o2.isUpdated() ) {
+					return o2._updatedDate.compareTo(o1._updatedDate);
+				}
+				else {
+					return o1.isUpdated() ? -1 : 1;
+				}
+			}
+			else {
+				//TODO: determine website order
+				return o1._websiteName.compareTo(o2._websiteName);
+			}
+		}		
 	}
 }

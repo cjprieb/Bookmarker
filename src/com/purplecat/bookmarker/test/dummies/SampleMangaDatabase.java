@@ -13,11 +13,13 @@ import javax.json.JsonReader;
 
 import org.joda.time.DateTime;
 
+import com.google.inject.Singleton;
 import com.purplecat.bookmarker.controller.observers.IListLoadedObserver;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.Place;
 import com.purplecat.bookmarker.services.databases.IMediaRepository;
 
+@Singleton
 public class SampleMangaDatabase extends SampleDatabaseService<Media> implements IMediaRepository {
 	
 	public Map<Integer, Long> _preferredOrder = new HashMap<Integer, Long>();
@@ -27,7 +29,7 @@ public class SampleMangaDatabase extends SampleDatabaseService<Media> implements
 	}
 	
 	private void setup() {
-		System.out.println("setting up");
+//		System.out.println("setting up sample manga database");
 		String fileName = "/com/purplecat/bookmarker/test/dummies/resources/sample_manga.txt";
 		try {
 			InputStream stream = getClass().getResourceAsStream(fileName);
@@ -46,7 +48,8 @@ public class SampleMangaDatabase extends SampleDatabaseService<Media> implements
 				media._lastReadDate = parseDate(obj.getString("_lastReadDate"));
 				media._updatedPlace = parsePlace(obj.getJsonObject("_updatedPlace"));
 				media._updatedDate = parseDate(obj.containsKey("_updatedDate") ? obj.getString("_updatedDate") : null);
-				System.out.println("Adding to list: " + media);
+				media._isSaved = true;
+//				System.out.println("Adding to list: " + media);
 				insert(media);
 				if ( media._id > this._maxIndex ) {
 					this._maxIndex = (int)media._id;
@@ -91,15 +94,14 @@ public class SampleMangaDatabase extends SampleDatabaseService<Media> implements
 		return null;
 	}
 	@Override
-	public List<Media> queryByTitle(String title) {
-		// TODO Auto-generated method stub
-		Media m = new Media();
-		m._displayTitle = title;
-		m._id = 10;
-		insert(m);
-		
+	public List<Media> queryByTitle(String title) {		
 		List<Media> list = new LinkedList<Media>();
-		list.add(m);
+		System.out.println("querying for " + title);
+		for ( Media media : this._map.values() ) {
+			if ( media._displayTitle.equalsIgnoreCase(title) ) {
+				list.add(media);
+			}
+		}
 		return list;
 	}
 }

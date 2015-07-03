@@ -44,6 +44,7 @@ public class WebsiteThreadObserver implements IWebsiteLoadObserver, Runnable {
 	public void run() {
 		//On Worker Thread
 		if ( !_task.isRunning() ) {
+			System.out.println("loading online updates");
 			_task.loadOnlineUpdates();
 		}
 	}

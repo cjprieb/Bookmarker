@@ -105,31 +105,27 @@ public class OnlineUpdateThreadTests {
 
 		@Override
 		public void runOnUIThread(IThreadTask task) {
-			// TODO Auto-generated method stub
-			
+			task.uiTaskCompleted();
 		}
 
 		@Override
 		public void runOnUIThread(Runnable task) {
-			// TODO Auto-generated method stub
-			
+			task.run();
 		}
 
 		@Override
 		public void runOnWorkerThread(IThreadTask task) {
-			// TODO Auto-generated method stub
-			
+			task.workerTaskStart();
+			runOnUIThread(task);
 		}
 
 		@Override
 		public void runOnWorkerThread(Runnable task) {
-			// TODO Auto-generated method stub
-			
+			task.run();
 		}
 
 		@Override
 		public boolean isUIThread() {
-			// TODO Auto-generated method stub
 			return false;
 		}
 		

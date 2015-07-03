@@ -170,7 +170,6 @@ public class OnlineUpdateItemTableModel extends TAbstractTableModel<OnlineMediaI
 
 		@Override
 		public void notifyLoadFinished(List<OnlineMediaItem> list) {
-			// TODO Sort?			
 		}		
 	}
 	

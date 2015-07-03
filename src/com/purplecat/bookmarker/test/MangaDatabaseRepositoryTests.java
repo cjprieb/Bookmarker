@@ -32,7 +32,7 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	private static GenreDatabaseRepository _genreDatabase;
 	private static List<Media> _randomSavedMedia;
 	private static String[] _sampleTitles = { "360° material", "chihayafuru", "7 centi!", "gozen 3-ji no muhouchitai", "chikutaku bonbon", 
-		"d. n. angel", "yume no shizuku ougon no torikago" };
+		"d. n. angel", "yume no shizuku ougon no torikago", "birdmen", "adventure of sinbad", "twelve nights" };
 
 	@BeforeClass
 	public static void setUpBeforeTest() throws Exception {

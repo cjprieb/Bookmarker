@@ -1,14 +1,18 @@
 package com.purplecat.bookmarker.view.swing.components;
 
 import java.awt.Component;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.SortOrder;
 import javax.swing.table.TableRowSorter;
 
 import com.google.inject.Inject;
 import com.purplecat.bookmarker.controller.Controller;
+import com.purplecat.bookmarker.extensions.OnlineMediaItemExt.OnlineBookmarkComparator;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.view.swing.actions.UpdateMediaFromItemAction;
 import com.purplecat.bookmarker.view.swing.models.OnlineUpdateItemTableModel;
@@ -18,6 +22,7 @@ import com.purplecat.commons.TTableColumn;
 import com.purplecat.commons.swing.TTable;
 import com.purplecat.commons.swing.TablePopupCreator;
 import com.purplecat.commons.swing.renderer.ICellRendererFactory;
+import com.purplecat.commons.utils.ListUtils;
 
 public class OnlineUpdateItemTableControl {
 	private final OnlineUpdateItemTableModel _model;
@@ -70,8 +75,15 @@ public class OnlineUpdateItemTableControl {
 		OnlineBookmarkSorter(OnlineUpdateItemTableModel model) {
 			super(model);
 
-			//int index = ListUtils.indexOf(_columns, DataFields.ONLINE_STATE_COL);
-			//if ( index >= 0 ) { this.setComparator(index, new FavoriteComparor()); }
+			List<SortKey> sortKeys = new LinkedList<SortKey>();
+			
+			int index = ListUtils.indexOf(_columns, DataFields.ONLINE_STATE_COL);
+			if ( index >= 0 ) { 
+				this.setComparator(index, new OnlineBookmarkComparator());
+				sortKeys.add(new SortKey(index, SortOrder.ASCENDING)); 
+			}
+			
+			setSortKeys(sortKeys);
 
 			//index = ListUtils.indexOf(_columns, DataFields.DATE_COL);
 			//if ( index >= 0 ) { this.setComparator(index, new ReverseDateComparor()); }
@@ -80,27 +92,4 @@ public class OnlineUpdateItemTableControl {
 			//if ( index >= 0 ) { this.setComparator(index, new MediaStoryStateComparor()); }
 		}		
 	}
-	
-	/*public void query(Query query) {
-		mSorter.setRowFilter(new QueryFilter(query));
-	}
-	
-	public class QueryFilter extends RowFilter<MediaTableModel, Integer> {
-		Query _lastQuery;
-		
-		public QueryFilter(Query query) {
-			_lastQuery = query;
-		}
-		
-		@Override
-		public boolean include(RowFilter.Entry<? extends MediaTableModel, ? extends Integer> entry) {
-			if ( _lastQuery != null ) {
-				return( _lastQuery.matchesQuery(CriterionMatchers.SavedItemMatcher, 
-						entry.getModel().getItemAt(entry.getIdentifier())) );
-			}
-			else {
-				return(true);
-			}
-		}
-	}*/
 }

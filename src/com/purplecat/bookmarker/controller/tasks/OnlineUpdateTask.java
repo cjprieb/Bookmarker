@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.inject.Inject;
+import com.purplecat.bookmarker.extensions.OnlineMediaItemExt.OnlineBookmarkComparator;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.services.ServiceException;
 import com.purplecat.bookmarker.services.databases.DatabaseException;
@@ -28,6 +29,8 @@ public class OnlineUpdateTask {
 	
 	private boolean _isRunning = false;
 	private boolean _stopRunning = false;
+	
+	private OnlineBookmarkComparator _bookmarkComparer = new OnlineBookmarkComparator();
 	
 	@Inject
 	public OnlineUpdateTask(IWebsiteList websites, IWebsiteLoadObserver obs, IOnlineMediaRepository repository, ILoggingService logging, IConnectionManager mgr) {
@@ -86,6 +89,7 @@ public class OnlineUpdateTask {
 				_logging.debug(1, TAG, "All items retrieved from database: " + retList.size());
 				
 				//NOTE: reorder list here?
+				retList.sort(_bookmarkComparer);
 				
 				loadItemInfo(scraper, retList, updatedMediaIds);
 			} 
@@ -107,6 +111,7 @@ public class OnlineUpdateTask {
 		try {
 			_connectionManager.open();
 			for ( OnlineMediaItem item : siteList ) {
+				_logging.debug(2, TAG, "Looking for item: " + item._displayTitle);
 				OnlineMediaItem found = _repository.findOrCreate(item);
 				iItemsParsed++;
 				if ( found != null ) {
@@ -132,32 +137,30 @@ public class OnlineUpdateTask {
 	}
 	
 	public void loadItemInfo(IWebsiteParser scraper, List<OnlineMediaItem> retList, Collection<Long> updatedMediaIds)  throws ServiceException {
-			int iItemsParsed = 0;
-			for ( OnlineMediaItem item : retList ) { //use found items, not parsed items.
-				if ( isStopped() ) {
-					break;
-				}
-				OnlineMediaItem newItem = scraper.loadItem(item);
-				iItemsParsed++;
-				if ( newItem != null ) {
-					_logging.debug(2, TAG, "Item parsed: " + item);
-					try {
-						_connectionManager.open();
-						_repository.update(newItem);
-					} catch (DatabaseException e) {
-						_logging.error(TAG, "Database error in loadMatchingMedia", e);
-						throw new ServiceException("Database error", ServiceException.SQL_ERROR);
-					}
-					finally {
-						_connectionManager.close();
-					}
-					_observer.notifyItemParsed(newItem, iItemsParsed, updatedMediaIds.size());
-				}
-				else {
-					_logging.debug(2, TAG, "Updated Item was null after load: " + item);
-				}
+		int iItemsParsed = 0;
+		for ( OnlineMediaItem item : retList ) { //use found items, not parsed items.
+			if ( isStopped() ) {
+				break;
 			}
-		
+			OnlineMediaItem newItem = scraper.loadItem(item);
+			iItemsParsed++;
+			if ( newItem != null ) {
+				_logging.debug(2, TAG, "Item parsed: " + item);
+				try {
+					_connectionManager.open();
+					_repository.update(newItem);
+				} catch (DatabaseException e) {
+					_logging.error(TAG, "Database error in loadMatchingMedia", e);
+					throw new ServiceException("Database error", ServiceException.SQL_ERROR);
+				}
+				finally {
+					_connectionManager.close();
+				}
+				_observer.notifyItemParsed(newItem, iItemsParsed, updatedMediaIds.size());
+			}
+			else {
+				_logging.debug(2, TAG, "Updated Item was null after load: " + item);
+			}
+		}		
 	}
-
 }

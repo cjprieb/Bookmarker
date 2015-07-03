@@ -27,12 +27,12 @@ import com.purplecat.commons.utils.StringUtils;
 public class BatotoWebsite implements IWebsiteParser {
 	final String TAG = "BatotoWebsite";
 	
-	private final WebsiteInfo _info;
-	private final ILoggingService _logging;
-	private final IGenreRepository _genreDatabase;
-	private final Pattern _chapterRegex;
-	private final Pattern _daysAgoRegex;
-	private final Pattern _dateRegex;
+	protected final WebsiteInfo _info;
+	protected final ILoggingService _logging;
+	protected final IGenreRepository _genreDatabase;
+	protected final Pattern _chapterRegex;
+	protected final Pattern _daysAgoRegex;
+	protected final Pattern _dateRegex;
 	
 	@Inject
 	public BatotoWebsite(ILoggingService logging, IGenreRepository genres) {
@@ -150,55 +150,61 @@ public class BatotoWebsite implements IWebsiteParser {
 		_logging.debug(2, TAG, "Place: " + p);
 		return p;
 	}
+	
+	protected Document getDocument() throws IOException {
+		return Jsoup.connect(_info._website).get();
+	}
 
 	@Override
 	public List<OnlineMediaItem> load() throws ServiceException {
+		try {
+			return loadDocument(getDocument());
+		} catch (IOException e) {
+			_logging.error(TAG, "Error getting document", e);
+			throw new ServiceException("Error loading Batoto", ServiceException.WEBSITE_ERROR);
+		}
+	}
+	
+	public List<OnlineMediaItem>  loadDocument(Document doc) {
 		List<OnlineMediaItem> items = new LinkedList<OnlineMediaItem>();
 		DateTime now = DateTime.now();
-		try {
-			Document doc = Jsoup.connect(_info._website).get();
-			Elements rows = doc.select(".chapters_list .lang_English");
-			OnlineMediaItem currentItem = null;
-			for ( Element row : rows ) {
-				//Each item takes up at least 2 rows
-				if ( row.select("td").size() == 2 ) {
-					//first row: thumbnail and title and link to title
-					currentItem = new OnlineMediaItem();
-					items.add(currentItem);
+		Elements rows = doc.select(".chapters_list .lang_English");
+		OnlineMediaItem currentItem = null;
+		for ( Element row : rows ) {
+			//Each item takes up at least 2 rows
+			if ( row.select("td").size() == 2 ) {
+				//first row: thumbnail and title and link to title
+				currentItem = new OnlineMediaItem();
+				items.add(currentItem);
+				
+				Element titleLink = null;
+				try {
+					titleLink = row.select("td").get(1).select("a").get(1);
 					
-					Element titleLink = null;
-					try {
-						titleLink = row.select("td").get(1).select("a").get(1);
-						
-						currentItem._websiteName = _info._name;
-						currentItem._displayTitle = titleLink.text();
-						currentItem._titleUrl = titleLink.attr("href");
-						_logging.debug(0, TAG, "Parsing: " + currentItem._displayTitle + " (" + currentItem._titleUrl + ")");
-					} catch (NullPointerException e) {
-						currentItem = null;
-						_logging.error(TAG, "Row could not be parsed as expected: " + row.html());
-					}
-				}
-				else if ( currentItem != null ) {
-					//chapter rows: place, link to chapter, and date/time
-					String chapterUrl = row.select("a").first().attr("href");
-					String chapterName = row.select("a").first().text();
-					String stringDate = row.select("td").last().text();
-					Place place = parsePlace(chapterUrl);
-					DateTime date = parseDate(now, stringDate);
-					
-					if ( currentItem._updatedPlace.compareTo(place) <= 0 ) {
-						currentItem._chapterUrl = chapterUrl;
-						currentItem._chapterName = chapterName;
-						currentItem._updatedPlace = place;
-						currentItem._updatedDate = date;
-					}
+					currentItem._websiteName = _info._name;
+					currentItem._displayTitle = titleLink.text();
+					currentItem._titleUrl = titleLink.attr("href");
+					_logging.debug(0, TAG, "Parsing: " + currentItem._displayTitle + " (" + currentItem._titleUrl + ")");
+				} catch (NullPointerException e) {
+					currentItem = null;
+					_logging.error(TAG, "Row could not be parsed as expected: " + row.html());
 				}
 			}
-			
-		} catch (IOException e) {
-			_logging.error(TAG, "Error loading items", e);
-			throw new ServiceException("Error loading Batoto", ServiceException.WEBSITE_ERROR);
+			else if ( currentItem != null ) {
+				//chapter rows: place, link to chapter, and date/time
+				String chapterUrl = row.select("a").first().attr("href");
+				String chapterName = row.select("a").first().text();
+				String stringDate = row.select("td").last().text();
+				Place place = parsePlace(chapterUrl);
+				DateTime date = parseDate(now, stringDate);
+				
+				if ( currentItem._updatedPlace.compareTo(place) <= 0 ) {
+					currentItem._chapterUrl = chapterUrl;
+					currentItem._chapterName = chapterName;
+					currentItem._updatedPlace = place;
+					currentItem._updatedDate = date;
+				}
+			}
 		}
 		return items;
 	}

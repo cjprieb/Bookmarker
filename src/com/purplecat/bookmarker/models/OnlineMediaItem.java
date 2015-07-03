@@ -24,8 +24,6 @@ public class OnlineMediaItem extends BaseDatabaseItem implements Comparable<Onli
 	
 	public final Set<Genre> _genres;
 	
-	public long _id = -1;
-	
 	public boolean _isIgnored = false;
 	
 	public boolean _isSaved = false;

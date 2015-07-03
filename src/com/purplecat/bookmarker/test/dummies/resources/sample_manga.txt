@@ -44,12 +44,39 @@
 		"_updatedDate" : "2015-05-11"
 	},
 	{
-		"order" : 4,
+		"order" : 6,
 		"_id" : 5,
 		"_displayTitle" : "Akagami no shirayukihime",
 		"_storyState" : "LAST_AVAILABLE_CHAPTER",
 		"_isComplete" : "false",
 		"_lastReadPlace" : { "_volume" : 6, "_chapter" : 65 },
 		"_lastReadDate" : "2015-05-12"
+	},
+	{
+		"order" : 5,
+		"_id" : 6,
+		"_displayTitle" : "Gintama",
+		"_storyState" : "LAST_AVAILABLE_CHAPTER",
+		"_isComplete" : "false",
+		"_lastReadPlace" : { "_volume" : 60, "_chapter" : 543 },
+		"_lastReadDate" : "2015-05-14"
+	},
+	{
+		"order" : 4,
+		"_id" : 7,
+		"_displayTitle" : "Adventure of Sinbad",
+		"_storyState" : "LAST_AVAILABLE_CHAPTER",
+		"_isComplete" : "false",
+		"_lastReadPlace" : { "_volume" : 0, "_chapter" : 60 },
+		"_lastReadDate" : "2015-06-15"
+	},
+	{
+		"order" : 7,
+		"_id" : 8,
+		"_displayTitle" : "Switch Girl!!",
+		"_storyState" : "LAST_AVAILABLE_CHAPTER",
+		"_isComplete" : "false",
+		"_lastReadPlace" : { "_volume" : 9, "_chapter" : 55 },
+		"_lastReadDate" : "2015-04-15"
 	}
 ]

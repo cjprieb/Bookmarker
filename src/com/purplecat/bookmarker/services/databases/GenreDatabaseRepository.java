@@ -195,22 +195,18 @@ public class GenreDatabaseRepository implements IGenreRepository {
 	
 	public Map<Long, Set<Genre>> loadAllMediaGenres() throws DatabaseException {
 		Map<Long, Set<Genre>> map = new HashMap<Long, Set<Genre>>();
-		String sql = SELECT_GENRE;
+		String sql = "";
 		try {
 			Connection conn = _connectionManager.getConnection();
 			//first make sure all genres are loaded:
-			NamedStatement stmt = new NamedStatement(conn, sql);
-			NamedResultSet result = stmt.executeQuery();
-			while ( result.next() ) {
-				loadGenreFromResultSet(result);
-			}
+			loadGenreCache(conn);
 
 			long mediaId = -1;
 			Set<Genre> genreList = null;
 			
 			sql = "SELECT GenMedia_ID, GenGenre_ID FROM GenreMap";
-			stmt = new NamedStatement(conn, sql);
-			result = stmt.executeQuery();
+			NamedStatement stmt = new NamedStatement(conn, sql);
+			NamedResultSet result = stmt.executeQuery();
 			while ( result.next() ) {
 				mediaId = result.getLong("GenMedia_ID");
 				genreList = map.get(mediaId);
@@ -225,5 +221,37 @@ public class GenreDatabaseRepository implements IGenreRepository {
 			throw new DatabaseException("loadAllMediaGenres failed", sql, e);
 		} 
 		return map;
+	}
+	
+	public Set<Genre> loadGenresForMedia(long id) throws DatabaseException {
+		Set<Genre> genreList = new HashSet<Genre>();
+		String sql = "";
+		try {
+			Connection conn = _connectionManager.getConnection();
+			//first make sure all genres are loaded:
+			loadGenreCache(conn);
+			
+			sql = "SELECT GenMedia_ID, GenGenre_ID FROM GenreMap WHERE GenMedia_ID = @mediaId";			
+			NamedStatement stmt = new NamedStatement(conn, sql);
+			stmt.setLong("@mediaId", id);
+			NamedResultSet result = stmt.executeQuery();
+			while ( result.next() ) {
+				genreList.add(_genreCache.get(result.getLong("GenGenre_ID")));
+			}
+		} catch (SQLException e) {
+			_logging.error(TAG, "Exception loading all media genres", e);
+			throw new DatabaseException("loadGenresForMedia failed", sql, e);
+		} 
+		return genreList;
+	}
+	
+	protected void loadGenreCache(Connection conn) throws SQLException {
+		if ( _genreCache.size() == 0 ) {
+			NamedStatement stmt = new NamedStatement(conn, SELECT_GENRE);
+			NamedResultSet result = stmt.executeQuery();
+			while ( result.next() ) {
+				loadGenreFromResultSet(result);
+			}
+		}
 	}
 }

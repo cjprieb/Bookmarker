@@ -6,12 +6,20 @@
 	<classpathentry kind="lib" path="/utilities/lib/OrangeExtensions-1.2.jar"/>
 	<classpathentry kind="lib" path="/utilities/lib/jsoup-1.8.2.jar"/>
 	<classpathentry kind="lib" path="/Commons/lib/OrangeExtensions-1.2.jar"/>
-	<classpathentry kind="lib" path="/Commons/joda-time-2.7/joda-time-2.7.jar"/>
+	<classpathentry kind="lib" path="/Commons/joda-time-2.7/joda-time-2.7.jar" sourcepath="/Commons/joda-time-2.7/joda-time-2.7-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/Commons/joda-time-2.7/joda-time-2.7-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="/Commons/lib/guava-18.0.jar"/>
 	<classpathentry kind="lib" path="/Commons/lib/guice-4.0-no_aop.jar"/>
 	<classpathentry kind="lib" path="/Commons/lib/javax.inject.jar"/>
 	<classpathentry kind="lib" path="/Commons/lib/javax.json-1.0.4.jar"/>
-	<classpathentry kind="lib" path="/Commons/purplecat-commons.jar"/>
+	<classpathentry kind="lib" path="/Commons/purplecat-commons.jar" sourcepath="/Commons/doc/com">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/Users/Crystal/Projects/Java/Commons/doc/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

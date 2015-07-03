@@ -135,7 +135,7 @@ public class MediaDatabaseRepository implements IMediaRepository {
 				media = loadMediaFromResultSet(result);
 			}
 			if ( media != null ) {
-				loadGenres(conn, Collections.singleton(media), null);
+				loadSingleGenres(conn, Collections.singleton(media));
 			}
 		} catch (SQLException e) {
 			_logging.error(TAG, "Exception querying for id " + id, e);
@@ -149,6 +149,8 @@ public class MediaDatabaseRepository implements IMediaRepository {
 		List<Media> list = new LinkedList<Media>();
 		String sql = "SELECT TtMedia_ID FROM Title WHERE TtStripped LIKE @title";
 		try {
+			_logging.debug(3, TAG, "Querying by title");
+			
 			Connection conn = _connectionManager.getConnection();
 			String strippedTitle = TitleExt.stripTitle(title);
 			List<Long> idList = new ArrayList<Long>();
@@ -159,17 +161,20 @@ public class MediaDatabaseRepository implements IMediaRepository {
 			while ( result.next() ) {
 				idList.add(result.getLong("TtMedia_ID"));
 			}
+
+			_logging.debug(4, TAG, "Ids found: " + idList.size());
 			
 			if ( idList.size() > 0 ) {
 				sql = String.format(SELECT_MEDIA + " WHERE Media._id IN (%s)", DBUtils.formatIdList(idList));
 				stmt = new NamedStatement(conn, sql);
-				stmt.setString("@title", title);
 				result = stmt.executeQuery();
 				while ( result.next() ) {
 					list.add(loadMediaFromResultSet(result));
 				}
+				_logging.debug(4, TAG, "Media data loaded");
 			}
-			loadGenres(conn, list, null);
+			loadSingleGenres(conn, list);
+			_logging.debug(4, TAG, "Genres loaded");
 		} catch (SQLException e) {
 			_logging.error(TAG, "Exception querying for title " + title, e);
 			throw new DatabaseException("queryByTitle failed", sql, e);
@@ -267,6 +272,16 @@ public class MediaDatabaseRepository implements IMediaRepository {
 			index++;
 			if ( observer != null ) {
 				observer.notifyItemLoaded(media, index, total);
+			}
+		}
+	}
+	
+	private void loadSingleGenres(Connection conn, Collection<Media> list) throws DatabaseException {
+		if ( list.size() > 0 ) {
+			for ( Media media : list ) {
+				Set<Genre> set = _genreDatabase.loadGenresForMedia(media._id);
+				media._genres.clear();
+				media._genres.addAll(set);
 			}
 		}
 	}

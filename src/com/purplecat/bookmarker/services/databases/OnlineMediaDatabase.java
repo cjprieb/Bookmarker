@@ -114,13 +114,16 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 		List<OnlineMediaItem> existingList = null;
 		try {
 			Connection conn = _connectionManager.getConnection();
+			_logging.debug(2, TAG, "Connection retrieved");
 			
 			List<Media> matches = _mediaDatabase.queryByTitle(item._displayTitle);
 			//TODO: don't assume first is best title match
+			_logging.debug(3, TAG, "Matches found: " + matches.size());
 			if ( matches.size() > 0 ) {
 				item._mediaId = matches.get(0)._id;
 				item._genres.addAll(matches.get(0)._genres);
 				existingList = findExistingOnlineItems(conn, item._mediaId);
+//				_logging.debug(3, TAG, "Found existing online items: " + existingList.size());
 				
 				for ( OnlineMediaItem existing : existingList ) {
 					if ( existing._websiteName.equals(item._websiteName) ) {
@@ -129,18 +132,22 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 					}
 				}
 			}
-			
+
+//			_logging.debug(3, TAG, "Disabling commit");
 			conn.setAutoCommit(false);
 			
 			if (matches.size() == 0) {
 				//Insert new Media item
+//				_logging.debug(4, TAG, "Inserting media");
 				item._mediaId = createMedia(conn, item);
 			}
 			
 			if ( result != null ) {
+//				_logging.debug(4, TAG, "Updating online item");
 				update(result);
 			}
 			else {
+//				_logging.debug(4, TAG, "Inserting online item");
 				insert(conn, item);
 				if ( item._mediaId > 0 ) {
 					//matching media was found, but not matching online media, 
@@ -155,9 +162,11 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 			if ( existingList != null ) {
 				maxId = OnlineMediaItemExt.getIdWithMaxPlace(existingList, item);
 			}
+//			_logging.debug(4, TAG, "Updating media");
 			updateMedia(conn, item._mediaId, maxId > 0 ? maxId : result._id);
 			
 			conn.commit();
+//			_logging.debug(3, TAG, "All committed");
 		} catch (SQLException e) {
 			throw new DatabaseException("findOrCreate failed", e);
 		} 
@@ -246,7 +255,7 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 	}
 	
 	private void loadGenres(Connection conn, Collection<OnlineMediaItem> list) throws DatabaseException {
-		Map<Long, Set<Genre>> map = _genreDatabase.loadAllMediaGenres();
+		Map<Long, Set<Genre>> map = _genreDatabase.loadAllMediaGenres(); //loading all since we have a list to load.
 		for ( OnlineMediaItem item : list ) {
 			if ( map.containsKey(item._mediaId)) {
 				item._genres.clear();
@@ -278,7 +287,6 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 	}
 
 	private void updateMedia(Connection conn, long mediaId, long updatedId) throws SQLException {
-		System.out.println("  updating media: " + mediaId + " for update item " + updatedId);
 		String sql = "UPDATE Media SET UpOnline_Id=@upId WHERE _id = @mediaId";
 		NamedStatement stmt = new NamedStatement(conn, sql);
 		stmt.setLong("@upId", updatedId);

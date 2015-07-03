@@ -19,3 +19,6 @@
 * 4 - update from summary panel
 * 8 - add tv shows tab
 * figure out what to do if the url doesn't generate a manga match
+
+BUGS
+* No title or chapter links for media summaries

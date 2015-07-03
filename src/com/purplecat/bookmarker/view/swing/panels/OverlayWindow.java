@@ -19,7 +19,7 @@ public class OverlayWindow {
 	}
 	
 	public void create() {		
-		_linkPanel = new JTextArea(1, 40);
+		_linkPanel = new JTextArea(1, 50);
 		_linkPanel.setBackground(com.purplecat.commons.swing.Toolbox.COLOR_DUSKY_BLUE);
 		_linkPanel.setLineWrap(true);
 		_linkPanel.setEditable(false);
@@ -34,7 +34,7 @@ public class OverlayWindow {
 		
 		if ( _panel != null ) {
 			Container topLevelFrame = _panel.getTopLevelAncestor();
-			Point p = topLevelFrame.getLocation();		
+			Point p = topLevelFrame.getLocation();
 			
 			p.x += 10;
 			p.y += topLevelFrame.getSize().height - _window.getSize().height - 10;

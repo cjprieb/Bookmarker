@@ -21,6 +21,7 @@ import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.Place;
 import com.purplecat.bookmarker.view.swing.DefaultColors;
 import com.purplecat.bookmarker.view.swing.DefaultSizes;
+import com.purplecat.bookmarker.view.swing.MainPanel;
 import com.purplecat.bookmarker.view.swing.html.SummaryTextArea;
 import com.purplecat.bookmarker.view.swing.html.SummaryTextRow;
 import com.purplecat.bookmarker.view.swing.observers.LinkClickObserver;
@@ -36,6 +37,7 @@ public class MediaSummaryPanel {
 	@Inject IResourceService _resources;
 	@Inject ILoggingService _logger;
 	@Inject LinkClickObserver.LinkFactory _factory;
+	@Inject MainPanel _mainPanel;
 	
 	JPanel _panel;
 	Media _currentMedia;
@@ -89,7 +91,7 @@ public class MediaSummaryPanel {
 				_dataType			= new SummaryTextRow(_resources.getString(Resources.string.lblType));
 				_dataLinks			= new SummaryTextRow(_resources.getString(Resources.string.lblLinks));	
 	
-				_factory.setPanel(_panel);
+				_factory.setPanel(_mainPanel._panel);
 				_dataAuthorLink		= _factory.create(_dataAuthor._textArea);	
 				_dataChapterLink	= _factory.create(new SummaryTextArea(_resources.getString(Resources.string.htmlLastChapter)));		
 				_dataSiteLink 		= _factory.create(new SummaryTextArea(_resources.getString(Resources.string.htmlTitlePage)));	

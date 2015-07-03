@@ -4,12 +4,12 @@
 * 1 - check speed for genre/summary insert - is it related to Batoto loading or the database?
 * -1 - enable drag/drop (if it's not already)-
 * -1 - move update bookmark controls to top- 
-* 1 - create "add url" dialog
-* 1 - double click opens URL
+* -1 - double click opens URL-
 * 2 - Add baka.updates support 
   * tests
 * 2 - Add egscans support
 	tests
+* 1 - create "add url" dialog
 * 1 - add controls to update list 
 * 4 - create search box for saved bookmarks
 * 1 - Add genre column to updates (or some way to notify that summary is loaded)

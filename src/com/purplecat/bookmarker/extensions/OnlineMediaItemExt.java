@@ -46,6 +46,18 @@ public class OnlineMediaItemExt {
 		return maxItem._id;
 	}
 	
+	public static String getPreferredUrl(OnlineMediaItem item) {
+		if ( item == null ) {
+			return "";
+		}
+		else if ( item._isSaved ) {
+			return item._chapterUrl;
+		}
+		else {
+			return item._titleUrl;
+		}
+	}
+	
 	public static class OnlineBookmarkComparator implements Comparator<OnlineMediaItem> {
 		@Override
 		public int compare(OnlineMediaItem o1, OnlineMediaItem o2) {

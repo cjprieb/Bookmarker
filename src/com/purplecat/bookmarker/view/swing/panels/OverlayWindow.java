@@ -15,6 +15,7 @@ public class OverlayWindow {
 	
 	public OverlayWindow(JPanel panel) {
 		_panel = panel;
+		create();
 	}
 	
 	public void create() {		

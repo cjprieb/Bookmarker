@@ -25,6 +25,7 @@ import com.purplecat.bookmarker.view.swing.renderers.DataFields;
 import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.TTableColumn;
 import com.purplecat.commons.swing.IImageRepository;
+import com.purplecat.commons.swing.Toolbox;
 import com.purplecat.commons.tests.GetRandom;
 
 public class OnlineTableViewTests {
@@ -34,6 +35,7 @@ public class OnlineTableViewTests {
 	TTableColumn[] _columns;
 	WebsiteInfo _site;
 	Controller _controller;
+	Toolbox _toolbox;
 	
 	@Before
 	public void setup() {
@@ -51,6 +53,7 @@ public class OnlineTableViewTests {
 		_resources = injector.getInstance(IResourceService.class);
 		_controller = injector.getInstance(Controller.class);
 		_imageResources = injector.getInstance(IImageRepository.class);
+		_toolbox = injector.getInstance(Toolbox.class);
 	}
 	
 	@Test 
@@ -95,7 +98,7 @@ public class OnlineTableViewTests {
 	@Test 
 	public void onlineTableModel_CorrectOrder() {
 		BookmarkerRendererFactory factory = new BookmarkerRendererFactory(_imageResources, _resources);
-		OnlineUpdateItemTableControl tableControl = new OnlineUpdateItemTableControl(factory, _controller, _resources, new DummyDragDrop());
+		OnlineUpdateItemTableControl tableControl = new OnlineUpdateItemTableControl(factory, _controller, _resources, _toolbox, new DummyDragDrop());
 		OnlineUpdateItemTableModel model = tableControl.getModel();
 		_controller.observeOnlineThreadLoading(model.getObserver());
 		_controller.loadUpdateMedia();

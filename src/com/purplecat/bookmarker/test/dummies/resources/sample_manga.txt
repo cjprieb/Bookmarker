@@ -33,7 +33,7 @@
 		"_updatedDate" : "2015-04-15"
 	},
 	{
-		"order" : 5,
+		"order" : 7,
 		"_id" : 4,
 		"_displayTitle" : "ReLIFE",
 		"_storyState" : "LAST_AVAILABLE_CHAPTER",
@@ -71,7 +71,7 @@
 		"_lastReadDate" : "2015-06-15"
 	},
 	{
-		"order" : 7,
+		"order" : 8,
 		"_id" : 8,
 		"_displayTitle" : "Switch Girl!!",
 		"_storyState" : "LAST_AVAILABLE_CHAPTER",

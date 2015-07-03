@@ -96,7 +96,12 @@ public class SavedMediaService {
 				//media._lastReadPlace._extra = patternResult.;
 				media._isSaved = true;
 				
-				_database.update(media);
+				if ( media._id > 0 ) {
+					_database.update(media);
+				}
+				else {
+					_database.insert(media);
+				}
 			}
 		}
 		catch (DatabaseException e) {

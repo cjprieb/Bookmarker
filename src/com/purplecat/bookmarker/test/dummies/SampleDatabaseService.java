@@ -42,7 +42,12 @@ public abstract class SampleDatabaseService<T extends BaseDatabaseItem> {
 	}
 
 	public void update(T item) {
-		_map.put(item._id, item);
+		if ( item._id > 0 ) {
+			_map.put(item._id, item);
+		}
+		else {
+			throw new NullPointerException("Invalid id; cannot update");
+		}
 	}
 
 	public void delete(long id) {

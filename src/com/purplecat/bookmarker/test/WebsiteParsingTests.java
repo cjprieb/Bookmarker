@@ -88,7 +88,10 @@ public class WebsiteParsingTests {
 	protected void checkFullItemLoaded(OnlineMediaItem item) {
 		System.out.println("checking " + item);
 		
-		Assert.assertTrue("no genres", item._genres != null && item._genres.size() > 0);
+		Assert.assertNotNull("no genres", item._genres);
+		if ( item._genres.size() == 0) {
+			System.err.println("No genres found for " + item._displayTitle);
+		}
 		Assert.assertTrue("no summary", item._summary != null && item._summary.length() > 0);
 	}
 

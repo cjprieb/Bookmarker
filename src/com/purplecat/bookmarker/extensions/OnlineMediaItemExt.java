@@ -61,6 +61,13 @@ public class OnlineMediaItemExt {
 	public static class OnlineBookmarkComparator implements Comparator<OnlineMediaItem> {
 		@Override
 		public int compare(OnlineMediaItem o1, OnlineMediaItem o2) {
+			if ( o1._websiteName == null && o2._websiteName == null ) {
+				return 0;
+			}
+			else if ( o1._websiteName == null || o2._websiteName == null ) {
+				return o1._websiteName == null ? -1 : 1;
+			}
+			
 			if ( o1._websiteName.equals(o2._websiteName) ) {
 				if ( o1._id <= 0 || o2._id <= 0 ) {//assume it's a site bookmark if the _id is less than 0
 					return o1._id <= 0 ? -1 : 1;

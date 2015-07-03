@@ -9,6 +9,8 @@ import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.table.TableRowSorter;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.purplecat.bookmarker.models.EFavoriteState.FavoriteComparor;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.view.swing.models.SavedMediaTableModel;
@@ -17,7 +19,9 @@ import com.purplecat.bookmarker.view.swing.renderers.UpdatedMediaRowRenderer;
 import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.TTableColumn;
 import com.purplecat.commons.extensions.DateTimeFormats.ReverseDateComparor;
+import com.purplecat.commons.swing.AppUtils.IDragDropAction;
 import com.purplecat.commons.swing.TTable;
+import com.purplecat.commons.swing.dragdrop.FileDrop;
 import com.purplecat.commons.swing.renderer.ICellRendererFactory;
 import com.purplecat.commons.utils.ListUtils;
 
@@ -28,7 +32,8 @@ public class SavedMediaTableControl {
 	private final TableRowSorter<SavedMediaTableModel> _sorter;
 	private final TTableColumn[] _columns;
 	
-	public SavedMediaTableControl(ICellRendererFactory factory, IResourceService resources) {
+	@Inject
+	public SavedMediaTableControl(ICellRendererFactory factory, IResourceService resources, @Named("Manga Url") IDragDropAction mangaDropAction) {
 		_columns = new TTableColumn[] {
 				//DataFields.FLAG_COL,
 				DataFields.MEDIA_STATE_COL,
@@ -44,10 +49,7 @@ public class SavedMediaTableControl {
 		_sorter = new SavedBookmarkSorter(_model);
 		_table.setRowSorter(_sorter);
 		
-		List<RowSorter.SortKey> sortKeys = new LinkedList<RowSorter.SortKey>();
-		sortKeys.add(new RowSorter.SortKey(2, SortOrder.ASCENDING)); //TITLE column
-		_sorter.setSortKeys(sortKeys);
-		//_sorter.sort();
+        new FileDrop(_scroll, true, mangaDropAction);
 	}
 	
 	public TTable<Media> getTable() {
@@ -65,12 +67,25 @@ public class SavedMediaTableControl {
 	public class SavedBookmarkSorter extends TableRowSorter<SavedMediaTableModel> {
 		SavedBookmarkSorter(SavedMediaTableModel model) {
 			super(model);
+			
+			List<SortKey> sortKeys = new LinkedList<SortKey>();
 
 			int index = ListUtils.indexOf(_columns, DataFields.FAVORITE_COL);
-			if ( index >= 0 ) { this.setComparator(index, new FavoriteComparor()); }
+			if ( index >= 0 ) { 
+				this.setComparator(index, new FavoriteComparor());
+			}
 
 			index = ListUtils.indexOf(_columns, DataFields.DATE_COL);
-			if ( index >= 0 ) { this.setComparator(index, new ReverseDateComparor()); }
+			if ( index >= 0 ) { 
+				this.setComparator(index, new ReverseDateComparor());
+			}
+
+			index = ListUtils.indexOf(_columns, DataFields.TITLE_COL);
+			if ( index >= 0 ) { 
+				sortKeys.add(new RowSorter.SortKey(2, SortOrder.ASCENDING));
+			}
+			
+			setSortKeys(sortKeys);
 
 			//index = ListUtils.indexOf(_columns, DataFields.MEDIA_STATE_COL);
 			//if ( index >= 0 ) { this.setComparator(index, new MediaStoryStateComparor()); }

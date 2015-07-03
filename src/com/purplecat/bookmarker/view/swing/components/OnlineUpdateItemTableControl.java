@@ -11,6 +11,7 @@ import javax.swing.SortOrder;
 import javax.swing.table.TableRowSorter;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.extensions.OnlineMediaItemExt.OnlineBookmarkComparator;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
@@ -19,8 +20,10 @@ import com.purplecat.bookmarker.view.swing.models.OnlineUpdateItemTableModel;
 import com.purplecat.bookmarker.view.swing.renderers.DataFields;
 import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.TTableColumn;
+import com.purplecat.commons.swing.AppUtils.IDragDropAction;
 import com.purplecat.commons.swing.TTable;
 import com.purplecat.commons.swing.TablePopupCreator;
+import com.purplecat.commons.swing.dragdrop.FileDrop;
 import com.purplecat.commons.swing.renderer.ICellRendererFactory;
 import com.purplecat.commons.utils.ListUtils;
 
@@ -33,7 +36,7 @@ public class OnlineUpdateItemTableControl {
 	private final Controller _controller;
 	
 	@Inject
-	public OnlineUpdateItemTableControl(ICellRendererFactory factory, Controller ctrl, IResourceService resources) {
+	public OnlineUpdateItemTableControl(ICellRendererFactory factory, Controller ctrl, IResourceService resources, @Named("Manga Url") IDragDropAction mangaDropAction) {
 		_controller = ctrl;
 		_columns = new TTableColumn[] {
 				DataFields.TIME_COL,
@@ -47,6 +50,8 @@ public class OnlineUpdateItemTableControl {
 		_scroll = new JScrollPane(_table);
 		_sorter = new OnlineBookmarkSorter(_model);
 		_table.setRowSorter(_sorter);
+		
+        new FileDrop(_scroll, true, mangaDropAction);
 		
 		setupPopupMenu();
 	}

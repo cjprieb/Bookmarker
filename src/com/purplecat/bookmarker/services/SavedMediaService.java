@@ -66,11 +66,14 @@ public class SavedMediaService {
 	}
 	
 	public Media updateFromUrl(String url) throws ServiceException {
-		UrlPatternResult patternResult = _patterns.match(url);
-		
 		Media media = null;
-		if ( patternResult != null && patternResult._title != null && patternResult._title.length() > 0 ) {
-			try {
+		ServiceException serviceException = null;
+		try {
+			_connectionManager.open();
+			
+			UrlPatternResult patternResult = _patterns.match(url);
+			
+			if ( patternResult != null && patternResult._title != null && patternResult._title.length() > 0 ) {
 				List<Media> list = _database.queryByTitle(patternResult._title);
 				
 				if ( list.size() == 0 ) {
@@ -95,12 +98,21 @@ public class SavedMediaService {
 				
 				_database.update(media);
 			}
-			catch (DatabaseException e) {
-				throw new ServiceException("Error updating media from url '" + url + "'", ServiceException.SQL_ERROR);
-			}
+		}
+		catch (DatabaseException e) {
+			_logging.error("Saved Media Service", "Exception update from url", e);
+			serviceException = new ServiceException("Error updating media from url '" + url + "'", ServiceException.SQL_ERROR);
+		}
+		finally {
+			_connectionManager.close();
 		}
 		
-		return media;
+		if ( serviceException != null ) {
+			throw serviceException;
+		}
+		else {
+			return media;
+		}
 	}
 
 	public List<Media> getSavedList(IListLoadedObserver<Media> observer) throws ServiceException {
@@ -125,33 +137,43 @@ public class SavedMediaService {
 		}
 	}
 
-	public Media updateFromOnlineItem(OnlineMediaItem onlineItem) throws ServiceException  {		
+	public Media updateFromOnlineItem(OnlineMediaItem onlineItem) throws ServiceException  {	
 		Media media = null;
-		if ( onlineItem != null && onlineItem._mediaId > 0 ) {
-			try {
-				//find media item corresponding to the online item
-				media = _database.queryById(onlineItem._mediaId); 
-	
-				//update media item from online item
-				media._chapterURL = onlineItem._chapterUrl;
-				media._lastReadDate = new DateTime();
-				media._lastReadPlace._volume = onlineItem._updatedPlace._volume;
-				media._lastReadPlace._chapter = onlineItem._updatedPlace._chapter;
-				media._lastReadPlace._subChapter = onlineItem._updatedPlace._subChapter;
-				media._lastReadPlace._page = onlineItem._updatedPlace._page;
-				media._lastReadPlace._extra = onlineItem._updatedPlace._extra;
-				media._isSaved = true;
-				
-				_database.update(media);
+		ServiceException serviceException = null;
+		try {
+			_connectionManager.open();	
+			if ( onlineItem != null && onlineItem._mediaId > 0 ) {
+			//find media item corresponding to the online item
+			media = _database.queryById(onlineItem._mediaId); 
+
+			//update media item from online item
+			media._chapterURL = onlineItem._chapterUrl;
+			media._lastReadDate = new DateTime();
+			media._lastReadPlace._volume = onlineItem._updatedPlace._volume;
+			media._lastReadPlace._chapter = onlineItem._updatedPlace._chapter;
+			media._lastReadPlace._subChapter = onlineItem._updatedPlace._subChapter;
+			media._lastReadPlace._page = onlineItem._updatedPlace._page;
+			media._lastReadPlace._extra = onlineItem._updatedPlace._extra;
+			media._isSaved = true;
+			
+			_database.update(media);
 			}
-			catch (DatabaseException e) {
-				throw new ServiceException("Error updating media from online item '" + onlineItem._displayTitle + "'", ServiceException.SQL_ERROR);
-			}
+			else {
+				serviceException = new ServiceException(ServiceException.INVALID_ID);
+			}	
+		}
+		catch (DatabaseException e) {
+			_logging.error("Saved Media Service", "Exception update from online item", e);
+			serviceException = new ServiceException("Error updating media from online item '" + onlineItem._displayTitle + "'", ServiceException.SQL_ERROR);
+		}
+		finally {
+			_connectionManager.close();
+		}	
+		if ( serviceException != null ) {
+			throw serviceException;
 		}
 		else {
-			throw new ServiceException(ServiceException.INVALID_ID);
+			return media;
 		}
-		
-		return media;
 	}
 }

@@ -35,7 +35,7 @@ public class MediaSummaryPanel {
 	protected static String TAG = "SavedMediaSummaryPanel";
 	@Inject IResourceService _resources;
 	@Inject ILoggingService _logger;
-	@Inject LinkClickObserver.Factory _factory;
+	@Inject LinkClickObserver.LinkFactory _factory;
 	
 	JPanel _panel;
 	Media _currentMedia;
@@ -89,6 +89,7 @@ public class MediaSummaryPanel {
 				_dataType			= new SummaryTextRow(_resources.getString(Resources.string.lblType));
 				_dataLinks			= new SummaryTextRow(_resources.getString(Resources.string.lblLinks));	
 	
+				_factory.setPanel(_panel);
 				_dataAuthorLink		= _factory.create(_dataAuthor._textArea);	
 				_dataChapterLink	= _factory.create(new SummaryTextArea(_resources.getString(Resources.string.htmlLastChapter)));		
 				_dataSiteLink 		= _factory.create(new SummaryTextArea(_resources.getString(Resources.string.htmlTitlePage)));	

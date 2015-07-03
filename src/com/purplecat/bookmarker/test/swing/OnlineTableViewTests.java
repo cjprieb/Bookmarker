@@ -16,6 +16,7 @@ import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.WebsiteInfo;
 import com.purplecat.bookmarker.services.databases.IOnlineMediaRepository;
+import com.purplecat.bookmarker.test.dummies.DummyDragDrop;
 import com.purplecat.bookmarker.test.modules.TestBookmarkerModule;
 import com.purplecat.bookmarker.view.swing.components.OnlineUpdateItemTableControl;
 import com.purplecat.bookmarker.view.swing.models.OnlineUpdateItemTableModel;
@@ -26,7 +27,7 @@ import com.purplecat.commons.TTableColumn;
 import com.purplecat.commons.swing.IImageRepository;
 import com.purplecat.commons.tests.GetRandom;
 
-public class OnlineTableViews {
+public class OnlineTableViewTests {
 	IOnlineMediaRepository _repository;
 	IResourceService _resources;
 	IImageRepository _imageResources;
@@ -94,7 +95,7 @@ public class OnlineTableViews {
 	@Test 
 	public void onlineTableModel_CorrectOrder() {
 		BookmarkerRendererFactory factory = new BookmarkerRendererFactory(_imageResources, _resources);
-		OnlineUpdateItemTableControl tableControl = new OnlineUpdateItemTableControl(factory, _controller, _resources);
+		OnlineUpdateItemTableControl tableControl = new OnlineUpdateItemTableControl(factory, _controller, _resources, new DummyDragDrop());
 		OnlineUpdateItemTableModel model = tableControl.getModel();
 		_controller.observeOnlineThreadLoading(model.getObserver());
 		_controller.loadUpdateMedia();

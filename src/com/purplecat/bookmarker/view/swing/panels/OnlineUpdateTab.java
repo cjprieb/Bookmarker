@@ -14,23 +14,21 @@ import com.purplecat.bookmarker.view.swing.components.OnlineUpdateItemTableContr
 import com.purplecat.bookmarker.view.swing.observers.OnlineMediaSummaryObserver;
 import com.purplecat.bookmarker.view.swing.observers.UpdateMediaObserverControl;
 import com.purplecat.commons.IResourceService;
-import com.purplecat.commons.swing.renderer.ICellRendererFactory;
 
 public class OnlineUpdateTab {
 	
 	private JPanel _panel;
 	
 	@Inject Controller _controller;
-	@Inject ICellRendererFactory _rendererFactory;
 	@Inject IResourceService _resources;
 	@Inject SummarySidebar _summaryPanel;
 	@Inject OnlineMediaSummaryObserver _summaryObserver;
+	@Inject OnlineUpdateItemTableControl _updateMediaTableControl;
 	
 	public void create() {		
-		OnlineUpdateItemTableControl updateMediaTableControl = new OnlineUpdateItemTableControl(_rendererFactory, _controller, _resources);
-		_controller.observeOnlineThreadLoading(updateMediaTableControl.getModel().getObserver());
-		_controller.observeSavedMediaUpdate(updateMediaTableControl.getModel().getObserver());
-		updateMediaTableControl.getTable().addRowSelectionListener(_summaryObserver);
+		_controller.observeOnlineThreadLoading(_updateMediaTableControl.getModel().getObserver());
+		_controller.observeSavedMediaUpdate(_updateMediaTableControl.getModel().getObserver());
+		_updateMediaTableControl.getTable().addRowSelectionListener(_summaryObserver);
 		
 		UpdateMediaObserverControl updateObserver = new UpdateMediaObserverControl(_resources);
 		_controller.observeOnlineThreadLoading(updateObserver);
@@ -48,7 +46,7 @@ public class OnlineUpdateTab {
 		layout.setHorizontalGroup(layout.createSequentialGroup()
 				.addContainerGap()
 				.addGroup(layout.createParallelGroup()
-						.addComponent(updateMediaTableControl.getComponent(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
+						.addComponent(_updateMediaTableControl.getComponent(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
 						.addGroup(layout.createSequentialGroup()
 							.addComponent(loadUpdatesButton, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addComponent(stopUpdatesButton, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -65,7 +63,7 @@ public class OnlineUpdateTab {
 		
 		layout.setVerticalGroup(layout.createSequentialGroup()
 				.addContainerGap()
-				.addComponent(updateMediaTableControl.getComponent(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
+				.addComponent(_updateMediaTableControl.getComponent(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
 				.addGroup(layout.createParallelGroup()
 					.addComponent(loadUpdatesButton, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addComponent(stopUpdatesButton, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)

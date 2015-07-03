@@ -3,13 +3,12 @@ package com.purplecat.bookmarker.controller.tasks;
 import com.google.inject.Inject;
 import com.purplecat.bookmarker.controller.observers.IItemChangedObserver;
 import com.purplecat.bookmarker.models.Media;
-import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.services.SavedMediaService;
 import com.purplecat.bookmarker.services.ServiceException;
 import com.purplecat.commons.logs.ILoggingService;
 import com.purplecat.commons.threads.IThreadTask;
 
-public class UpdateSavedMediaTask implements IThreadTask {
+public class UpdateMangaFromUrlTask implements IThreadTask {
 	public static final String TAG = "UpdateSavedMediaTask";
 	
 	@Inject public ILoggingService _logging;
@@ -18,28 +17,30 @@ public class UpdateSavedMediaTask implements IThreadTask {
 	ServiceException _error;
 	Iterable<IItemChangedObserver<Media>> _observers;
 	SavedMediaService _mediaService;
-	OnlineMediaItem _onlineItem;
+	String _url;
 	
-	public UpdateSavedMediaTask(SavedMediaService service, Iterable<IItemChangedObserver<Media>> obs, OnlineMediaItem onlineItem) {
+	public UpdateMangaFromUrlTask(SavedMediaService service, Iterable<IItemChangedObserver<Media>> obs, String url) {
 		_observers = obs;
 		_mediaService = service;
-		_onlineItem = onlineItem;
+		_url = url;
 	}
 	
 	@Override
 	public void uiTaskCompleted() {
-		for ( IItemChangedObserver<Media> obs : _observers ) {
-			obs.notifyItemUpdated(_result);
+		if ( _result != null ) {
+			for ( IItemChangedObserver<Media> obs : _observers ) {
+				obs.notifyItemUpdated(_result);
+			}
 		}
 	}
 
 	@Override
 	public void workerTaskStart() {		
 		try {
-			_result = _mediaService.updateFromOnlineItem(_onlineItem);
+			_result = _mediaService.updateFromUrl(_url);
 		} catch (ServiceException e) {
 			_error = e;
-			_logging.error(TAG, "Could not update from online item", e);
+			_logging.error(TAG, "Could not update from url: " + _url, e);
 		}
 	}
 }

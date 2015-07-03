@@ -9,14 +9,17 @@ import java.net.URL;
 
 import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkEvent.EventType;
 import javax.swing.text.JTextComponent;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.purplecat.bookmarker.Resources;
 import com.purplecat.bookmarker.view.swing.DefaultColors;
+import com.purplecat.bookmarker.view.swing.panels.OverlayWindow;
 import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.logs.ILoggingService;
 import com.purplecat.commons.swing.Toolbox;
@@ -25,15 +28,24 @@ import com.purplecat.commons.utils.StringUtils;
 public class LinkClickObserver extends MouseAdapter {
 	static String TAG = "LinkClickObserver";
 	
-	public static class Factory {		
+	@Singleton
+	public static class LinkFactory {		
 		@Inject ILoggingService _logger;
 		@Inject IResourceService _resources;
 		@Inject Toolbox _toolbox;
-		@Inject SummaryHyperlinkObserver _hyperlinkObserver;
 		
-		public Factory() {}
+		private SummaryHyperlinkObserver _hyperlinkObserver;
+		
+		public void setPanel(JPanel panel) {
+			if ( _hyperlinkObserver == null ) {
+				_hyperlinkObserver = new SummaryHyperlinkObserver(_toolbox, new OverlayWindow(panel));
+			}
+		}
 		
 		public LinkClickObserver create(JTextComponent text) {
+			if ( _hyperlinkObserver == null ) {
+				throw new NullPointerException("setPanel must be called first");
+			}
 			return new LinkClickObserver(_logger, _resources, _toolbox, _hyperlinkObserver, text);
 		}
 	}

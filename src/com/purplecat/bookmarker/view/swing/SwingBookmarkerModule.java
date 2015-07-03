@@ -17,10 +17,12 @@ import com.purplecat.bookmarker.services.websites.IWebsiteLoadObserver;
 import com.purplecat.bookmarker.services.websites.WebsiteThreadObserver;
 import com.purplecat.bookmarker.sql.ConnectionManager;
 import com.purplecat.bookmarker.sql.IConnectionManager;
+import com.purplecat.bookmarker.view.swing.actions.UrlDragDropAction.AddMangaUrlDropAction;
 import com.purplecat.bookmarker.view.swing.renderers.BookmarkerRendererFactory;
 import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.logs.ConsoleLog;
 import com.purplecat.commons.logs.ILoggingService;
+import com.purplecat.commons.swing.AppUtils.IDragDropAction;
 import com.purplecat.commons.swing.IImageRepository;
 import com.purplecat.commons.swing.MyApplication;
 import com.purplecat.commons.swing.SwingImageRepository;
@@ -56,9 +58,10 @@ public class SwingBookmarkerModule extends AbstractModule {
 		bind(ICellRendererFactory.class).to(BookmarkerRendererFactory.class);
 		bind(IImageRepository.class).to(SwingImageRepository.class);
 		bind(IResourceService.class).to(SwingResourceService.class);
+		bind(IDragDropAction.class).annotatedWith(Names.named("Manga Url")).to(AddMangaUrlDropAction.class);
 		
 		//Swing GUI Items
-		bind(Toolbox.class);
+		bind(Toolbox.class);		
 		
 		//Main Class
 		bind(MyApplication.class).to(BookmarkerStart.class);

@@ -20,13 +20,11 @@ import com.purplecat.bookmarker.view.swing.panels.OnlineUpdateTab;
 import com.purplecat.bookmarker.view.swing.panels.SavedMediaTab;
 import com.purplecat.bookmarker.view.swing.panels.SummarySidebar;
 import com.purplecat.commons.IResourceService;
-import com.purplecat.commons.swing.renderer.ICellRendererFactory;
 
 @Singleton
 public class MainPanel implements ChangeListener {
 	
 	@Inject Controller _controller;
-	@Inject ICellRendererFactory _rendererFactory;
 	@Inject IResourceService _resources;
 	
 	@Inject SavedMediaTab _savedMediaTab;

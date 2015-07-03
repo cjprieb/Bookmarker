@@ -1,15 +1,20 @@
 package com.purplecat.bookmarker.view.swing.actions;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+
+import com.purplecat.bookmarker.Resources;
 import com.purplecat.bookmarker.controller.Controller;
+import com.purplecat.commons.IResourceService;
 
-public class StopUpdatesAction implements ActionListener {
+public class StopUpdatesAction extends AbstractAction {
 	Controller _controller;
 	
-	public StopUpdatesAction(Controller ctrl) {
+	public StopUpdatesAction(Controller ctrl, IResourceService resources) {
 		_controller = ctrl;
+		this.putValue(Action.NAME, resources.getString(Resources.string.lblStopUpdates));
 	}
 	
 	@Override 

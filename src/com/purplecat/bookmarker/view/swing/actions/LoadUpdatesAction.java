@@ -1,15 +1,20 @@
 package com.purplecat.bookmarker.view.swing.actions;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+
+import com.purplecat.bookmarker.Resources;
 import com.purplecat.bookmarker.controller.Controller;
+import com.purplecat.commons.IResourceService;
 
-public class LoadUpdatesAction implements ActionListener {
+public class LoadUpdatesAction extends AbstractAction {
 	Controller _controller;
 	
-	public LoadUpdatesAction(Controller ctrl) {
+	public LoadUpdatesAction(Controller ctrl, IResourceService resources) {
 		_controller = ctrl;
+		this.putValue(Action.NAME, resources.getString(Resources.string.lblLoadUpdates));
 	}
 	
 	@Override 

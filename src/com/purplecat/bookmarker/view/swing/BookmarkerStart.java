@@ -20,7 +20,6 @@ import com.purplecat.bookmarker.models.WebsiteInfo;
 import com.purplecat.bookmarker.services.websites.IWebsiteLoadObserver;
 import com.purplecat.bookmarker.view.swing.panels.GlassTimerPanel;
 import com.purplecat.commons.swing.AppIcons;
-import com.purplecat.commons.swing.AppUtils;
 import com.purplecat.commons.swing.IImageRepository;
 import com.purplecat.commons.swing.MyApplication;
 import com.purplecat.commons.swing.renderer.ICellRendererFactory;
@@ -55,6 +54,7 @@ public class BookmarkerStart extends MyApplication implements IWebsiteLoadObserv
 	protected void setupMainPanel(JFrame frame) {
 		_timerGlassPane = new GlassTimerPanel(_imageRepository, frame);
 		frame.getContentPane().add(_mainPanel.create(_timerGlassPane));
+		frame.setJMenuBar(_mainPanel.initializeMenu());
 	}
 
 	@Override
@@ -139,6 +139,6 @@ public class BookmarkerStart extends MyApplication implements IWebsiteLoadObserv
 			appIcons.set(1, _imageRepository.getScaledImage(Resources.image.imgBookmarkerId, AppIcons.LARGE_DOCK_IMAGE_SCALE).getImage());
 		}
 		
-		AppUtils.setApplicationIcons(this, this.mFrame, appIcons);
+		setApplicateImages(appIcons);
 	}
 }

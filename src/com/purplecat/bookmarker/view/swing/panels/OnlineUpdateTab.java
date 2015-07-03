@@ -6,7 +6,6 @@ import javax.swing.JPanel;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import com.google.inject.Inject;
-import com.purplecat.bookmarker.Resources;
 import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.view.swing.actions.LoadUpdatesAction;
 import com.purplecat.bookmarker.view.swing.actions.StopUpdatesAction;
@@ -14,6 +13,7 @@ import com.purplecat.bookmarker.view.swing.components.OnlineUpdateItemTableContr
 import com.purplecat.bookmarker.view.swing.observers.OnlineMediaSummaryObserver;
 import com.purplecat.bookmarker.view.swing.observers.UpdateMediaObserverControl;
 import com.purplecat.commons.IResourceService;
+import com.purplecat.commons.swing.Toolbox;
 
 public class OnlineUpdateTab {
 	
@@ -21,6 +21,7 @@ public class OnlineUpdateTab {
 	
 	@Inject Controller _controller;
 	@Inject IResourceService _resources;
+	@Inject Toolbox _toolbox;
 	@Inject SummarySidebar _summaryPanel;
 	@Inject OnlineMediaSummaryObserver _summaryObserver;
 	@Inject OnlineUpdateItemTableControl _updateMediaTableControl;
@@ -33,11 +34,8 @@ public class OnlineUpdateTab {
 		UpdateMediaObserverControl updateObserver = new UpdateMediaObserverControl(_resources);
 		_controller.observeOnlineThreadLoading(updateObserver);
 		
-		JButton loadUpdatesButton = new JButton(_resources.getString(Resources.string.lblLoadUpdates));
-		loadUpdatesButton.addActionListener(new LoadUpdatesAction(_controller));
-		
-		JButton stopUpdatesButton = new JButton(_resources.getString(Resources.string.lblStopUpdates));
-		stopUpdatesButton.addActionListener(new StopUpdatesAction(_controller));
+		JButton loadUpdatesButton = new JButton(new LoadUpdatesAction(_controller, _resources));		
+		JButton stopUpdatesButton = new JButton(new StopUpdatesAction(_controller, _resources));
 
 		_panel = new JPanel();
 		GroupLayout layout = new GroupLayout(_panel);
@@ -63,11 +61,11 @@ public class OnlineUpdateTab {
 		
 		layout.setVerticalGroup(layout.createSequentialGroup()
 				.addContainerGap()
-				.addComponent(_updateMediaTableControl.getComponent(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
 				.addGroup(layout.createParallelGroup()
 					.addComponent(loadUpdatesButton, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addComponent(stopUpdatesButton, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 				)
+				.addComponent(_updateMediaTableControl.getComponent(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
 				.addGroup(layout.createParallelGroup()
 						.addComponent(updateObserver.getCountLabel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(updateObserver.getTimeLabel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)

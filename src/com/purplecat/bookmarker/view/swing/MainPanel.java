@@ -1,11 +1,18 @@
 package com.purplecat.bookmarker.view.swing;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 import java.util.List;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.GroupLayout;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -20,12 +27,15 @@ import com.purplecat.bookmarker.view.swing.panels.OnlineUpdateTab;
 import com.purplecat.bookmarker.view.swing.panels.SavedMediaTab;
 import com.purplecat.bookmarker.view.swing.panels.SummarySidebar;
 import com.purplecat.commons.IResourceService;
+import com.purplecat.commons.swing.Toolbox;
+import com.sun.glass.events.KeyEvent;
 
 @Singleton
 public class MainPanel implements ChangeListener {
 	
 	@Inject Controller _controller;
 	@Inject IResourceService _resources;
+	@Inject Toolbox _toolbox;
 	
 	@Inject SavedMediaTab _savedMediaTab;
 	@Inject OnlineUpdateTab _onlineUpdateTab;	
@@ -70,6 +80,16 @@ public class MainPanel implements ChangeListener {
 		return _panel;
 	}
 	
+	public JMenuBar initializeMenu() {
+		JMenu updateMenu = new JMenu(_resources.getString(Resources.string.menuOnline));
+		updateMenu.add(new JMenuItem(new LoadUpdatesAction()));
+		updateMenu.add(new JMenuItem(new StopUpdatesAction()));
+		
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.add(updateMenu);
+		return menuBar;
+	}
+	
 	@Override
 	public void stateChanged(ChangeEvent e) {
 		if ( e.getSource() == _tabbedPane ) {
@@ -102,5 +122,32 @@ public class MainPanel implements ChangeListener {
 			_glassPanel.setProgress(0, 0);
 			_glassPanel.setVisible(false);
 		}		
+	}
+	
+	public class StopUpdatesAction extends AbstractAction {		
+		public StopUpdatesAction() {
+			this.putValue(Action.NAME, _resources.getString(Resources.string.lblStopUpdates));
+			this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
+			this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_T);
+		}
+		
+		@Override 
+		public void actionPerformed(ActionEvent e) {
+			_controller.stopUpdates();		
+		}
+	}
+	
+	public class LoadUpdatesAction extends AbstractAction {		
+		public LoadUpdatesAction() {
+			this.putValue(Action.NAME, _resources.getString(Resources.string.lblLoadUpdates));
+			this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_R, _toolbox.getMetaControl()));
+			this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_R);
+		}
+		
+		@Override 
+		public void actionPerformed(ActionEvent e) {
+			_tabbedPane.setSelectedComponent(_onlineUpdateTab.getPanel());
+			_controller.loadUpdateMedia();
+		}
 	}
 }

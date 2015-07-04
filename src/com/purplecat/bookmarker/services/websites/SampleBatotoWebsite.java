@@ -11,6 +11,7 @@ import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.services.ServiceException;
 import com.purplecat.bookmarker.services.databases.IGenreRepository;
 import com.purplecat.commons.logs.ILoggingService;
+import com.purplecat.commons.tests.GetRandom;
 
 public class SampleBatotoWebsite extends BatotoWebsite {
 	
@@ -34,6 +35,7 @@ public class SampleBatotoWebsite extends BatotoWebsite {
 
 	@Override
 	public OnlineMediaItem loadItem(OnlineMediaItem item) throws ServiceException {
+		item._summary = GetRandom.getPhraseString(300);
 		return item;
 	}
 }

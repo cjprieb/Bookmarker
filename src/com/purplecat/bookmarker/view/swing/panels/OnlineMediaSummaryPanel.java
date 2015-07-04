@@ -11,12 +11,12 @@ public class OnlineMediaSummaryPanel extends MediaSummaryPanel {
 		setUpdateColor(view._isSaved && view.isUpdated(), view.isRead());
 //		setAuthor(view._author);
 		setPlaceAndDateTime(view._lastReadPlace, view._lastReadDate, view._updatedPlace, view._updatedDate);
-//		setGenres(view._genres);
+		setGenres(view._genres);
 //		setCategories(view._categories);
 		_dataRating.setVisible(true);
 		setRating(view._rating);
 //		setType(view._type);
-//		setSummary(view._summary);
+		setSummary(view._summary);
 		setLink(_dataChapterLink, "");
 		setLink(_dataSiteLink, view._titleUrl);
 		setLink(_dataUpdatedLink, view._chapterUrl);

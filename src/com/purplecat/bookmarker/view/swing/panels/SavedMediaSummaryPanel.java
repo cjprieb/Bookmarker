@@ -24,7 +24,7 @@ public class SavedMediaSummaryPanel extends MediaSummaryPanel {
 		setDescription(view._notes);
 		setLink(_dataChapterLink, view._chapterURL);
 		_dataSiteLink._textControl.setVisible(false);
-//		setLink(_dataSiteLink, view._titleUrl);
+//		setLink(_dataSiteLink, view._titleURL);
 		setLink(_dataUpdatedLink, view._updatedUrl);		
 	}
 

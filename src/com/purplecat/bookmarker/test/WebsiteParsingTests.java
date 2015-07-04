@@ -1,6 +1,5 @@
 package com.purplecat.bookmarker.test;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -16,9 +15,9 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.Place;
-import com.purplecat.bookmarker.models.WebsiteInfo;
 import com.purplecat.bookmarker.services.ServiceException;
 import com.purplecat.bookmarker.services.databases.IGenreRepository;
+import com.purplecat.bookmarker.services.websites.BakaWebsite;
 import com.purplecat.bookmarker.services.websites.BatotoWebsite;
 import com.purplecat.bookmarker.services.websites.IWebsiteParser;
 import com.purplecat.bookmarker.test.modules.TestBookmarkerModule;
@@ -40,16 +39,31 @@ public class WebsiteParsingTests {
 	}
 
 	@Test
-	public void batotoInfoTest() {
-		IWebsiteParser site = new BatotoWebsite(_logging, _genreDatabase);
-		WebsiteInfo info = site.getInfo();
-		assertEquals(info._name, "Batoto");
-		assertEquals(info._website, "http://bato.to/");
+	public void batotoParseTest() {
+		IWebsiteParser site = new BatotoWebsite(_logging, _genreDatabase);		
+		try {
+			List<OnlineMediaItem> items = site.load();
+			assertNotNull(items);
+			assertTrue(items.size() > 0);
+			int iCount = 0;
+			for ( OnlineMediaItem item : items ) {
+				iCount++;
+				checkItem(item);
+
+				if (iCount < 15 ) { 
+					site.loadItem(item);
+					checkFullItemLoaded(item);					
+				}
+			}
+		} catch (ServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
-	public void batotoParseTest() {
-		IWebsiteParser site = new BatotoWebsite(_logging, _genreDatabase);		
+	public void bakaParseTest() {
+		IWebsiteParser site = new BakaWebsite(_logging, _genreDatabase);		
 		try {
 			List<OnlineMediaItem> items = site.load();
 			assertNotNull(items);
@@ -92,7 +106,10 @@ public class WebsiteParsingTests {
 		if ( item._genres.size() == 0) {
 			System.err.println("No genres found for " + item._displayTitle);
 		}
-		Assert.assertTrue("no summary", item._summary != null && item._summary.length() > 0);
+		Assert.assertNotNull("no summary", item._summary);
+		if ( item._summary.length() == 0) {
+			System.err.println("No summary found for " + item._displayTitle);
+		}
 	}
 
 }

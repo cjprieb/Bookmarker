@@ -123,6 +123,12 @@ public class OnlineTableViewTests {
 			else if ( !bUpdated && item.isUpdated() ) {
 				Assert.fail("Updated item in wrong order");
 			}
+			if ( item._summary.length() == 0 ) {
+				Assert.fail("No summary loaded");
+			}
+			else {
+				System.out.println("    has summary: " + item._summary);
+			}
 			if ( item.isUpdated() ) {
 				updateCount++;
 			}

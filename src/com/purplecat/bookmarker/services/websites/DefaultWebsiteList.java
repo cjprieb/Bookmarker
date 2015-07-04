@@ -14,6 +14,7 @@ public class DefaultWebsiteList implements IWebsiteList {
 	@Inject
 	public DefaultWebsiteList(ILoggingService logging, IGenreRepository genres) {
 		_websites.add(new BatotoWebsite(logging, genres));
+		_websites.add(new BakaWebsite(logging, genres));
 	}
 
 	@Override

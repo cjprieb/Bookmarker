@@ -1,23 +1,26 @@
 package com.purplecat.bookmarker.test;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
-import org.junit.Before;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.purplecat.bookmarker.extensions.PlaceExt;
 import com.purplecat.bookmarker.models.Place;
+import com.purplecat.commons.io.FileUtils;
 
 public class ExtensionTests {
 	
 	List<PlacePair> _placeParseTests;
 	List<PlacePair> _placeRenderTests;
 	List<PlaceComparePair> _placeCompareTests;
+	List<PlacePair> _bakaPlaces;
 	
 	@Before
-	public void setupTestStrings() {
+	public void setupTestStrings() throws Exception {
 		_placeParseTests = new ArrayList<PlacePair>(100);
 		_placeParseTests.add(new PlacePair("v12c64p48", 12, 64, 0, 48, false));
 		_placeParseTests.add(new PlacePair("v2c8p54", 2, 8, 0, 54, false));
@@ -59,6 +62,12 @@ public class ExtensionTests {
 		_placeRenderTests.add(new PlacePair("v 10 ch 14.5*", 10, 14, 5, 0, true));
 		_placeRenderTests.add(new PlacePair("v 10 ch 42*", 10, 42, 0, 53, true));
 		_placeRenderTests.add(new PlacePair("v 3 ch 14*", 3, 14, 0, 30, true));
+		
+		_bakaPlaces = new ArrayList<PlacePair>(100);
+		for ( String lines : FileUtils.readAllLines(new File("test_data/baka_places.txt")) ) {
+			String[] tokens = lines.split("\\t");
+			_bakaPlaces.add(new PlacePair(tokens[0], PlaceExt.parse(tokens[1])));
+		}
 	}
 		
 	@Test
@@ -88,7 +97,7 @@ public class ExtensionTests {
 	@Test
 	public void placeCompareTests() {
 		for ( PlaceComparePair pair : _placeCompareTests ) {
-			System.out.println("Compareing: " + pair._place1 + " to " + pair._place2);
+			System.out.println("Comparing: " + pair._place1 + " to " + pair._place2);
 			Assert.assertEquals(pair._place1.compareTo(pair._place2), pair._expectedResult);
 			if ( pair._expectedResult == 0 ) {
 				Assert.assertEquals(pair._place2.compareTo(pair._place1), pair._expectedResult);
@@ -99,6 +108,15 @@ public class ExtensionTests {
 		}		
 	}
 	
+	@Test
+	public void bakaPlaceParse() {
+		for ( PlacePair pair : _bakaPlaces ) {
+			System.out.println("Parsing baka place: " + pair._value + " into " + pair._place);
+			Place actual = PlaceExt.parseBakaPlace(pair._value);
+			Assert.assertEquals(pair._place, actual);
+		}
+	}
+	
 	private static class PlacePair {
 		Place _place;
 		String _value;
@@ -106,6 +124,11 @@ public class ExtensionTests {
 		public PlacePair(String value, int v, int c, int sub, int page, boolean extra) {
 			_value = value;
 			_place = new Place(v, c, sub, page, extra);
+		}
+		
+		public PlacePair(String value, Place place) {
+			_value = value;
+			_place = place;
 		}
 	}
 	

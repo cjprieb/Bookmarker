@@ -1,5 +1,8 @@
 package com.purplecat.bookmarker.extensions;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
@@ -15,6 +18,8 @@ public class PlaceExt {
 	private static final int SUBCHAPTER = 3;
 	private static final int EXTRA 		= 4;
 	private static final int PAGE 		= 5;
+
+	private static final Pattern _bakaPlaceRegex = Pattern.compile("(?:v\\.(\\d+) )?c\\.(.+)");
 	
 	public static Place parse(String str) {
 		Place place = new Place();
@@ -146,5 +151,94 @@ public class PlaceExt {
 		else {
 			return render(place);
 		}		
+	}
+
+	public static Place parseBakaPlace(String text) {
+		Place place = new Place();
+		Matcher matcher = _bakaPlaceRegex.matcher(text);
+		if ( matcher.matches() ) {
+			if ( matcher.group(1) != null ) {
+				place._volume = Numbers.parseInt(matcher.group(1), 0);
+			}
+			if ( matcher.group(2) != null ) {
+				String sChapterText = matcher.group(2).toLowerCase();
+				String sChapter = sChapterText;
+				//68
+				//69-71
+				//Extra (end)
+				//13.5
+				//1v2 +2-3
+				//Oneshot
+				//Epilogue
+				//15 (end)
+				//10a
+//				int charIndex = sChapter.indexOf('-');
+//				if ( charIndex >= 0 ) {
+//					sChapter = sChapter.substring(charIndex+1);
+//				}	
+//				
+//				charIndex = sChapter.indexOf('v');
+//				if ( charIndex >= 0 ) {
+//					sChapter = sChapter.substring(0, charIndex);
+//				}
+				
+				StringBuilder chapterBuilder = new StringBuilder();
+				StringBuilder subChapterBuilder = new StringBuilder();
+				boolean addToChapter = true;
+				boolean addToSubChapter = false;
+				boolean resetChapter = false;
+				for ( char c : sChapter.toCharArray() ) {
+					if ( Character.isDigit(c) ) {
+						if ( addToSubChapter ) {
+							subChapterBuilder.append(c);						
+						}
+						else if ( addToChapter ) {
+							if ( resetChapter ) {
+								chapterBuilder.setLength(0);
+								resetChapter = false;
+							}
+							chapterBuilder.append(c);
+						}
+					}
+					else if ( c == '.' ) {
+						addToSubChapter = true;
+					}
+					else if ( c == '-' ) {
+						addToSubChapter = false;
+						addToChapter = true;
+						resetChapter = true;
+					}
+					else if ( chapterBuilder.length() > 0 && Character.isLetter(c) && c != 'v' && !resetChapter ) {
+						//'v' stands for volume
+						addToChapter = false;
+						subChapterBuilder.append((c-'a'+1));
+					}
+					else if ( c == ' ' ) {
+						addToChapter = true;
+						resetChapter = true;
+					}
+					else {
+						addToSubChapter = false;
+						addToChapter = false;
+					}
+				}
+
+//				String sSubChapter = "";
+//				charIndex = sChapter.indexOf('.');
+//				if ( charIndex >= 0 ) {
+//					sSubChapter = sChapter.substring(charIndex+1);
+//					sChapter = sChapter.substring(0, charIndex);
+//				}
+
+				if ( sChapterText.contains("epilogue") || sChapterText.contains("extra") ) {
+					place._extra = true;
+				}
+				
+				place._chapter = Numbers.parseInt(chapterBuilder.toString(), 0);
+				place._subChapter = Numbers.parseInt(subChapterBuilder.toString(), 0);
+				
+			}
+		}
+		return place;
 	}
 }

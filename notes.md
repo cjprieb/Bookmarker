@@ -26,9 +26,9 @@
 ## BUGS
 * ~~No title or chapter links for media summaries~~
 * ~~Fix alignment for Updated time~~
-* saved media items don't seem to have a chapter url
 * ~~display summary as html~~
 * update count is not total, but rather single parsing
+* saved media items don't seem to have a chapter url
 
 ## KANGAETE KOTO
 * how to handle multiple updates for the same item??

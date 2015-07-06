@@ -69,13 +69,14 @@ public class OnlineUpdateTask {
 		List<OnlineMediaItem> retList = new LinkedList<OnlineMediaItem>();
 		_observer.notifyLoadStarted();
 		
+		Set<Long> updatedMediaIds = new HashSet<Long>();
+		
 		for ( IWebsiteParser scraper : _websites.getList() ) {
 			if ( isStopped() ) {
 				break;
 			}
 			
 			_observer.notifySiteStarted(scraper.getInfo());
-			
 			try {
 				List<OnlineMediaItem> siteList = scraper.load();
 				
@@ -84,7 +85,7 @@ public class OnlineUpdateTask {
 				_logging.debug(0, TAG, "Site parsed: " + scraper.getInfo()._name);
 				_observer.notifySiteParsed(scraper.getInfo(), siteList.size());				
 				
-				Set<Long> updatedMediaIds = loadMatchingMedia(siteList, retList);
+				updatedMediaIds.addAll(loadMatchingMedia(siteList, retList));
 
 				_logging.debug(1, TAG, "All items retrieved from database: " + retList.size());
 				

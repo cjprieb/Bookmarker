@@ -86,7 +86,7 @@ public class MediaSummaryPanel {
 				_dataCategories		= new SummaryTextRow(_resources.getString(Resources.string.lblCategories));
 				_dataRating			= new SummaryTextRow(_resources.getString(Resources.string.lblRating));
 				_dataDescription	= new SummaryTextRow(_resources.getString(Resources.string.lblDescription));
-				_dataSummary		= new SummaryTextRow(_resources.getString(Resources.string.lblSummary));
+				_dataSummary		= new SummaryTextRow(_resources.getString(Resources.string.lblSummary), true);
 				_dataStatus			= new SummaryTextRow(_resources.getString(Resources.string.lblStatus));
 				_dataType			= new SummaryTextRow(_resources.getString(Resources.string.lblType));
 				_dataLinks			= new SummaryTextRow(_resources.getString(Resources.string.lblLinks));	

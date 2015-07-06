@@ -111,7 +111,7 @@ public class MediaServiceTests {
 			Media matchingManga = _service.updateFromUrl(url);
 			Assert.assertNotNull("Item was not found", matchingManga);
 			Assert.assertNotNull("invalid id", matchingManga._id);
-			Assert.assertEquals("chapter url mismatch", url, matchingManga._chapterURL);
+			Assert.assertEquals("chapter url mismatch", url, matchingManga._chapterUrl);
 			Assert.assertTrue("updated date mismatch", Matchers.MatchDateTime(now, matchingManga._lastReadDate, 20));
 			Assert.assertEquals(1, matchingManga._lastReadPlace._volume);
 			Assert.assertEquals(1, matchingManga._lastReadPlace._chapter);
@@ -148,7 +148,7 @@ public class MediaServiceTests {
 			Media matchingManga = _service.updateFromOnlineItem(onlineItem);
 			Assert.assertNotNull("Item was not found", matchingManga);
 			Assert.assertEquals("invalid id", onlineItem._mediaId, matchingManga._id);
-			Assert.assertEquals("chapter url mismatch", onlineItem._chapterUrl, matchingManga._chapterURL);
+			Assert.assertEquals("chapter url mismatch", onlineItem._chapterUrl, matchingManga._chapterUrl);
 			Assert.assertTrue("updated date mismatch", Matchers.MatchDateTime(now, matchingManga._lastReadDate, 20));
 			Assert.assertEquals(onlineItem._updatedPlace._volume, matchingManga._lastReadPlace._volume);
 			Assert.assertEquals(onlineItem._updatedPlace._chapter, matchingManga._lastReadPlace._chapter);

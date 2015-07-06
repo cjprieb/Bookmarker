@@ -87,7 +87,7 @@ public class SavedMediaService {
 					//TODO: what to do if there is more than one match??
 				}
 							
-				media._chapterURL = url;
+				media._chapterUrl = url;
 				media._lastReadDate = new DateTime();
 				media._lastReadPlace._volume = patternResult._volume;
 				media._lastReadPlace._chapter = patternResult._chapter;
@@ -152,7 +152,7 @@ public class SavedMediaService {
 			media = _database.queryById(onlineItem._mediaId); 
 
 			//update media item from online item
-			media._chapterURL = onlineItem._chapterUrl;
+			media._chapterUrl = onlineItem._chapterUrl;
 			media._lastReadDate = new DateTime();
 			media._lastReadPlace._volume = onlineItem._updatedPlace._volume;
 			media._lastReadPlace._chapter = onlineItem._updatedPlace._chapter;

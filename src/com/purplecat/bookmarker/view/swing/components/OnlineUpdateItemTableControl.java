@@ -21,6 +21,7 @@ import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.view.swing.actions.UpdateMediaFromItemAction;
 import com.purplecat.bookmarker.view.swing.models.OnlineUpdateItemTableModel;
 import com.purplecat.bookmarker.view.swing.renderers.DataFields;
+import com.purplecat.bookmarker.view.swing.renderers.OnlineLoadedRowRenderer;
 import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.TTableColumn;
 import com.purplecat.commons.swing.AppUtils.IDragDropAction;
@@ -57,7 +58,7 @@ public class OnlineUpdateItemTableControl {
 				DataFields.PLACE_COL
 		};
 		_model = new OnlineUpdateItemTableModel(_columns, resources);		
-		_table = new TTable<OnlineMediaItem>(factory);
+		_table = new TTable<OnlineMediaItem>(factory, new OnlineLoadedRowRenderer());
 		_table.setTemplateModel(_model);		
 		_scroll = new JScrollPane(_table);
 		_sorter = new OnlineBookmarkSorter(_model);

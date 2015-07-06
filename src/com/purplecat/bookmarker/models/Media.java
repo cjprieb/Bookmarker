@@ -8,7 +8,7 @@ import org.joda.time.DateTime;
 
 public class Media extends BaseDatabaseItem implements Comparable<Media> {
 	
-	public String _chapterURL;
+	public String _chapterUrl;
 
 	public String _displayTitle;
 	
@@ -27,6 +27,10 @@ public class Media extends BaseDatabaseItem implements Comparable<Media> {
 	public EFavoriteState _rating;
 	
 	public EStoryState _storyState;
+	
+	public String _summary;
+	
+	public String _titleUrl;
 
 	public DateTime _updatedDate;
 
@@ -90,7 +94,7 @@ public class Media extends BaseDatabaseItem implements Comparable<Media> {
 	public Media copy() {
 		Media media = new Media();
 		media._id = this._id;
-		media._chapterURL = this._chapterURL;
+		media._chapterUrl = this._chapterUrl;
 		media._displayTitle = this._displayTitle;
 		media._isSaved = this._isSaved;
 		media._lastReadDate = this._lastReadDate;
@@ -109,6 +113,8 @@ public class Media extends BaseDatabaseItem implements Comparable<Media> {
 	public void updateFrom(OnlineMediaItem item) {
 		this._updatedDate = item._updatedDate;
 		this._updatedPlace = item._updatedPlace;
+		this._updatedUrl = item._chapterUrl;
+		this._summary = item._summary;
 		this._genres.clear();
 		this._genres.addAll(item._genres);
 	}

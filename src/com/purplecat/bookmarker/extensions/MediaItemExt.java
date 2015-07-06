@@ -9,7 +9,7 @@ public class MediaItemExt {
 			return "";
 		}
 		else {
-			return item.isUpdated() ? item._updatedUrl : item._chapterURL;
+			return item.isUpdated() ? item._updatedUrl : item._chapterUrl;
 		}
 	}
 

@@ -8,13 +8,13 @@
 * ~~1 double click opens URL~~
 * ~~2 Add baka.updates support~~
   * tests
-* 2 Add egscans support
-	tests
-* 1 create "add url" dialog
 * 2 add controls to update list 
 	* limit parsing to X hours ago; 
 	* limit to single website
 	* parse genres option
+* 2 Add egscans support
+	tests
+* 1 create "add url" dialog
 * 4 create search box for saved bookmarks
 * 1 Add genre column to updates (or some way to notify that summary is loaded)
 * 2 remove unwanted genres
@@ -22,13 +22,16 @@
 * 2 dialog for editing manga
 * 4 update from summary panel
 * 8 add tv shows tab
+* 2 add links to URLs in summary
+* ~~1 add summary to (saved) media item~~
+* 1 display alt titles
 
 ## BUGS
 * ~~No title or chapter links for media summaries~~
 * ~~Fix alignment for Updated time~~
 * ~~display summary as html~~
-* update count is not total, but rather single parsing
-* saved media items don't seem to have a chapter url
+* ~~update count is not total, but rather single parsing~~
+* ~~saved media items don't seem to have a chapter url, nor title url~~
 
 ## KANGAETE KOTO
 * how to handle multiple updates for the same item??
@@ -38,6 +41,7 @@
 * check if updated items are completed or not
 * check if item is novel or not
 * load ratings
-* add summary to (saved) media item
+* load categories
+* whether to save summaries
 
 http://rmarkdown.rstudio.com/authoring_basics.html

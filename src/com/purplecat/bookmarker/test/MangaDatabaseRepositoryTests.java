@@ -157,7 +157,8 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			Media media = new Media();
 			media._displayTitle = GetRandom.getString(6);
 			media._lastReadPlace._chapter++;
-			media._chapterURL = "http://sampleurl";
+			media._chapterUrl = "http://sampleurl";
+			media._titleUrl = "http://www.sampleurl.com/thetitle";
 			media._storyState = EStoryState.NEW_BOOKMARK;
 			media._notes = "Some notes!";
 			media._rating = EFavoriteState.GOOD;
@@ -185,7 +186,7 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			
 			media._displayTitle = GetRandom.getString(6);
 			media._lastReadPlace._chapter++;
-			media._chapterURL = "http://sampleurl";
+			media._chapterUrl = "http://sampleurl";
 			media._storyState = EStoryState.MIDDLE_CHAPTER;
 			media._notes = "Some notes!";
 			media._rating = EFavoriteState.AWESOME;
@@ -213,7 +214,7 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			
 			media._displayTitle = GetRandom.getString(6);
 			media._lastReadPlace._chapter++;
-			media._chapterURL = "http://sampleurl";
+			media._chapterUrl = "http://sampleurl";
 			media._lastReadDate = new DateTime();
 			media._isSaved = true;
 			
@@ -271,12 +272,15 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	}
 	
 	protected void checkSavedMediaItem(Media media) {
+		System.out.println("checking saved media item: " + media);
 		Assert.assertTrue("id is not valid", media._id > 0);
 		Assert.assertTrue("no title", media._displayTitle != null && media._displayTitle.length() > 0);
 		Assert.assertTrue("not saved", media._isSaved);
 		Assert.assertNotNull("no last read date", media._lastReadDate);		
 		Assert.assertTrue("invalid last read date: " + media._lastReadDate.toString(DateTimeFormats.SQLITE_DATE_FORMAT), media._lastReadDate.isAfter(new DateTime(2000, 1, 1, 0, 0)));
 		Assert.assertNotNull("no place", media._lastReadPlace);
+		Assert.assertNotNull("no chapter url", media._chapterUrl);
+		Assert.assertNotNull("no title url", media._titleUrl);
 	}
 	
 	protected void checkEquals(Media expected, Media actual) {
@@ -298,6 +302,8 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 		Assert.assertEquals("updated mismatch", expected._rating, actual._rating);
 		Assert.assertEquals("updated mismatch", expected._storyState, actual._storyState);
 		Assert.assertEquals("updated mismatch", expected._isComplete, actual._isComplete);
+		Assert.assertEquals("title url mismatch", expected._titleUrl, actual._titleUrl);
+		Assert.assertEquals("chapter url mismatch", expected._chapterUrl, actual._chapterUrl);
 	}
 	
 	public static class TestMediaObserver implements IListLoadedObserver<Media> {

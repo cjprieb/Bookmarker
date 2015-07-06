@@ -29,9 +29,9 @@ import com.purplecat.commons.logs.ILoggingService;
 public class MediaDatabaseRepository implements IMediaRepository {
 	public static final String TAG = "MediaDatabaseRepository";
 	
-	private static final String SELECT_MEDIA = "SELECT Media._id _id, MdDisplayTitle _displayTitle, MdIsComplete _isComplete, SvdIsSaved _isSaved, "
+	private static final String SELECT_MEDIA = "SELECT Media._id _id, MdDisplayTitle _displayTitle, MdIsComplete _isComplete, MdMainUrl _titleUrl, SvdIsSaved _isSaved, "
 			+ " SvdStoryState _storyState, SvdRating _rating, SvdIsFlagged _isFlagged, SvdNotes _notes, "
-										+ " hist.svhstDate _lastReadDate, hist.svhstPlace _lastReadPlace, "
+										+ " hist.svhstDate _lastReadDate, hist.svhstPlace _lastReadPlace, hist.SvhstUrl _chapterUrl, "
 										+ " CASE WHEN svdisSaved THEN upbkchapterUrl ELSE upbktitleUrl END _updatedUrl, upbkdate _updatedDate, upbkplace _updatedPlace"
 										+ " FROM MEDIA" + 
 										" LEFT JOIN savedhistory hist on hist._id = media.svdhistory_id" +
@@ -62,6 +62,8 @@ public class MediaDatabaseRepository implements IMediaRepository {
 		media._displayTitle = result.getString("_displayTitle");
 		media._isComplete = result.getBoolean("_isComplete");
 		media._isSaved = result.getBoolean("_isSaved");
+		media._chapterUrl = result.getString("_chapterUrl");
+		media._titleUrl = result.getString("_titleUrl");
 		media._lastReadDate = result.getDateFromString("_lastReadDate");
 		media._lastReadPlace = PlaceExt.parse(result.getString("_lastReadPlace"));
 		media._storyState = StoryStateExt.parse(result.getInt("_storyState"));
@@ -187,8 +189,8 @@ public class MediaDatabaseRepository implements IMediaRepository {
 		if ( item._isSaved == false ) {
 			throw new ServiceException("Media item must be 'saved'.", ServiceException.INVALID_DATA);
 		}
-		String sql = "INSERT INTO Media (MdDisplayTitle, MdIsComplete, SvdIsSaved, SvdStoryState, SvdRating, SvdNotes)"
-				+ " VALUES (@title, @complete, @saved, @state, @rating, @notes)";
+		String sql = "INSERT INTO Media (MdDisplayTitle, MdIsComplete, MdMainUrl, SvdIsSaved, SvdStoryState, SvdRating, SvdNotes)"
+				+ " VALUES (@title, @complete, @titleUrl, @saved, @state, @rating, @notes)";
 		try {
 			Connection conn = _connectionManager.getConnection();
 			conn.setAutoCommit(false);
@@ -197,10 +199,12 @@ public class MediaDatabaseRepository implements IMediaRepository {
 			stmt.setString("@title", item._displayTitle);
 			stmt.setString("@title", item._displayTitle);
 			stmt.setBoolean("@complete", item._isComplete);
+			stmt.setString("@titleUrl", item._titleUrl);
 			stmt.setBoolean("@saved", item._isSaved);
 			stmt.setInt("@state", item._storyState.getValue());
 			stmt.setInt("@rating", item._rating.getValue());
 			stmt.setString("@notes", item._notes);
+			stmt.setString("@titleUrl", item._titleUrl);
 			item._id = stmt.executeInsert();
 			
 			updateHistory(conn, item);
@@ -219,12 +223,13 @@ public class MediaDatabaseRepository implements IMediaRepository {
 				Connection conn = _connectionManager.getConnection();
 				conn.setAutoCommit(false);
 				
-				sql = "UPDATE Media SET MdDisplayTitle = @title, MdIsComplete = @complete, SvdIsSaved = @saved, SvdStoryState = @state,"
-						+ " SvdRating = @rating, SvdNotes = @notes WHERE _id = @id";
+				sql = "UPDATE Media SET MdDisplayTitle = @title, MdIsComplete = @complete, MdMainUrl = @titleUrl,"
+						+ " SvdIsSaved = @saved, SvdStoryState = @state, SvdRating = @rating, SvdNotes = @notes WHERE _id = @id";
 				NamedStatement stmt = new NamedStatement(conn, sql);
 				stmt.setLong("@id", item._id);
 				stmt.setString("@title", item._displayTitle);
 				stmt.setBoolean("@complete", item._isComplete);
+				stmt.setString("@titleUrl", item._titleUrl);
 				stmt.setBoolean("@saved", item._isSaved);
 				stmt.setInt("@state", item._storyState.getValue());
 				stmt.setInt("@rating", item._rating.getValue());
@@ -293,7 +298,7 @@ public class MediaDatabaseRepository implements IMediaRepository {
 		stmt.setLong("@mediaId", item._id);
 		stmt.setDate("@date", item._lastReadDate);
 		stmt.setString("@place", PlaceExt.format(item._lastReadPlace));
-		stmt.setString("@url", item._chapterURL);
+		stmt.setString("@url", item._chapterUrl);
 		stmt.setInt("@v", item._lastReadPlace._volume);
 		stmt.setInt("@ch", item._lastReadPlace._chapter);
 		stmt.setInt("@sub", item._lastReadPlace._subChapter);

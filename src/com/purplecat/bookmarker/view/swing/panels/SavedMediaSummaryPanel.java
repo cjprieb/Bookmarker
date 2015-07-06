@@ -20,11 +20,11 @@ public class SavedMediaSummaryPanel extends MediaSummaryPanel {
 //		setCategories(view._categories);
 		_dataRating.setVisible(false);
 //		setType(view._type);
-//		setSummary(view._summary);
+		setSummary(view._summary);
 		setDescription(view._notes);
-		setLink(_dataChapterLink, view._chapterURL);
+		setLink(_dataChapterLink, view._chapterUrl);
 		_dataSiteLink._textControl.setVisible(false);
-//		setLink(_dataSiteLink, view._titleURL);
+		setLink(_dataSiteLink, view._titleUrl);
 		setLink(_dataUpdatedLink, view._updatedUrl);		
 	}
 

@@ -17,11 +17,16 @@ public class SampleWebsiteList implements IWebsiteList {
 	@Inject
 	public SampleWebsiteList(ILoggingService logging, IGenreRepository genres) {
 		_websites.add(new SampleBatotoWebsite(logging, genres));
+//		_websites.add(new SampleBakaWebsite(logging, genres));
 	}
 
 	@Override
 	public Iterable<IWebsiteParser> getList() {
 		return _websites;
+	}
+	
+	public int getSampleHoursAgo() {
+		return 8;//this will work for batoto
 	}
 
 }

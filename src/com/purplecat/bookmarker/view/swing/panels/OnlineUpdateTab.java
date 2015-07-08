@@ -10,6 +10,7 @@ import com.google.inject.Inject;
 import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.view.swing.actions.LoadUpdatesAction;
 import com.purplecat.bookmarker.view.swing.actions.StopUpdatesAction;
+import com.purplecat.bookmarker.view.swing.components.HourSpinner;
 import com.purplecat.bookmarker.view.swing.components.OnlineUpdateItemTableControl;
 import com.purplecat.bookmarker.view.swing.observers.OnlineMediaSummaryObserver;
 import com.purplecat.bookmarker.view.swing.observers.UpdateMediaObserverControl;
@@ -19,6 +20,7 @@ import com.purplecat.commons.swing.Toolbox;
 public class OnlineUpdateTab {
 	
 	private JPanel _panel;
+	private HourSpinner _spinner;
 	
 	@Inject Controller _controller;
 	@Inject IResourceService _resources;
@@ -27,16 +29,24 @@ public class OnlineUpdateTab {
 	@Inject OnlineMediaSummaryObserver _summaryObserver;
 	@Inject OnlineUpdateItemTableControl _updateMediaTableControl;
 	
-	public void create() {		
-		_controller.observeOnlineThreadLoading(_updateMediaTableControl.getModel().getObserver());
-		_controller.observeSavedMediaUpdate(_updateMediaTableControl.getModel().getObserver());
-		_updateMediaTableControl.getTable().addRowSelectionListener(_summaryObserver);
-		
+	public void create() {
 		UpdateMediaObserverControl updateObserver = new UpdateMediaObserverControl(_resources);
-		_controller.observeOnlineThreadLoading(updateObserver);
 		
-		JButton loadUpdatesButton = new JButton(new LoadUpdatesAction(_controller, _resources));		
-		JButton stopUpdatesButton = new JButton(new StopUpdatesAction(_controller, _resources));
+		{
+			_controller.observeOnlineThreadLoading(_updateMediaTableControl.getModel().getObserver());
+			_controller.observeSavedMediaUpdate(_updateMediaTableControl.getModel().getObserver());
+			_controller.observeOnlineThreadLoading(updateObserver);
+			_updateMediaTableControl.getTable().addRowSelectionListener(_summaryObserver);
+		}
+			
+		
+		JButton loadUpdatesButton = new JButton(new LoadUpdatesAction(_controller, _resources, this));		
+		JButton stopUpdatesButton = new JButton(new StopUpdatesAction(_controller, _resources));		
+		
+		{
+			_spinner = new HourSpinner(_resources);
+			_spinner.setValue(8);
+		}
 
 		_panel = new JPanel();
 		GroupLayout layout = new GroupLayout(_panel);
@@ -47,6 +57,8 @@ public class OnlineUpdateTab {
 				.addGroup(layout.createParallelGroup()
 						.addComponent(_updateMediaTableControl.getComponent(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
 						.addGroup(layout.createSequentialGroup()
+							.addComponent(_spinner, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGap(0, 0, Short.MAX_VALUE)
 							.addComponent(loadUpdatesButton, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addComponent(stopUpdatesButton, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 						)
@@ -63,6 +75,7 @@ public class OnlineUpdateTab {
 		layout.setVerticalGroup(layout.createSequentialGroup()
 				.addContainerGap()
 				.addGroup(layout.createParallelGroup()
+					.addComponent(_spinner, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addComponent(loadUpdatesButton, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addComponent(stopUpdatesButton, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 				)
@@ -82,5 +95,9 @@ public class OnlineUpdateTab {
 	
 	public void updateSummaryPanel() {
 		_summaryPanel.setSummaryView(_summaryObserver.getSummaryPanel());
+	}
+
+	public int getHoursAgo() {
+		return (int)_spinner.getHourValue();
 	}
 }

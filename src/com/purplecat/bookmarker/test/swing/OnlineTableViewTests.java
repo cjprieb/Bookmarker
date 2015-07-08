@@ -101,8 +101,7 @@ public class OnlineTableViewTests {
 		OnlineUpdateItemTableControl tableControl = new OnlineUpdateItemTableControl(factory, _controller, _resources, _toolbox, new DummyDragDrop());
 		OnlineUpdateItemTableModel model = tableControl.getModel();
 		_controller.observeOnlineThreadLoading(model.getObserver());
-		_controller.loadUpdateMedia();
-//		_controller.loadUpdateMedia();//trigger twice as using sample batoto which loads a different file the second time
+		_controller.loadUpdateMedia(8);
 		
 		assertTrue("list has no elements", model.getRowCount() > 1);
 		assertTrue("table has no elements", tableControl.getTable().getRowCount() > 1);

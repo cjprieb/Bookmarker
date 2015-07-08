@@ -40,9 +40,11 @@ public class WebsiteParsingTests {
 
 	@Test
 	public void batotoParseTest() {
+		System.out.println("BATOTO");
 		IWebsiteParser site = new BatotoWebsite(_logging, _genreDatabase);		
 		try {
-			List<OnlineMediaItem> items = site.load();
+			DateTime minUpdateDate = DateTime.now().minusHours(8); //hours ago
+			List<OnlineMediaItem> items = site.load(minUpdateDate);
 			assertNotNull(items);
 			assertTrue(items.size() > 0);
 			int iCount = 0;
@@ -54,6 +56,9 @@ public class WebsiteParsingTests {
 					site.loadItem(item);
 					checkFullItemLoaded(item);					
 				}
+				if ( item._updatedDate.compareTo(minUpdateDate) < 0 ) {
+					Assert.fail("Item was updated too long ago");
+				}
 			}
 		} catch (ServiceException e) {
 			// TODO Auto-generated catch block
@@ -63,9 +68,11 @@ public class WebsiteParsingTests {
 
 	@Test
 	public void bakaParseTest() {
+		System.out.println("BAKA UPDATES");
 		IWebsiteParser site = new BakaWebsite(_logging, _genreDatabase);		
 		try {
-			List<OnlineMediaItem> items = site.load();
+			DateTime minUpdateDate = DateTime.now().minusHours(8); //hours ago
+			List<OnlineMediaItem> items = site.load(minUpdateDate);
 			assertNotNull(items);
 			assertTrue(items.size() > 0);
 			int iCount = 0;
@@ -76,6 +83,9 @@ public class WebsiteParsingTests {
 				if (iCount < 15 ) { 
 					site.loadItem(item);
 					checkFullItemLoaded(item);					
+				}
+				if ( item._updatedDate.compareTo(minUpdateDate) < 0 ) {
+					Assert.fail("Item was updated too long ago");
 				}
 			}
 		} catch (ServiceException e) {
@@ -87,6 +97,7 @@ public class WebsiteParsingTests {
 	protected void checkItem(OnlineMediaItem item) {
 		DateTime date = DateTime.now().minusDays(10);
 		System.out.println("checking " + item);
+		System.out.println("    date: " + item._updatedDate);
 		
 		Assert.assertTrue("no title", item._displayTitle != null && item._displayTitle.length() > 0);
 		Assert.assertTrue("no title url", item._titleUrl != null && item._titleUrl.length() > 0);
@@ -95,7 +106,10 @@ public class WebsiteParsingTests {
 		Assert.assertTrue("invalid date", item._updatedDate.isAfter(date));
 		
 		if ( item._chapterUrl != null && item._chapterUrl.length() > 0 && ( item._chapterName == null || !item._chapterName.contains("Oneshot") )  ) {
-			Assert.assertTrue("invalid place", item._updatedPlace.compareTo(new Place()) > 0);
+//			Assert.assertTrue("invalid place", item._updatedPlace.compareTo(new Place()) > 0);
+			if ( item._updatedPlace.compareTo(new Place()) == 0 ) {
+				System.err.println("No place found for " + item._displayTitle + " (using " + item._chapterUrl + ")");
+			}
 		}
 	}
 	

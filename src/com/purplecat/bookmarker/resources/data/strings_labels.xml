@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resource>
   <string name="dlgDropUrlMessage">Drop URL</string>
+  <string name="lblAbbrHour">hr</string>
+  <string name="lblAbbrMinute">min</string>
   <string name="lblAdd">Add</string>
   <string name="lblAll">All</string>
   <string name="lblAllSites">All</string>  

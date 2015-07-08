@@ -28,7 +28,7 @@ public class DummyWebsiteList implements IWebsiteList {
 		}
 		
 		@Override
-		public List<OnlineMediaItem> load() {
+		public List<OnlineMediaItem> load(DateTime minDateTime) {
 			_loadCalled = true;			
 			List<OnlineMediaItem> list = new LinkedList<OnlineMediaItem>();
 			

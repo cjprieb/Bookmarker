@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -77,59 +78,73 @@ public class BakaWebsite implements IWebsiteParser {
 	}
 
 	@Override
-	public List<OnlineMediaItem> load() throws ServiceException {
+	public List<OnlineMediaItem> load(DateTime minDateToLoad) throws ServiceException {
 		try {
-			return loadDocument(getDocument());
+			return loadDocument(getDocument(), minDateToLoad);
 		} catch (IOException e) {
 			_logging.error(TAG, "Error getting document", e);
 			throw new ServiceException("Error loading Baka Updates", ServiceException.WEBSITE_ERROR);
 		}
 	}
 	
-	public List<OnlineMediaItem>  loadDocument(Document doc) {
+	public List<OnlineMediaItem>  loadDocument(Document doc, DateTime minDateToLoad) {
 		List<OnlineMediaItem> items = new LinkedList<OnlineMediaItem>();
-		DateTime now = DateTime.now();
-		Element mainTable = doc.select("#main_content table.text").first();
-		if ( mainTable != null ) {
-			Elements rows = mainTable.select("tr");
-			//Skip first row, as that is the header
-			for ( int i = 1; i < rows.size(); i++ ) {
-				Elements cells = rows.get(i).select("td");
-				if ( cells.size() < 3 ) {
-					continue; //not enough columns
-				}
-
-				Element ahref = cells.get(0).select("a").first();
-				if ( ahref != null ) {
-					String sChapterText = cells.get(1).text();
-					OnlineMediaItem item = new OnlineMediaItem();
-					item._websiteName = _info._name;
-					item._displayTitle = cells.get(0).text();
-					item._updatedPlace = PlaceExt.parseBakaPlace(sChapterText);
-					item._updatedDate = now;
-					item._titleUrl = ahref.attr("href");
-					//only add item if it has a title URL
-					items.add(item);
-
-					ahref = cells.get(2).select("a").first();
-					if ( ahref != null ) {
-						item._chapterUrl = ahref.attr("href");
+		DateTime tableTime = DateTime.now();
+		Elements dataParagraphHeadings = doc.select(".titlesmall");
+		
+		for ( Element dateParagraph : dataParagraphHeadings ) {
+			tableTime = parseHeadingDate(dateParagraph.text());
+		
+			Element mainTable = dateParagraph.nextElementSibling().select("table.text").first();
+			if ( mainTable != null ) {
+				Elements rows = mainTable.select("tr");
+				//Skip first row, as that is the header
+				for ( int i = 1; i < rows.size(); i++ ) {
+					Elements cells = rows.get(i).select("td");
+					if ( cells.size() < 3 ) {
+						continue; //not enough columns
+					}
+		
+					Element ahref = cells.get(0).select("a").first();
+					if ( ahref != null && tableTime.compareTo(minDateToLoad) >= 0 ) {
+						String sChapterText = cells.get(1).text();
+						OnlineMediaItem item = new OnlineMediaItem();
+						item._websiteName = _info._name;
+						item._displayTitle = cells.get(0).text();
+						item._updatedPlace = PlaceExt.parseBakaPlace(sChapterText);
+						item._updatedDate = tableTime;
+						item._titleUrl = ahref.attr("href");
+						//only add item if it has a title URL
+						items.add(item);
+		
+						ahref = cells.get(2).select("a").first();
+						if ( ahref != null ) {
+							item._chapterUrl = ahref.attr("href");
+						}
+						
+						if ( sChapterText.contains("Oneshot") ) {
+							item._chapterName = sChapterText;
+						}
+						
+						if ( item._displayTitle.endsWith("*") ) {
+							item._displayTitle = item._displayTitle.substring(0, item._displayTitle.length()-1);
+						}
 					}
 					
-					if ( sChapterText.contains("Oneshot") ) {
-						item._chapterName = sChapterText;
-					}
-					
-					if ( item._displayTitle.endsWith("*") ) {
-						item._displayTitle = item._displayTitle.substring(0, item._displayTitle.length()-1);
-					}
+					//updating date so that items are in correct order
+					tableTime = tableTime.minusSeconds(1);
 				}
-				
-				//updating date so that items are in correct order
-				now = now.minusSeconds(1);
 			}
 		}
 		return items;
+	}
+
+	private DateTime parseHeadingDate(String text) {
+		// Saturday, July 4th 2015
+		text = text.replaceAll(".+?, (\\w+) (\\d+)\\w+ (\\d+)", "$1 $2 $3");
+		DateTime date = DateTime.parse(text, DateTimeFormat.forPattern("MMMM dd yyyy"));
+		DateTime now = DateTime.now();
+		return new DateTime(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth(), now.getHourOfDay(), now.getMinuteOfHour());
 	}
 
 }

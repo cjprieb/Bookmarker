@@ -68,8 +68,7 @@ public class OnlineUpdateThreadTests {
 		DummyWebsiteScraper _scraper = injector.getInstance(DummyWebsiteList.class)._scraper;
 		DummyThreadObserver _observer = injector.getInstance(DummyThreadObserver.class);
 		
-		//It's setup to be this way
-		_service.loadOnlineUpdates();
+		_service.loadOnlineUpdates(24);//hours ago
 		
 		Assert.assertTrue("scraper not called", _scraper.loadCalled());
 		Assert.assertTrue("scraper item load not called", _scraper.itemLoadCalled());

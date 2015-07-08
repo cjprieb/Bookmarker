@@ -9,9 +9,10 @@
 * ~~2 Add baka.updates support~~
   * tests
 * 2 add controls to update list 
-	* limit parsing to X hours ago; 
+	* ~~limit parsing to X hours ago~~
 	* limit to single website
 	* parse genres option
+* 1 add F5 genre/summary loading
 * 2 Add egscans support
 	tests
 * 1 create "add url" dialog
@@ -43,5 +44,6 @@
 * load ratings
 * load categories
 * whether to save summaries
+* save control settings
 
 http://rmarkdown.rstudio.com/authoring_basics.html

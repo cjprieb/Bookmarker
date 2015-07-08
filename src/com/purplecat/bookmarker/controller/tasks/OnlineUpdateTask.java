@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.joda.time.DateTime;
+
 import com.google.inject.Inject;
 import com.purplecat.bookmarker.extensions.OnlineMediaItemExt.OnlineBookmarkComparator;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
@@ -63,13 +65,14 @@ public class OnlineUpdateTask {
 		_stopRunning = false;
 	}
 
-	public void loadOnlineUpdates() {
+	public void loadOnlineUpdates(int hoursAgo) {
 		started();
 		
 		List<OnlineMediaItem> retList = new LinkedList<OnlineMediaItem>();
 		_observer.notifyLoadStarted();
 		
 		Set<Long> updatedMediaIds = new HashSet<Long>();
+		DateTime minDateToLoad = DateTime.now().minusHours(hoursAgo);
 		
 		for ( IWebsiteParser scraper : _websites.getList() ) {
 			if ( isStopped() ) {
@@ -78,7 +81,7 @@ public class OnlineUpdateTask {
 			
 			_observer.notifySiteStarted(scraper.getInfo());
 			try {
-				List<OnlineMediaItem> siteList = scraper.load();
+				List<OnlineMediaItem> siteList = scraper.load(minDateToLoad);
 				
 				//NOTE: check for duplicates and such here?
 				

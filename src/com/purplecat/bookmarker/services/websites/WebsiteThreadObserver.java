@@ -26,6 +26,7 @@ public class WebsiteThreadObserver implements IWebsiteLoadObserver, Runnable {
 	private final IOnlineMediaRepository _onlineRepository;
 	
 	private OnlineUpdateTask _task; 
+	private int _hoursAgo;
 	
 	@Inject
 	public WebsiteThreadObserver(IThreadPool threadPool, IWebsiteList websites, IOnlineMediaRepository onlineRepository, ILoggingService logging, IConnectionManager mgr) {
@@ -40,12 +41,16 @@ public class WebsiteThreadObserver implements IWebsiteLoadObserver, Runnable {
 		_observers.add(obs);
 	}
 	
+	public void setLoadParameters(int hoursAgo) {
+		_hoursAgo = hoursAgo;
+	}
+	
 	@Override
 	public void run() {
 		//On Worker Thread
 		if ( !_task.isRunning() ) {
 			System.out.println("loading online updates");
-			_task.loadOnlineUpdates();
+			_task.loadOnlineUpdates(_hoursAgo);
 		}
 	}
 	

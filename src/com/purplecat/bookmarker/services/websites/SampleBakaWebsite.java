@@ -13,24 +13,20 @@ import com.purplecat.bookmarker.services.databases.IGenreRepository;
 import com.purplecat.commons.logs.ILoggingService;
 import com.purplecat.commons.tests.GetRandom;
 
-public class SampleBatotoWebsite extends BatotoWebsite {
-	
-	private int _fileIndex = 0;
+public class SampleBakaWebsite extends BakaWebsite {
 	
 	@Inject
-	public SampleBatotoWebsite(ILoggingService logging, IGenreRepository genres) {
+	public SampleBakaWebsite(ILoggingService logging, IGenreRepository genres) {
 		super(logging, genres);
 	}
 	
 	@Override
 	protected Document getDocument() throws IOException {
-//		String fileName = _fileIndex % 2 == 0 ? "sample_batoto_2.html" : "sample_batoto.html";
 		String fileName = "sample_batoto.html";
 		File in = new File(fileName);
 		if ( !in.exists() ) {
 			_logging.debug(0, TAG, "sample file not found: " + in.getAbsolutePath());
 		}
-		_fileIndex++;
 		return Jsoup.parse(in, "UTF-8");
 	}
 

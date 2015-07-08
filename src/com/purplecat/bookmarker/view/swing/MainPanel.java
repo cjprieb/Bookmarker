@@ -147,7 +147,7 @@ public class MainPanel implements ChangeListener {
 		@Override 
 		public void actionPerformed(ActionEvent e) {
 			_tabbedPane.setSelectedComponent(_onlineUpdateTab.getPanel());
-			_controller.loadUpdateMedia();
+			_controller.loadUpdateMedia(_onlineUpdateTab.getHoursAgo());
 		}
 	}
 }

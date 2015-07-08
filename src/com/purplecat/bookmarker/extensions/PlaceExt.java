@@ -20,6 +20,7 @@ public class PlaceExt {
 	private static final int PAGE 		= 5;
 
 	private static final Pattern _bakaPlaceRegex = Pattern.compile("(?:v\\.(\\d+) )?c\\.(.+)");
+	private static final Pattern _chapterRegex = Pattern.compile("\\d+/([^/_]+)_(?:v(\\d+)_)?(?:ch(\\d+)([^_]+)?_)?by_(.+)");
 	
 	public static Place parse(String str) {
 		Place place = new Place();
@@ -163,24 +164,8 @@ public class PlaceExt {
 			if ( matcher.group(2) != null ) {
 				String sChapterText = matcher.group(2).toLowerCase();
 				String sChapter = sChapterText;
-				//68
-				//69-71
-				//Extra (end)
-				//13.5
-				//1v2 +2-3
-				//Oneshot
-				//Epilogue
-				//15 (end)
-				//10a
-//				int charIndex = sChapter.indexOf('-');
-//				if ( charIndex >= 0 ) {
-//					sChapter = sChapter.substring(charIndex+1);
-//				}	
-//				
-//				charIndex = sChapter.indexOf('v');
-//				if ( charIndex >= 0 ) {
-//					sChapter = sChapter.substring(0, charIndex);
-//				}
+				//68	69-71	Extra (end)		13.5	10a
+				//1v2 +2-3		Oneshot		Epilogue		15 (end)
 				
 				StringBuilder chapterBuilder = new StringBuilder();
 				StringBuilder subChapterBuilder = new StringBuilder();
@@ -240,5 +225,42 @@ public class PlaceExt {
 			}
 		}
 		return place;
+	}
+
+	public static Place parseBatotoPlace(String chapterUrl) {
+		int volume = 0, chapter = 0, sub = 0;
+		boolean extra = false;
+		
+		//	http://bato.to/read/_/320356/world-trigger_ch101_by_glorious-scanlations
+		//	http://bato.to/read/_/320360/medarot_v1_ch4_by_heavenly-scans
+		//	http://bato.to/read/_/320273/song-of-the-long-march_ch43.2_by_easy-going-scans
+		//	http://bato.to/read/_/320272/kounodori-the-stork_v2_ch7.1_by_futari-wa-pretty-anon
+		//	http://bato.to/read/_/320220/alice-in-borderland_v6_ch24--v2-_by_nest-traducciones
+		Matcher matcher = _chapterRegex.matcher(chapterUrl);
+		if ( matcher.find() ) {
+			
+			volume = Numbers.parseInt(matcher.group(2), 0);
+			chapter = Numbers.parseInt(matcher.group(3), 0);
+			String moreDetail = matcher.group(4);
+			if ( moreDetail != null && moreDetail.length() > 0 ) {
+				if ( moreDetail.startsWith(".") ) {
+					String subChapterString = "";
+					for ( int i = 1; i < moreDetail.length(); i++ ) {
+						if ( Character.isDigit(moreDetail.charAt(i) ) ) {
+							subChapterString += moreDetail.charAt(i);
+						}
+						else {
+							break;
+						}
+					}
+					sub = Numbers.parseInt(subChapterString, 0);
+				}
+				else if ( moreDetail.contains("v2") ){
+					extra = true; //?
+				}
+			}
+		}
+		
+		return new Place(volume, chapter, sub, 0, extra);
 	}
 }

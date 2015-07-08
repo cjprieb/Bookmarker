@@ -6,9 +6,12 @@ use Cwd;
 
 sub parseResourceFile($$);
 
-my $dir = "/Users/Crystal/Projects/Bookmarker/Bookmarker/src/com/purplecat/bookmarker/";
+my $packageName = "bookmarker";
+
+my $currDir = cwd();
+my $dir = $currDir . "/src/com/purplecat/$packageName/";
 my $outFile = $dir . "Resources.java";
-my $package = "com.purplecat.bookmarker";
+my $package = "com.purplecat.$packageName";
 
 open OUT, ">:encoding(UTF-8)", $outFile or warn "invalid OUT file $outFile";
 
@@ -27,7 +30,7 @@ parseResourceFile("images.xml", "image");
 print OUT "}\n";
 print "Program finished.\n";
 
-sub parseResourceFile() {
+sub parseResourceFile($$) {
 	my ($fileName,$expectedTag) = @_;
 	
 	print "  printing resources $expectedTag items...\n";

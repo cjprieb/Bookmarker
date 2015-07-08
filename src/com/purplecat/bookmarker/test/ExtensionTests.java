@@ -4,11 +4,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.purplecat.bookmarker.extensions.PlaceExt;
+import com.purplecat.bookmarker.extensions.WebsiteDateExt;
 import com.purplecat.bookmarker.models.Place;
 import com.purplecat.commons.io.FileUtils;
 
@@ -18,6 +20,7 @@ public class ExtensionTests {
 	List<PlacePair> _placeRenderTests;
 	List<PlaceComparePair> _placeCompareTests;
 	List<PlacePair> _bakaPlaces;
+	List<PlacePair> _batotoPlaces;
 	
 	@Before
 	public void setupTestStrings() throws Exception {
@@ -68,6 +71,12 @@ public class ExtensionTests {
 			String[] tokens = lines.split("\\t");
 			_bakaPlaces.add(new PlacePair(tokens[0], PlaceExt.parse(tokens[1])));
 		}
+		
+		_batotoPlaces = new ArrayList<PlacePair>(100);
+		for ( String lines : FileUtils.readAllLines(new File("test_data/batoto_places.txt")) ) {
+			String[] tokens = lines.split("\\t");
+			_batotoPlaces.add(new PlacePair(tokens[0], PlaceExt.parse(tokens[1])));
+		}
 	}
 		
 	@Test
@@ -115,6 +124,28 @@ public class ExtensionTests {
 			Place actual = PlaceExt.parseBakaPlace(pair._value);
 			Assert.assertEquals(pair._place, actual);
 		}
+	}
+	
+	@Test
+	public void batotoPlaceParse() {
+		for ( PlacePair pair : _batotoPlaces ) {
+			System.out.println("Parsing batoto place: " + pair._value + " into " + pair._place);
+			Place actual = PlaceExt.parseBatotoPlace(pair._value);
+			Assert.assertEquals(pair._place, actual);
+		}
+	}
+	
+	@Test
+	public void batotoDateParse() {
+		DateTime now = DateTime.now();
+		
+		String dateStr = "Today, 11:01 PM";
+		DateTime actual = new DateTime(now.getYear(), now.getMonthOfYear(), now.getDayOfMonth(), 23, 01);
+		Assert.assertEquals("wrong date for " + dateStr, actual, WebsiteDateExt.parseBatotoDate(now, dateStr));
+		
+		dateStr = "Today, 10:43 PM";
+		actual = new DateTime(now.getYear(), now.getMonthOfYear(), now.getDayOfMonth(), 22, 43);
+		Assert.assertEquals("wrong date for " + dateStr, actual, WebsiteDateExt.parseBatotoDate(now, dateStr));
 	}
 	
 	private static class PlacePair {

@@ -14,7 +14,7 @@ public class StopUpdatesAction extends AbstractAction {
 	
 	public StopUpdatesAction(Controller ctrl, IResourceService resources) {
 		_controller = ctrl;
-		this.putValue(Action.NAME, resources.getString(Resources.string.lblStopUpdates));
+		this.putValue(Action.NAME, resources.getString(Resources.string.lblStop));
 	}
 	
 	@Override 

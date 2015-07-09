@@ -74,19 +74,43 @@ public class WebsiteLoadingTests extends DatabaseConnectorTestBase {
 	}
 	
 	@Test
+	public void loadWebsitesGenre() {
+		Injector injector = Guice.createInjector(new DatabaseWebsiteScrapingModule());		
+		OnlineUpdateTask _service = injector.getInstance(OnlineUpdateTask.class);	
+		DummyThreadObserver _observer = injector.getInstance(DummyThreadObserver.class);
+		SampleWebsiteList _websites = injector.getInstance(SampleWebsiteList.class);
+		
+		_service.loadOnlineUpdates(_websites.getSampleHoursAgo(), true, _websites.getList());
+
+		Assert.assertTrue("load started not called", _observer.loadStartedCalled());
+		Assert.assertTrue("site started not called", _observer.siteStartedCalled());
+		Assert.assertTrue("site loaded not called", _observer.siteLoadedCalled());
+		Assert.assertTrue("item loaded not called", _observer.itemLoadedCalled());
+		Assert.assertTrue("load finished not called", _observer.loadFinishedCalled());
+		
+		List<OnlineMediaItem> list = _observer.getList();
+		Assert.assertNotNull("list is null", list);
+		Assert.assertTrue("list has no items", list.size() > 0);
+		Assert.assertTrue("no items were found", _observer.getItemsFound() > 0);
+		Assert.assertEquals("items parsed does not match items found", _observer.getItemsParsed(), _observer.getItemsFound());
+		Assert.assertTrue("items not loaded", _websites.getLoadItemCount() > 0);
+	}
+	
+	@Test
 	public void loadWebsitesOrder() {
 		Injector injector = Guice.createInjector(new DatabaseWebsiteScrapingModule());		
 		OnlineUpdateTask _service = injector.getInstance(OnlineUpdateTask.class);	
 		DummyThreadObserver _observer = injector.getInstance(DummyThreadObserver.class);
 		SampleWebsiteList _websites = injector.getInstance(SampleWebsiteList.class);
 		
-		_service.loadOnlineUpdates(_websites.getSampleHoursAgo());
+		_service.loadOnlineUpdates(_websites.getSampleHoursAgo(), false, _websites.getList());
 
 		Assert.assertTrue("load started not called", _observer.loadStartedCalled());
 		Assert.assertTrue("site started not called", _observer.siteStartedCalled());
 		Assert.assertTrue("site loaded not called", _observer.siteLoadedCalled());
-		//Assert.assertTrue("item loaded not called", _observer.itemLoadedCalled());
+		Assert.assertTrue("item loaded not called", _observer.itemLoadedCalled());
 		Assert.assertTrue("load finished not called", _observer.loadFinishedCalled());
+		Assert.assertEquals("items were loaded", 0, _websites.getLoadItemCount());
 		
 		List<OnlineMediaItem> list = _observer.getList();
 		Assert.assertNotNull("list is null", list);
@@ -126,7 +150,7 @@ public class WebsiteLoadingTests extends DatabaseConnectorTestBase {
 		
 		int hoursAgo = _websites.getSampleHoursAgo();
 		DateTime minUpdateDate = DateTime.now().minusHours(hoursAgo);
-		_service.loadOnlineUpdates(hoursAgo);
+		_service.loadOnlineUpdates(hoursAgo, false, _websites.getList());
 		
 		List<OnlineMediaItem> list = _observer.getList();
 		Assert.assertNotNull("list is null", list);

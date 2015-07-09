@@ -7,6 +7,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import com.google.inject.Inject;
+import com.purplecat.bookmarker.models.Genre;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.services.ServiceException;
 import com.purplecat.bookmarker.services.databases.IGenreRepository;
@@ -15,7 +16,8 @@ import com.purplecat.commons.tests.GetRandom;
 
 public class SampleBatotoWebsite extends BatotoWebsite {
 	
-	private int _fileIndex = 0;
+//	private int _fileIndex = 0;
+	private int _loadItemCount = 0;
 	
 	@Inject
 	public SampleBatotoWebsite(ILoggingService logging, IGenreRepository genres) {
@@ -30,13 +32,23 @@ public class SampleBatotoWebsite extends BatotoWebsite {
 		if ( !in.exists() ) {
 			_logging.debug(0, TAG, "sample file not found: " + in.getAbsolutePath());
 		}
-		_fileIndex++;
+//		_fileIndex++;
 		return Jsoup.parse(in, "UTF-8");
 	}
 
 	@Override
 	public OnlineMediaItem loadItem(OnlineMediaItem item) throws ServiceException {
 		item._summary = GetRandom.getPhraseString(300);
+		
+		Genre genre = new Genre();
+		genre._name = GetRandom.getString(6);
+		item._genres.add(genre);
+		
+		_loadItemCount++;
 		return item;
+	}
+
+	public int getLoadItemCount() {
+		return _loadItemCount;
 	}
 }

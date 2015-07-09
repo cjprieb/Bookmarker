@@ -1,5 +1,6 @@
 package com.purplecat.bookmarker.services.websites;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class DefaultWebsiteList implements IWebsiteList {
 	}
 
 	@Override
-	public Iterable<IWebsiteParser> getList() {
+	public Collection<IWebsiteParser> getList() {
 		return _websites;
 	}
 

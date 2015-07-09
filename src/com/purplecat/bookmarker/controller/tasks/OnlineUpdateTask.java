@@ -14,7 +14,6 @@ import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.services.ServiceException;
 import com.purplecat.bookmarker.services.databases.DatabaseException;
 import com.purplecat.bookmarker.services.databases.IOnlineMediaRepository;
-import com.purplecat.bookmarker.services.websites.IWebsiteList;
 import com.purplecat.bookmarker.services.websites.IWebsiteLoadObserver;
 import com.purplecat.bookmarker.services.websites.IWebsiteParser;
 import com.purplecat.bookmarker.sql.IConnectionManager;
@@ -24,7 +23,6 @@ public class OnlineUpdateTask {
 	final String TAG = "OnlineUpdateTask";
 	
 	final IWebsiteLoadObserver _observer;
-	final IWebsiteList _websites;
 	final IOnlineMediaRepository _repository;
 	final ILoggingService _logging;
 	final IConnectionManager _connectionManager;
@@ -35,8 +33,7 @@ public class OnlineUpdateTask {
 	private OnlineBookmarkComparator _bookmarkComparer = new OnlineBookmarkComparator();
 	
 	@Inject
-	public OnlineUpdateTask(IWebsiteList websites, IWebsiteLoadObserver obs, IOnlineMediaRepository repository, ILoggingService logging, IConnectionManager mgr) {
-		_websites = websites;
+	public OnlineUpdateTask(IWebsiteLoadObserver obs, IOnlineMediaRepository repository, ILoggingService logging, IConnectionManager mgr) {
 		_observer = obs;
 		_repository = repository;
 		_logging = logging;
@@ -65,7 +62,7 @@ public class OnlineUpdateTask {
 		_stopRunning = false;
 	}
 
-	public void loadOnlineUpdates(int hoursAgo) {
+	public void loadOnlineUpdates(int hoursAgo, boolean _loadGenres, Iterable<IWebsiteParser> selectedWebsites) {
 		started();
 		
 		List<OnlineMediaItem> retList = new LinkedList<OnlineMediaItem>();
@@ -74,7 +71,7 @@ public class OnlineUpdateTask {
 		Set<Long> updatedMediaIds = new HashSet<Long>();
 		DateTime minDateToLoad = DateTime.now().minusHours(hoursAgo);
 		
-		for ( IWebsiteParser scraper : _websites.getList() ) {
+		for ( IWebsiteParser scraper : selectedWebsites ) {
 			if ( isStopped() ) {
 				break;
 			}
@@ -95,7 +92,9 @@ public class OnlineUpdateTask {
 				//NOTE: reorder list here?
 				retList.sort(_bookmarkComparer);
 				
-				loadItemInfo(scraper, retList, updatedMediaIds);
+				if ( _loadGenres ) {
+					loadItemInfo(scraper, retList, updatedMediaIds);
+				}
 			} 
 			catch (ServiceException e) {
 				_logging.error(TAG, "Error loading from: " + scraper.getInfo()._name, e);

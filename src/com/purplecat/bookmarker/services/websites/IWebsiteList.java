@@ -1,7 +1,9 @@
 package com.purplecat.bookmarker.services.websites;
 
+import java.util.Collection;
+
 public interface IWebsiteList {
 
-	public Iterable<IWebsiteParser> getList();
+	public Collection<IWebsiteParser> getList();
 	
 }

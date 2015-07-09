@@ -1,5 +1,6 @@
 package com.purplecat.bookmarker.test;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Assert;
@@ -68,7 +69,7 @@ public class OnlineUpdateThreadTests {
 		DummyWebsiteScraper _scraper = injector.getInstance(DummyWebsiteList.class)._scraper;
 		DummyThreadObserver _observer = injector.getInstance(DummyThreadObserver.class);
 		
-		_service.loadOnlineUpdates(24);//hours ago
+		_service.loadOnlineUpdates(24, true, Collections.singleton(_scraper));//hours ago
 		
 		Assert.assertTrue("scraper not called", _scraper.loadCalled());
 		Assert.assertTrue("scraper item load not called", _scraper.itemLoadCalled());

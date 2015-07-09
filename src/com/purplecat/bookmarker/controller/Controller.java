@@ -14,6 +14,7 @@ import com.purplecat.bookmarker.controller.tasks.UpdateMangaFromUrlTask;
 import com.purplecat.bookmarker.controller.tasks.UpdateSavedMediaTask;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
+import com.purplecat.bookmarker.models.WebsiteInfo;
 import com.purplecat.bookmarker.services.SavedMediaService;
 import com.purplecat.bookmarker.services.websites.IWebsiteLoadObserver;
 import com.purplecat.bookmarker.services.websites.WebsiteThreadObserver;
@@ -68,8 +69,8 @@ public class Controller {
 		_observer.addWebsiteLoadObserver(obs);
 	}
 	
-	public void loadUpdateMedia(int hoursAgo) {
-		_observer.setLoadParameters(hoursAgo);
+	public void loadUpdateMedia(int hoursAgo, boolean loadGenres, boolean loadAll, WebsiteInfo selectedWebsite) {
+		_observer.setLoadParameters(hoursAgo, loadGenres, loadAll, selectedWebsite);
 		_threadPool.runOnWorkerThread(_observer);
 	}
 	

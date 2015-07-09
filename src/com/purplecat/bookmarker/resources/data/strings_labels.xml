@@ -52,6 +52,7 @@
   <string name="lblLinks">Links</string>
   <string name="lblLoaded">Loaded</string>
   <string name="lblLoading">Loading</string>
+  <string name="lblLoadGenres">Load Genres</string>
   <string name="lblLoadUpdates">Load Updates</string>
   <string name="lblMatch">Match</string>
   <string name="lblMatched">Matched</string>

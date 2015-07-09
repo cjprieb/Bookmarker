@@ -1,5 +1,6 @@
 package com.purplecat.bookmarker.test.dummies;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -94,7 +95,7 @@ public class DummyWebsiteList implements IWebsiteList {
 	}
 
 	@Override
-	public Iterable<IWebsiteParser> getList() {
+	public Collection<IWebsiteParser> getList() {
 		return _list;
 	}
 }

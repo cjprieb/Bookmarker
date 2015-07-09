@@ -2,6 +2,7 @@ package com.purplecat.bookmarker.services.websites;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.google.inject.Inject;
 import com.purplecat.bookmarker.controller.tasks.OnlineUpdateTask;
@@ -27,6 +28,8 @@ public class WebsiteThreadObserver implements IWebsiteLoadObserver, Runnable {
 	
 	private OnlineUpdateTask _task; 
 	private int _hoursAgo;
+	private boolean _loadGenres;
+	private Iterable<IWebsiteParser> _selectedWebsites;
 	
 	@Inject
 	public WebsiteThreadObserver(IThreadPool threadPool, IWebsiteList websites, IOnlineMediaRepository onlineRepository, ILoggingService logging, IConnectionManager mgr) {
@@ -34,15 +37,25 @@ public class WebsiteThreadObserver implements IWebsiteLoadObserver, Runnable {
 		_websites = websites;
 		_onlineRepository = onlineRepository;
 		_observers = new LinkedList<IWebsiteLoadObserver>();
-		_task = new OnlineUpdateTask(_websites, this, _onlineRepository, logging, mgr);
+		_task = new OnlineUpdateTask(this, _onlineRepository, logging, mgr);
 	}
 	
 	public void addWebsiteLoadObserver(IWebsiteLoadObserver obs) {
 		_observers.add(obs);
 	}
 	
-	public void setLoadParameters(int hoursAgo) {
+	public void setLoadParameters(int hoursAgo, boolean loadGenres, boolean loadAll, WebsiteInfo selectedWebsite) {
 		_hoursAgo = hoursAgo;
+		_loadGenres = loadGenres;
+		
+		if ( loadAll ) {
+			_selectedWebsites = _websites.getList();
+		}
+		else {
+			_selectedWebsites = _websites.getList().stream()
+					.filter(site -> site.getInfo()._name.equalsIgnoreCase(selectedWebsite._name))
+					.collect(Collectors.toList());
+		}
 	}
 	
 	@Override
@@ -50,7 +63,7 @@ public class WebsiteThreadObserver implements IWebsiteLoadObserver, Runnable {
 		//On Worker Thread
 		if ( !_task.isRunning() ) {
 			System.out.println("loading online updates");
-			_task.loadOnlineUpdates(_hoursAgo);
+			_task.loadOnlineUpdates(_hoursAgo, _loadGenres, _selectedWebsites);
 		}
 	}
 	

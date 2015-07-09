@@ -2,6 +2,7 @@ package com.purplecat.bookmarker.view.swing;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -28,7 +29,6 @@ import com.purplecat.bookmarker.view.swing.panels.SavedMediaTab;
 import com.purplecat.bookmarker.view.swing.panels.SummarySidebar;
 import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.swing.Toolbox;
-import com.sun.glass.events.KeyEvent;
 
 @Singleton
 public class MainPanel implements ChangeListener {
@@ -46,7 +46,7 @@ public class MainPanel implements ChangeListener {
 
 	public JPanel create(GlassTimerPanel timerGlassPane) {
 		_panel = new JPanel();
-		_panel.setPreferredSize(new Dimension(850, 600));
+		_panel.setPreferredSize(new Dimension(900, 600));
 		
 		_tabbedPane = new JTabbedPane();
 		_tabbedPane.addChangeListener(this);
@@ -147,7 +147,7 @@ public class MainPanel implements ChangeListener {
 		@Override 
 		public void actionPerformed(ActionEvent e) {
 			_tabbedPane.setSelectedComponent(_onlineUpdateTab.getPanel());
-			_controller.loadUpdateMedia(_onlineUpdateTab.getHoursAgo());
+			_onlineUpdateTab.callLoadUpdates();	
 		}
 	}
 }

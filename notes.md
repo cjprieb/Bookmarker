@@ -10,22 +10,24 @@
   * tests
 * 2 add controls to update list 
 	* ~~limit parsing to X hours ago~~
+	* ~~parse genres option~~
 	* limit to single website
-	* parse genres option
-* 1 add F5 genre/summary loading
+* 2 add F5 genre/summary loading
 * 2 Add egscans support
 	tests
 * 1 create "add url" dialog
 * 4 create search box for saved bookmarks
-* 1 Add genre column to updates (or some way to notify that summary is loaded)
+* ~~1 Add genre column to updates (or some way to notify that summary is loaded)~~
 * 2 remove unwanted genres
-* 2 dialog for genres
-* 2 dialog for editing manga
+* 4 dialog for genres
+* 4 dialog for editing manga
 * 4 update from summary panel
 * 8 add tv shows tab
 * 2 add links to URLs in summary
 * ~~1 add summary to (saved) media item~~
 * 1 display alt titles
+* 4 specify preferred order for websites
+* 1 save online update tab control values
 
 ## BUGS
 * ~~No title or chapter links for media summaries~~
@@ -33,6 +35,7 @@
 * ~~display summary as html~~
 * ~~update count is not total, but rather single parsing~~
 * ~~saved media items don't seem to have a chapter url, nor title url~~
+* Refresh duplicates items in list (online update tab)
 
 ## KANGAETE KOTO
 * how to handle multiple updates for the same item??
@@ -45,5 +48,6 @@
 * load categories
 * whether to save summaries
 * save control settings
+* go further back to find saved media?
 
 http://rmarkdown.rstudio.com/authoring_basics.html

@@ -72,7 +72,7 @@ public class SavedMediaTableModel extends TAbstractTableModel<Media> {
 		Object obj = "";
 		
 		TTableColumn column = _columns[columnIndex];
-		if ( column == DataFields.TITLE_COL ) { obj = item._displayTitle; }
+		if ( column == DataFields.TITLE_COL ) { obj = item.getDisplayTitle(); }
 		else if ( column == DataFields.DATE_COL ) { obj = item._lastReadDate; }
 		else if ( column == DataFields.PLACE_COL ) { obj = item._lastReadPlace; }
 		else if ( column == DataFields.FAVORITE_COL ) { obj = item._rating; }

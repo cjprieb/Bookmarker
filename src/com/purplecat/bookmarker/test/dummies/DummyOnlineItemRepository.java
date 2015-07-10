@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.services.databases.IOnlineMediaRepository;
@@ -60,6 +61,13 @@ public class DummyOnlineItemRepository implements IOnlineMediaRepository {
 	@Override
 	public void delete(long id) {
 		_map.remove(id);
+	}
+
+	@Override
+	public List<OnlineMediaItem> queryByMediaId(long mediaId) {
+		return _map.values().stream()
+				.filter(item -> item._mediaId == mediaId)
+				.collect(Collectors.toList());
 	}
 
 }

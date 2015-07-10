@@ -14,4 +14,6 @@ public interface IWebsiteParser {
 	public WebsiteInfo getInfo();
 
 	public OnlineMediaItem loadItem(OnlineMediaItem item) throws ServiceException;
+
+	public boolean urlMatches(String url);
 }

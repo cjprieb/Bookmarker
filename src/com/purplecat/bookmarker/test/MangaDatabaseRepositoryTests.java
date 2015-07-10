@@ -25,6 +25,7 @@ import com.purplecat.bookmarker.sql.IConnectionManager;
 import com.purplecat.bookmarker.test.modules.TestDatabaseModule;
 import com.purplecat.commons.extensions.DateTimeFormats;
 import com.purplecat.commons.tests.GetRandom;
+import com.purplecat.commons.utils.StringUtils;
 
 public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	private static IConnectionManager _connectionManager;
@@ -33,6 +34,8 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	private static List<Media> _randomSavedMedia;
 	private static String[] _sampleTitles = { "360° material", "chihayafuru", "7 centi!", "gozen 3-ji no muhouchitai", "chikutaku bonbon", 
 		"d. n. angel", "yume no shizuku ougon no torikago", "birdmen", "adventure of sinbad", "twelve nights" };
+	
+	private static long[] _sampleAltTitleIds = { 5, 6, 7, 9, 10, 11, 26, 28, 31, 46, 54, 60, 67 };
 
 	@BeforeClass
 	public static void setUpBeforeTest() throws Exception {
@@ -137,7 +140,7 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	public void testInsert() {
 		try {
 			Media media = new Media();
-			media._displayTitle = GetRandom.getString(6);
+			media.setDisplayTitle(GetRandom.getString(6));
 			media._isSaved = false;
 			_database.insert(media);
 		} catch (ServiceException e) {
@@ -155,7 +158,7 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	public void testInsertSaved() {
 		try {
 			Media media = new Media();
-			media._displayTitle = GetRandom.getString(6);
+			media.setDisplayTitle(GetRandom.getString(6));
 			media._lastReadPlace._chapter++;
 			media._chapterUrl = "http://sampleurl";
 			media._titleUrl = "http://www.sampleurl.com/thetitle";
@@ -180,11 +183,40 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	}
 
 	@Test
+	public void testInsertFind() {
+		try {
+			Media media = new Media();
+			media.setDisplayTitle(GetRandom.getString(6));
+			media._lastReadPlace._chapter++;
+			media._chapterUrl = "http://sampleurl";
+			media._titleUrl = "http://www.sampleurl.com/thetitle";
+			media._storyState = EStoryState.NEW_BOOKMARK;
+			media._notes = "Some notes!";
+			media._rating = EFavoriteState.GOOD;
+			media._lastReadDate = new DateTime();
+			media._isSaved = true;
+			_database.insert(media);
+			
+			Assert.assertTrue("Invalid id", media._id > 0);	
+			System.out.println("Media added: "  + media._id);
+			
+			List<Media> foundMedia = _database.queryByTitle(media.getDisplayTitle());
+			Assert.assertNotNull("list is null", foundMedia);
+			Assert.assertTrue("list has no items", foundMedia.size() > 0);
+			Assert.assertEquals("wrong id", media._id, foundMedia.get(0)._id);
+			Assert.assertEquals("wrong title", media.getDisplayTitle(), foundMedia.get(0).getDisplayTitle());
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail("Exception occurred");
+		}
+	}
+
+	@Test
 	public void testUpdate() {
 		try {
 			Media media = GetRandom.getItem(_randomSavedMedia);
 			
-			media._displayTitle = GetRandom.getString(6);
+			media.setDisplayTitle(GetRandom.getString(6));
 			media._lastReadPlace._chapter++;
 			media._chapterUrl = "http://sampleurl";
 			media._storyState = EStoryState.MIDDLE_CHAPTER;
@@ -208,11 +240,47 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	}
 
 	@Test
+	public void testUpdateFind() {
+		try {
+			Media media = GetRandom.getItem(_randomSavedMedia);
+			
+			String oldTitle = media.getDisplayTitle();
+
+			media.setDisplayTitle(GetRandom.getString(6));
+			media._lastReadPlace._chapter++;
+			media._chapterUrl = "http://sampleurl";
+			media._titleUrl = "http://www.sampleurl.com/thetitle";
+			media._storyState = EStoryState.NEW_BOOKMARK;
+			media._notes = "Some notes!";
+			media._rating = EFavoriteState.GOOD;
+			media._lastReadDate = new DateTime();
+			media._isSaved = true;
+			_database.update(media);
+			
+			Assert.assertTrue("Invalid id", media._id > 0);	
+			System.out.println("Media added: "  + media._id);
+			
+			List<Media> foundMedia = _database.queryByTitle(media.getDisplayTitle());
+			Assert.assertNotNull("list is null", foundMedia);
+			Assert.assertTrue("list has no items", foundMedia.size() > 0);
+			Assert.assertEquals("wrong id", media._id, foundMedia.get(0)._id);
+			Assert.assertEquals("wrong title", media.getDisplayTitle(), foundMedia.get(0).getDisplayTitle());
+
+			foundMedia = _database.queryByTitle(oldTitle);
+			Assert.assertNotNull("list is null", foundMedia);
+			Assert.assertEquals("list has items", 1, foundMedia.size()); //will be one as we didn't remove the old title
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail("Exception occurred");
+		}
+	}
+
+	@Test
 	public void testUpdateNonSaved() {
 		try {
 			Media media = _database.queryById(23660);//known unsaved item
 			
-			media._displayTitle = GetRandom.getString(6);
+			media.setDisplayTitle(GetRandom.getString(6));
 			media._lastReadPlace._chapter++;
 			media._chapterUrl = "http://sampleurl";
 			media._lastReadDate = new DateTime();
@@ -257,9 +325,32 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 				System.out.println("looking for \"" + title + "\"");
 				List<Media> list = _database.queryByTitle(title);
 				Assert.assertNotNull("List is null", list);
-				Assert.assertTrue("No elements matching " + title, list.size() > 0);
-				System.out.println("  match found: "  + list.get(0)._displayTitle);
+				Assert.assertEquals("No elements matching " + title, 1, list.size());
+				System.out.println("  match found: "  + list.get(0).getDisplayTitle());
+				
+				boolean bTitleFound = list.get(0).getDisplayTitle().equalsIgnoreCase(title);
+				for ( String altTitle : list.get(0)._altTitles ) {
+					if ( altTitle.equalsIgnoreCase(title) ) {
+						bTitleFound = true;
+						break;
+					}
+				}
+				Assert.assertTrue("no title found in media", bTitleFound);
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail("Exception occurred");
+		}
+	}
+
+	@Test
+	public void testLoadItemWithMultipleTitles() {
+		try {
+			long id = _sampleAltTitleIds[GetRandom.getInteger(0, _sampleAltTitleIds.length-1)];
+			Media media = _database.queryById(id);
+			Assert.assertNotNull("media is null", media);
+			Assert.assertTrue("no alt titles", media._altTitles.size() > 0);
+			checkSavedMediaItem(media);			
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail("Exception occurred");
@@ -268,13 +359,13 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	
 	protected void checkMediaItem(Media media) {
 		Assert.assertTrue("id is not valid", media._id > 0);
-		Assert.assertTrue("no title", media._displayTitle != null && media._displayTitle.length() > 0);
+		Assert.assertTrue("no title", !StringUtils.isNullOrEmpty(media.getDisplayTitle()));
 	}
 	
 	protected void checkSavedMediaItem(Media media) {
 		System.out.println("checking saved media item: " + media);
 		Assert.assertTrue("id is not valid", media._id > 0);
-		Assert.assertTrue("no title", media._displayTitle != null && media._displayTitle.length() > 0);
+		Assert.assertTrue("no title", !StringUtils.isNullOrEmpty(media.getDisplayTitle()));
 		Assert.assertTrue("not saved", media._isSaved);
 		Assert.assertNotNull("no last read date", media._lastReadDate);		
 		Assert.assertTrue("invalid last read date: " + media._lastReadDate.toString(DateTimeFormats.SQLITE_DATE_FORMAT), media._lastReadDate.isAfter(new DateTime(2000, 1, 1, 0, 0)));
@@ -285,7 +376,7 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	
 	protected void checkEquals(Media expected, Media actual) {
 		Assert.assertEquals("id mismatch", expected._id, actual._id);
-		Assert.assertEquals("title mismatch", expected._displayTitle, actual._displayTitle);
+		Assert.assertEquals("title mismatch", expected.getDisplayTitle(), actual.getDisplayTitle());
 		Assert.assertEquals("saved mismatch", expected._isSaved, actual._isSaved);
 		if ( expected._lastReadDate != null && actual._lastReadDate != null ) {
 			Assert.assertEquals("last read date mismatch", 

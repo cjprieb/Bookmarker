@@ -6,11 +6,13 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
+import com.purplecat.bookmarker.extensions.TitleExt;
+
 public class Media extends BaseDatabaseItem implements Comparable<Media> {
 	
 	public String _chapterUrl;
 
-	public String _displayTitle;
+	private String _displayTitle;
 	
 	public final List<Genre> _genres;
 	
@@ -37,10 +39,25 @@ public class Media extends BaseDatabaseItem implements Comparable<Media> {
 	public Place _updatedPlace;
 	
 	public String _updatedUrl;
+
+	public List<String> _altTitles;
 	
 	public Media() {
 		_lastReadPlace = new Place();
 		_genres = new ArrayList<Genre>();
+		_altTitles = new ArrayList<String>(1);
+	}
+	
+	public String getDisplayTitle() {
+		return _displayTitle;
+	}
+	
+	public void setDisplayTitle(String s) {
+		_displayTitle = s;
+		String stripped = TitleExt.stripTitle(s);
+		if ( _altTitles.stream().noneMatch(item -> TitleExt.stripTitle(item).equals(stripped)) ) {
+			_altTitles.add(s);
+		}
 	}
 	
 	public boolean isUpdated() {
@@ -111,9 +128,11 @@ public class Media extends BaseDatabaseItem implements Comparable<Media> {
 	}
 
 	public void updateFrom(OnlineMediaItem item) {
-		this._updatedDate = item._updatedDate;
-		this._updatedPlace = item._updatedPlace;
-		this._updatedUrl = item._chapterUrl;
+		if ( item._id > 0 ) {
+			this._updatedDate = item._updatedDate;
+			this._updatedPlace = item._updatedPlace;
+			this._updatedUrl = item._chapterUrl;
+		}
 		this._summary = item._summary;
 		this._genres.clear();
 		this._genres.addAll(item._genres);

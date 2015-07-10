@@ -6,8 +6,8 @@ import com.purplecat.bookmarker.models.Media;
 @Singleton
 public class SavedMediaSummaryPanel extends MediaSummaryPanel {
 	public void update(Media view) {
-		_dataTitle.setText(view._displayTitle);		
-//		setAltTitles(view._altTitles);
+		_dataTitle.setText(view.getDisplayTitle());		
+		setAltTitles(view.getDisplayTitle(), view._altTitles);
 		setUpdateColor(view._isSaved && view.isUpdated(), view.isRead());
 //		setAuthor(view._author);
 		if ( view.isUpdated() ) {

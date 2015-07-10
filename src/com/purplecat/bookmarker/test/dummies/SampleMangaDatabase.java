@@ -2,9 +2,9 @@ package com.purplecat.bookmarker.test.dummies;
 
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -43,11 +43,12 @@ public class SampleMangaDatabase extends SampleDatabaseService<Media> implements
 				Media media = new Media();
 				int order = obj.getInt("order");
 				media._id = obj.getInt("_id");
-				media._displayTitle = obj.getString("_displayTitle");
+				media.setDisplayTitle(obj.getString("_displayTitle"));
 				media._lastReadPlace = parsePlace(obj.getJsonObject("_lastReadPlace"));
 				media._lastReadDate = parseDate(obj.getString("_lastReadDate"));
 				media._updatedPlace = parsePlace(obj.getJsonObject("_updatedPlace"));
 				media._updatedDate = parseDate(obj.containsKey("_updatedDate") ? obj.getString("_updatedDate") : null);
+				media._titleUrl = obj.containsKey("_titleUrl") ? obj.getString("_titleUrl") : null;
 				media._isSaved = true;
 //				System.out.println("Adding to list: " + media);
 				insert(media);
@@ -90,18 +91,13 @@ public class SampleMangaDatabase extends SampleDatabaseService<Media> implements
 	
 	@Override
 	public List<Media> querySavedMedia(IListLoadedObserver<Media> observer) {
-		// TODO Auto-generated method stub
-		return null;
+		return _map.values().stream()
+				.collect(Collectors.toList());
 	}
 	@Override
-	public List<Media> queryByTitle(String title) {		
-		List<Media> list = new LinkedList<Media>();
-		System.out.println("querying for " + title);
-		for ( Media media : this._map.values() ) {
-			if ( media._displayTitle.equalsIgnoreCase(title) ) {
-				list.add(media);
-			}
-		}
-		return list;
+	public List<Media> queryByTitle(String title) {	
+		return _map.values().stream()
+				.filter(media -> media.getDisplayTitle().equalsIgnoreCase(title))
+				.collect(Collectors.toList());
 	}
 }

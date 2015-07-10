@@ -1,6 +1,7 @@
 package com.purplecat.bookmarker.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.joda.time.DateTime;
 
@@ -10,7 +11,11 @@ import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.UrlPatternResult;
 import com.purplecat.bookmarker.services.databases.DatabaseException;
+import com.purplecat.bookmarker.services.databases.IGenreRepository;
 import com.purplecat.bookmarker.services.databases.IMediaRepository;
+import com.purplecat.bookmarker.services.databases.IOnlineMediaRepository;
+import com.purplecat.bookmarker.services.websites.IWebsiteList;
+import com.purplecat.bookmarker.services.websites.IWebsiteParser;
 import com.purplecat.bookmarker.sql.IConnectionManager;
 import com.purplecat.commons.logs.ILoggingService;
 
@@ -19,37 +24,21 @@ public class SavedMediaService {
 	public final IConnectionManager _connectionManager;
 	public final IMediaRepository _database;
 	public final UrlPatternService _patterns;
+	public final IWebsiteList _websites;
+	public final IOnlineMediaRepository _onlineDatabase;
+	public final IGenreRepository _genreDatabase;
 	
 	@Inject
-	public SavedMediaService(ILoggingService logging, IConnectionManager mgr, IMediaRepository database, UrlPatternService patterns) {
+	public SavedMediaService(ILoggingService logging, IConnectionManager mgr, IMediaRepository database, IOnlineMediaRepository onlineDatabase,
+			IGenreRepository genreDatabase, UrlPatternService patterns, IWebsiteList websites) {
 		_logging = logging;
 		_connectionManager = mgr;
 		_database = database;
 		_patterns = patterns;
+		_websites = websites;
+		_onlineDatabase = onlineDatabase;
+		_genreDatabase = genreDatabase;
 	}
-	
-//	public IMediaRepository getRepository() {
-//		return _database;
-//	}
-
-//	public void add(Media item) throws ServiceException {
-//		throw new UnsupportedOperationException();
-		//_database.insert(item);
-//	}
-
-//	public void edit(Media item) throws ServiceException {
-//		throw new UnsupportedOperationException();
-//		if ( item._id <= 0 ) {
-//			throw new ServiceException(ServiceException.INVALID_ID);
-//		}
-//		
-//		_database.update(item);
-//	}
-
-//	public void remove(long id) throws ServiceException {
-//		throw new UnsupportedOperationException();
-//		_database.delete(id);
-//	}
 
 	public Media get(long id) throws ServiceException {
 		if ( id <= 0 ) {
@@ -78,7 +67,7 @@ public class SavedMediaService {
 				
 				if ( list.size() == 0 ) {
 					media = new Media();
-					media._displayTitle = patternResult._title;
+					media.setDisplayTitle(patternResult._title);
 				}
 				else if ( list.size() == 1 ) {
 					media = list.get(0);
@@ -142,7 +131,7 @@ public class SavedMediaService {
 		}
 	}
 
-	public Media updateFromOnlineItem(OnlineMediaItem onlineItem) throws ServiceException  {	
+	public Media updateFromOnlineItem(OnlineMediaItem onlineItem) throws ServiceException {	
 		Media media = null;
 		ServiceException serviceException = null;
 		try {
@@ -180,5 +169,64 @@ public class SavedMediaService {
 		else {
 			return media;
 		}
+	}
+
+	public OnlineMediaItem loadMediaSummary(long mediaId, String url) throws ServiceException {	
+		OnlineMediaItem onlineItem = null;
+		
+		Optional<IWebsiteParser> matchingParser = _websites.getList().stream()
+				.filter(parser -> parser.urlMatches(url))
+				.findFirst();
+		
+		if ( matchingParser.isPresent() ) {
+			ServiceException serviceException = null;
+			
+			try {
+				_connectionManager.open();
+				Optional<OnlineMediaItem> optOnlineItem = _onlineDatabase.queryByMediaId(mediaId).stream()
+					.filter(item -> item._websiteName.equals(matchingParser.get().getInfo()._name))
+					.findFirst();	
+				if ( optOnlineItem.isPresent() ) {
+					onlineItem = optOnlineItem.get();
+				}	
+			}
+			catch (DatabaseException e) {
+				_logging.error("Saved Media Service", "Exception update from online item", e);
+				serviceException = new ServiceException("Error loading summary for media item " + mediaId + " from " + url, ServiceException.SQL_ERROR);
+			}
+			finally {
+				_connectionManager.close();
+			}
+			
+	
+			if ( onlineItem == null ) {
+				onlineItem = new OnlineMediaItem();
+				onlineItem._mediaId = mediaId;
+			}
+			onlineItem._titleUrl = url;
+			matchingParser.get().loadItem(onlineItem);
+			
+			try {
+				_connectionManager.open();
+				
+				if ( onlineItem._id > 0 ) {
+					_onlineDatabase.update(onlineItem);	
+				}
+				else {					
+					_genreDatabase.updateGenreList(onlineItem._genres, mediaId);		
+				}	
+			}
+			catch (DatabaseException e) {
+				_logging.error("Saved Media Service", "Exception update from online item", e);
+				serviceException = new ServiceException("Error loading summary for media item " + mediaId + " from " + url, ServiceException.SQL_ERROR);
+			}
+			finally {
+				_connectionManager.close();
+			}	
+			if ( serviceException != null ) {
+				throw serviceException;
+			}
+		}
+		return onlineItem;
 	}
 }

@@ -1,6 +1,8 @@
 package com.purplecat.bookmarker.test;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.junit.Assert;
@@ -165,5 +167,33 @@ public class WebsiteLoadingTests extends DatabaseConnectorTestBase {
 			}
 		}
 	}
+	
+//	@Test
+//	public void loadWebsitesTwice() {
+//		Injector injector = Guice.createInjector(new DatabaseWebsiteScrapingModule());		
+//		OnlineUpdateTask _service = injector.getInstance(OnlineUpdateTask.class);	
+//		DummyThreadObserver _observer = injector.getInstance(DummyThreadObserver.class);
+//		SampleWebsiteList _websites = injector.getInstance(SampleWebsiteList.class);
+//		
+//		int hoursAgo = _websites.getSampleHoursAgo();
+//		_service.loadOnlineUpdates(hoursAgo, false, _websites.getList());
+//		_service.loadOnlineUpdates(hoursAgo, false, _websites.getList());
+//		
+//		List<OnlineMediaItem> list = _observer.getList();
+//		Assert.assertNotNull("list is null", list);
+//		Assert.assertTrue("list has no items", list.size() > 0);
+//		Assert.assertTrue(_observer.getItemsFound() > 0);
+//		Assert.assertEquals(_observer.getItemsParsed(), _observer.getItemsFound());
+//		
+//		Set<Long> mediaIdsInList = new HashSet<Long>();
+//		for ( OnlineMediaItem item : _observer.getList() ) {
+//			if ( mediaIdsInList.contains(item._mediaId) ) {
+//				Assert.fail("media item already in list: " + item._mediaId);
+//			}
+//			else {
+//				mediaIdsInList.add(item._mediaId);
+//			}
+//		}
+//	}
 
 }

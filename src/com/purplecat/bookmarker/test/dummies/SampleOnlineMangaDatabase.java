@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -115,5 +116,12 @@ public class SampleOnlineMangaDatabase extends SampleDatabaseService<OnlineMedia
 			insert(item);
 		}
 		return item;
+	}
+
+	@Override
+	public List<OnlineMediaItem> queryByMediaId(long mediaId) {
+		return _map.values().stream()
+				.filter(item -> item._mediaId == mediaId)
+				.collect(Collectors.toList());
 	}
 }

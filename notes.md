@@ -11,7 +11,7 @@
 * 2 add controls to update list 
 	* ~~limit parsing to X hours ago~~
 	* ~~parse genres option~~
-	* limit to single website
+	* ~~limit to single website~~
 * 2 add F5 genre/summary loading
 * 2 Add egscans support
 	tests
@@ -25,7 +25,7 @@
 * 8 add tv shows tab
 * 2 add links to URLs in summary
 * ~~1 add summary to (saved) media item~~
-* 1 display alt titles
+* ~~1 display alt titles~~
 * 4 specify preferred order for websites
 * 1 save online update tab control values
 
@@ -35,7 +35,8 @@
 * ~~display summary as html~~
 * ~~update count is not total, but rather single parsing~~
 * ~~saved media items don't seem to have a chapter url, nor title url~~
-* Refresh duplicates items in list (online update tab)
+* refresh duplicates items in list (online update tab)
+* don't show display title in alt titles
 
 ## KANGAETE KOTO
 * how to handle multiple updates for the same item??
@@ -49,5 +50,6 @@
 * whether to save summaries
 * save control settings
 * go further back to find saved media?
+* how to handle database cleaning
 
 http://rmarkdown.rstudio.com/authoring_basics.html

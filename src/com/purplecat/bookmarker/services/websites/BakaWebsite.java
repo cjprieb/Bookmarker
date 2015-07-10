@@ -139,6 +139,11 @@ public class BakaWebsite implements IWebsiteParser {
 		return items;
 	}
 
+	@Override
+	public boolean urlMatches(String url) {
+		return !StringUtils.isNullOrEmpty(url) && url.contains("mangaupdates");
+	}
+
 	private DateTime parseHeadingDate(String text) {
 		// Saturday, July 4th 2015
 		text = text.replaceAll(".+?, (\\w+) (\\d+)\\w+ (\\d+)", "$1 $2 $3");

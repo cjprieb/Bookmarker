@@ -110,7 +110,7 @@ public class BookmarkerStart extends MyApplication implements IWebsiteLoadObserv
 
 	@Override
 	public void notifyItemParsed(OnlineMediaItem item, int itemsParsed,	int totalUpdateCount) {
-		if ( _totalUpdateCount != totalUpdateCount) {
+		if ( totalUpdateCount >= 0 && _totalUpdateCount != totalUpdateCount ) {
 			updateIcon(Color.yellow, Color.black, totalUpdateCount);
 		}
 	}

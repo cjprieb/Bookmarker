@@ -76,8 +76,10 @@ public class UpdateMediaObserverControl implements IWebsiteLoadObserver {
 
 	@Override
 	public void notifyItemParsed(OnlineMediaItem item, int itemsParsed, int totalUpdateCount) {
-		_progressBar.setValue(itemsParsed);
-		if ( _updateCount != totalUpdateCount ) {
+		if ( itemsParsed >= -1 ) {
+			_progressBar.setValue(itemsParsed);
+		}
+		if ( totalUpdateCount >= -1 && _updateCount != totalUpdateCount ) {
 			_updateCount = totalUpdateCount;
 			updateIcons(Color.yellow, Color.black, _updateCount);
 		}

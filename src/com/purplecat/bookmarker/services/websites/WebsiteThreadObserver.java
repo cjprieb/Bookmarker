@@ -1,6 +1,5 @@
 package com.purplecat.bookmarker.services.websites;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +21,6 @@ import com.purplecat.commons.threads.IThreadPool;
 public class WebsiteThreadObserver implements IWebsiteLoadObserver, Runnable {
 	
 	private final IThreadPool _threadPool;
-	private List<IWebsiteLoadObserver> _observers;
 	private final IWebsiteList _websites;
 	private final IOnlineMediaRepository _onlineRepository;
 	
@@ -30,23 +28,20 @@ public class WebsiteThreadObserver implements IWebsiteLoadObserver, Runnable {
 	private int _hoursAgo;
 	private boolean _loadGenres;
 	private Iterable<IWebsiteParser> _selectedWebsites;
+	private Iterable<IWebsiteLoadObserver> _observers;
 	
 	@Inject
 	public WebsiteThreadObserver(IThreadPool threadPool, IWebsiteList websites, IOnlineMediaRepository onlineRepository, ILoggingService logging, IConnectionManager mgr) {
 		_threadPool = threadPool;
 		_websites = websites;
 		_onlineRepository = onlineRepository;
-		_observers = new LinkedList<IWebsiteLoadObserver>();
 		_task = new OnlineUpdateTask(this, _onlineRepository, logging, mgr);
 	}
 	
-	public void addWebsiteLoadObserver(IWebsiteLoadObserver obs) {
-		_observers.add(obs);
-	}
-	
-	public void setLoadParameters(int hoursAgo, boolean loadGenres, boolean loadAll, WebsiteInfo selectedWebsite) {
+	public void setLoadParameters(int hoursAgo, boolean loadGenres, boolean loadAll, WebsiteInfo selectedWebsite, Iterable<IWebsiteLoadObserver> observers) {
 		_hoursAgo = hoursAgo;
 		_loadGenres = loadGenres;
+		_observers = observers;
 		
 		if ( loadAll ) {
 			_selectedWebsites = _websites.getList();

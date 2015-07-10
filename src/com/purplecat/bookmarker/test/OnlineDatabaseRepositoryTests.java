@@ -2,6 +2,7 @@ package com.purplecat.bookmarker.test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.joda.time.DateTime;
 import org.junit.After;
@@ -114,7 +115,7 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			item._mediaId = media._id;
 			item._lastReadDate = new DateTime(media._lastReadDate);
 			item._lastReadPlace = media._lastReadPlace;
-			item._displayTitle = media._displayTitle;
+			item._displayTitle = media.getDisplayTitle();
 			item._chapterUrl = "http://bato.to/read/_/319045/shana-oh-yoshitsune_v10_ch38_by_easy-going-scans";
 			item._titleUrl = "http://bato.to/comic/_/comics/shana-oh-yoshitsune-r5256";
 			item._updatedDate = new DateTime();
@@ -255,6 +256,20 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 		}
 	}
 
+	@Test
+	public void testQueryByMediaId() {
+		try {					
+			OnlineMediaItem item = GetRandom.getItem(_randomSavedItems.stream().filter(m -> m.isUpdated()).collect(Collectors.toList()));
+			List<OnlineMediaItem> result = _database.queryByMediaId(item._mediaId);
+			
+			Assert.assertNotNull("Item is null", result);			
+			Assert.assertTrue("No items found", result.size() > 0);
+			Assert.assertTrue("Invalid media id", result.stream().anyMatch(a -> a._id == item._id));
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail("Exception occurred");
+		}
+	}
 
 	@Test
 	public void testRemove() {

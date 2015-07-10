@@ -33,6 +33,7 @@ public class Controller {
 	private final List<SampleTaskObserver> _sampleTaskObservers;
 	private final List<IListLoadedObserver<Media>> _mediaLoadObservers;
 	private final List<IItemChangedObserver<Media>> _mediaUpdateObservers;
+	private List<IWebsiteLoadObserver> _websiteLoadObservers;
 	
 	@Inject
 	public Controller(ILoggingService logging, IThreadPool threadPool, SavedMediaService mangaService, WebsiteThreadObserver observer) {
@@ -44,6 +45,7 @@ public class Controller {
 		_sampleTaskObservers = new LinkedList<SampleTaskObserver>();
 		_mediaLoadObservers = new LinkedList<IListLoadedObserver<Media>>();
 		_mediaUpdateObservers = new LinkedList<IItemChangedObserver<Media>>();
+		_websiteLoadObservers = new LinkedList<IWebsiteLoadObserver>();
 	}
 	
 	/*------Sample Task action-------*/
@@ -64,13 +66,13 @@ public class Controller {
 		_threadPool.runOnWorkerThread(new SavedMediaLoadTask(_logging, _threadPool, _mediaService, _mediaLoadObservers));
 	}
 
-	/*------Run/Stop Update Thread action-------*/
+	/*------Run/Stop Update Thread action-------*/	
 	public void observeOnlineThreadLoading(IWebsiteLoadObserver obs) {
-		_observer.addWebsiteLoadObserver(obs);
+		_websiteLoadObservers.add(obs);
 	}
 	
 	public void loadUpdateMedia(int hoursAgo, boolean loadGenres, boolean loadAll, WebsiteInfo selectedWebsite) {
-		_observer.setLoadParameters(hoursAgo, loadGenres, loadAll, selectedWebsite);
+		_observer.setLoadParameters(hoursAgo, loadGenres, loadAll, selectedWebsite, _websiteLoadObservers);
 		_threadPool.runOnWorkerThread(_observer);
 	}
 	
@@ -88,6 +90,10 @@ public class Controller {
 	}
 
 	public void updateMangaFromUrl(String url) {
-		_threadPool.runOnWorkerThread(new UpdateMangaFromUrlTask(_mediaService, _mediaUpdateObservers, url));
+		_threadPool.runOnWorkerThread(new UpdateMangaFromUrlTask(_logging, _mediaService, _mediaUpdateObservers, url));
+	}
+	
+	public void loadMediaSummary(long mediaId, String url) {
+		_threadPool.runOnWorkerThread(new LoadMediaSummary(_logging, _mediaService, _websiteLoadObservers, mediaId, url));		
 	}
 }

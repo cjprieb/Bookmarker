@@ -19,7 +19,8 @@
 		"_lastReadPlace" : { "_volume" : 37, "_chapter" : 222 },
 		"_lastReadDate" : "2015-05-06",
 		"_updatedPlace" : { "_volume" : 37, "_chapter" : 223 },
-		"_updatedDate" : "2015-05-14"
+		"_updatedDate" : "2015-05-14",
+		"_titleUrl" : "http://bato.to/comic/_/comics/iede-shounen-to-natsu-no-yoru-r11079"
 	},
 	{
 		"order" :2,

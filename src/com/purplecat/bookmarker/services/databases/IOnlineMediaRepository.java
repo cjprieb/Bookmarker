@@ -9,6 +9,8 @@ public interface IOnlineMediaRepository {
 	public List<OnlineMediaItem> query() throws DatabaseException;
 	
 	public OnlineMediaItem queryById(long id) throws DatabaseException;
+	
+	public List<OnlineMediaItem> queryByMediaId(long mediaId) throws DatabaseException;
 
 	public OnlineMediaItem findOrCreate(OnlineMediaItem item) throws DatabaseException;
 

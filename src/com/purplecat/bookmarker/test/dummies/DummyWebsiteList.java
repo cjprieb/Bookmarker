@@ -84,6 +84,11 @@ public class DummyWebsiteList implements IWebsiteList {
 			return item;
 		}
 
+		@Override
+		public boolean urlMatches(String url) {
+			return false;
+		}
+
 	}
 	
 	public List<IWebsiteParser> _list = new LinkedList<IWebsiteParser>();

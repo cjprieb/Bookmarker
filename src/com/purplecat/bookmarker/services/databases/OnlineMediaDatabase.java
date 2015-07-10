@@ -122,7 +122,7 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 			if ( matches.size() > 0 ) {
 				item._mediaId = matches.get(0)._id;
 				item._genres.addAll(matches.get(0)._genres);
-				existingList = findExistingOnlineItems(conn, item._mediaId);
+				existingList = queryByMediaId(item._mediaId);
 //				_logging.debug(3, TAG, "Found existing online items: " + existingList.size());
 				
 				for ( OnlineMediaItem existing : existingList ) {
@@ -133,21 +133,21 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 				}
 			}
 
-//			_logging.debug(3, TAG, "Disabling commit");
+			_logging.debug(3, TAG, "Disabling commit");
 			conn.setAutoCommit(false);
 			
 			if (matches.size() == 0) {
 				//Insert new Media item
-//				_logging.debug(4, TAG, "Inserting media");
+				_logging.debug(4, TAG, "Inserting media");
 				item._mediaId = createMedia(conn, item);
 			}
 			
 			if ( result != null ) {
-//				_logging.debug(4, TAG, "Updating online item");
+				_logging.debug(4, TAG, "Updating online item");
 				update(result);
 			}
 			else {
-//				_logging.debug(4, TAG, "Inserting online item");
+				_logging.debug(4, TAG, "Inserting online item");
 				insert(conn, item);
 				if ( item._mediaId > 0 ) {
 					//matching media was found, but not matching online media, 
@@ -162,11 +162,11 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 			if ( existingList != null ) {
 				maxId = OnlineMediaItemExt.getIdWithMaxPlace(existingList, item);
 			}
-//			_logging.debug(4, TAG, "Updating media");
+			_logging.debug(4, TAG, "Updating media");
 			updateMedia(conn, item._mediaId, maxId > 0 ? maxId : result._id);
 			
 			conn.commit();
-//			_logging.debug(3, TAG, "All committed");
+			_logging.debug(3, TAG, "All committed");
 		} catch (SQLException e) {
 			throw new DatabaseException("findOrCreate failed", e);
 		} 
@@ -178,7 +178,7 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 		try {
 			Connection conn = _connectionManager.getConnection();
 			insert(conn, item);
-			List<OnlineMediaItem> existingList = findExistingOnlineItems(conn, item._mediaId);
+			List<OnlineMediaItem> existingList = queryByMediaId(item._mediaId);
 			updateMedia(conn, item._mediaId, OnlineMediaItemExt.getIdWithMaxPlace(existingList, item));
 		} catch (SQLException e) {
 			throw new DatabaseException("Insert failed", e);
@@ -211,7 +211,7 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 			stmt.executeUpdate();
 
 			_genreDatabase.updateGenreList(item._genres, item._mediaId);
-			List<OnlineMediaItem> existingList = findExistingOnlineItems(conn, item._mediaId);
+			List<OnlineMediaItem> existingList = queryByMediaId(item._mediaId);
 			updateMedia(conn, item._mediaId, OnlineMediaItemExt.getIdWithMaxPlace(existingList, item));
 		} catch (SQLException e) {
 			throw new DatabaseException("Update failed", sql, e);
@@ -230,22 +230,28 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 			throw new DatabaseException("Delete failed", sql, e);
 		} 
 	}
-	
-	private List<OnlineMediaItem> findExistingOnlineItems(Connection conn, long mediaId) throws SQLException, DatabaseException {
-		List<Genre> genres = _genreDatabase.queryByMediaId(mediaId);
+
+	@Override
+	public List<OnlineMediaItem> queryByMediaId(long mediaId) throws DatabaseException {
+		String sql = SELECT_ITEMS + " WHERE UpbkMedia_ID = @mediaId";
 		List<OnlineMediaItem> existing = new LinkedList<OnlineMediaItem>();
-		NamedStatement stmt = new NamedStatement(conn, SELECT_ITEMS + " WHERE UpbkMedia_ID = @mediaId");
-		stmt.setLong("@mediaId", mediaId);
-		NamedResultSet result = stmt.executeQuery();
-		while ( result.next() ) {
-			OnlineMediaItem item = loadOnlineMediaFromResultSet(result);
-			item._genres.addAll(genres);
-			existing.add(item);
-			break;
-		}
+		try {
+			Connection conn = _connectionManager.getConnection();
+			List<Genre> genres = _genreDatabase.queryByMediaId(mediaId);
+			NamedStatement stmt = new NamedStatement(conn, sql);
+			stmt.setLong("@mediaId", mediaId);
+			NamedResultSet result = stmt.executeQuery();
+			while ( result.next() ) {
+				OnlineMediaItem item = loadOnlineMediaFromResultSet(result);
+				item._genres.addAll(genres);
+				existing.add(item);
+			}
+		} catch (SQLException e) {
+			throw new DatabaseException("queryByMediaId failed", sql, e);
+		} 
 		return existing;
 	}
-	
+
 	private long createMedia(Connection conn, OnlineMediaItem item) throws SQLException {
 		String sql = "INSERT INTO Media (MdDisplayTitle, SvdIsSaved) VALUES (@title, @isSaved)";
 		NamedStatement stmt = new NamedStatement(conn, sql);

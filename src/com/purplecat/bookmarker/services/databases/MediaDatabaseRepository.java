@@ -42,12 +42,14 @@ public class MediaDatabaseRepository implements IMediaRepository {
 	public final ILoggingService _logging;
 	public final ConnectionManager _connectionManager;
 	public final GenreDatabaseRepository _genreDatabase;
+	public final TitleDatabaseRepository _titleDatabase;
 	 
 	@Inject
-	public MediaDatabaseRepository(ILoggingService logger, ConnectionManager mgr, GenreDatabaseRepository genreDatabase) {
+	public MediaDatabaseRepository(ILoggingService logger, ConnectionManager mgr, GenreDatabaseRepository genreDatabase, TitleDatabaseRepository titleRepository) {
 		_logging = logger;
 		_connectionManager = mgr;
 		_genreDatabase = genreDatabase;
+		_titleDatabase = titleRepository;
 	}
 	
 	/**
@@ -59,7 +61,7 @@ public class MediaDatabaseRepository implements IMediaRepository {
 	private Media loadMediaFromResultSet(NamedResultSet result) throws SQLException {
 		Media media = new Media();
 		media._id = result.getLong("_id");
-		media._displayTitle = result.getString("_displayTitle");
+		media.setDisplayTitle(result.getString("_displayTitle"));
 		media._isComplete = result.getBoolean("_isComplete");
 		media._isSaved = result.getBoolean("_isSaved");
 		media._chapterUrl = result.getString("_chapterUrl");
@@ -85,7 +87,8 @@ public class MediaDatabaseRepository implements IMediaRepository {
 			while ( result.next() ) {
 				list.add(loadMediaFromResultSet(result));
 			}
-			loadGenres(conn, list, null);
+			loadAllGenres(conn, list, null);
+			loadAllTitles(conn, list, null);
 		} catch (SQLException e) {
 			throw new DatabaseException("Query failed", SELECT_MEDIA, e);
 		} 
@@ -116,7 +119,8 @@ public class MediaDatabaseRepository implements IMediaRepository {
 					observer.notifyItemLoaded(item, index, total);
 				}
 			}
-			loadGenres(conn, list, observer);
+			loadAllGenres(conn, list, observer);
+			loadAllTitles(conn, list, observer);
 		} catch (SQLException e) {
 			_logging.error(TAG, "Exception querying for saved media", e);
 			throw new DatabaseException("querySavedMedia failed", sql, e);
@@ -138,6 +142,7 @@ public class MediaDatabaseRepository implements IMediaRepository {
 			}
 			if ( media != null ) {
 				loadSingleGenres(conn, Collections.singleton(media));
+				loadSingleTitles(conn, Collections.singleton(media));
 			}
 		} catch (SQLException e) {
 			_logging.error(TAG, "Exception querying for id " + id, e);
@@ -177,6 +182,8 @@ public class MediaDatabaseRepository implements IMediaRepository {
 			}
 			loadSingleGenres(conn, list);
 			_logging.debug(4, TAG, "Genres loaded");
+			loadSingleTitles(conn, list);
+			_logging.debug(4, TAG, "Titles loaded");
 		} catch (SQLException e) {
 			_logging.error(TAG, "Exception querying for title " + title, e);
 			throw new DatabaseException("queryByTitle failed", sql, e);
@@ -196,8 +203,7 @@ public class MediaDatabaseRepository implements IMediaRepository {
 			conn.setAutoCommit(false);
 			
 			NamedStatement stmt = new NamedStatement(conn, sql);
-			stmt.setString("@title", item._displayTitle);
-			stmt.setString("@title", item._displayTitle);
+			stmt.setString("@title", item.getDisplayTitle());
 			stmt.setBoolean("@complete", item._isComplete);
 			stmt.setString("@titleUrl", item._titleUrl);
 			stmt.setBoolean("@saved", item._isSaved);
@@ -208,6 +214,8 @@ public class MediaDatabaseRepository implements IMediaRepository {
 			item._id = stmt.executeInsert();
 			
 			updateHistory(conn, item);
+			
+			_titleDatabase.updateTitleList(item._altTitles, item._id);
 			
 			conn.commit();
 		} catch (SQLException e) {
@@ -227,7 +235,7 @@ public class MediaDatabaseRepository implements IMediaRepository {
 						+ " SvdIsSaved = @saved, SvdStoryState = @state, SvdRating = @rating, SvdNotes = @notes WHERE _id = @id";
 				NamedStatement stmt = new NamedStatement(conn, sql);
 				stmt.setLong("@id", item._id);
-				stmt.setString("@title", item._displayTitle);
+				stmt.setString("@title", item.getDisplayTitle());
 				stmt.setBoolean("@complete", item._isComplete);
 				stmt.setString("@titleUrl", item._titleUrl);
 				stmt.setBoolean("@saved", item._isSaved);
@@ -236,7 +244,9 @@ public class MediaDatabaseRepository implements IMediaRepository {
 				stmt.setString("@notes", item._notes);
 				stmt.executeUpdate();
 				
-				updateHistory(conn, item);			
+				updateHistory(conn, item);
+				
+				_titleDatabase.updateTitleList(item._altTitles, item._id);	
 								
 				conn.commit();
 			} catch (SQLException e) {
@@ -265,7 +275,7 @@ public class MediaDatabaseRepository implements IMediaRepository {
 		}	
 	}
 	
-	private void loadGenres(Connection conn, Collection<Media> list, IListLoadedObserver<Media> observer) throws DatabaseException {
+	private void loadAllGenres(Connection conn, Collection<Media> list, IListLoadedObserver<Media> observer) throws DatabaseException {
 		Map<Long, Set<Genre>> map = _genreDatabase.loadAllMediaGenres();
 		int index = 0;
 		int total = list.size();
@@ -281,12 +291,38 @@ public class MediaDatabaseRepository implements IMediaRepository {
 		}
 	}
 	
+	private void loadAllTitles(Connection conn, Collection<Media> list, IListLoadedObserver<Media> observer) throws DatabaseException {
+		Map<Long, Set<String>> map = _titleDatabase.loadAllMediaTitles();
+		int index = 0;
+		int total = list.size();
+		for ( Media media : list ) {
+			if ( map.containsKey(media._id)) {
+				media._altTitles.clear();
+				media._altTitles.addAll(map.get(media._id));
+			}
+			index++;
+			if ( observer != null ) {
+				observer.notifyItemLoaded(media, index, total);
+			}
+		}
+	}
+	
 	private void loadSingleGenres(Connection conn, Collection<Media> list) throws DatabaseException {
 		if ( list.size() > 0 ) {
 			for ( Media media : list ) {
 				Set<Genre> set = _genreDatabase.loadGenresForMedia(media._id);
 				media._genres.clear();
 				media._genres.addAll(set);
+			}
+		}
+	}
+	
+	private void loadSingleTitles(Connection conn, Collection<Media> list) throws DatabaseException {
+		if ( list.size() > 0 ) {
+			for ( Media media : list ) {
+				List<String> set = _titleDatabase.queryByMediaId(media._id);
+				media._altTitles.clear();
+				media._altTitles.addAll(set);
 			}
 		}
 	}
@@ -312,4 +348,24 @@ public class MediaDatabaseRepository implements IMediaRepository {
 		stmt.setLong("@histId", newHistId);
 		stmt.executeUpdate();	
 	}
+//	
+//	private void insertTitle(Connection conn, long id, String title) throws SQLException {
+//		String sql = "INSERT INTO Title (TtMedia_ID, TtTitle, TtStripped) " +
+//				"VALUES (@mediaId, @title, @stripped)";
+//		NamedStatement stmt = new NamedStatement(conn, sql);
+//		stmt.setLong("@mediaId", id);
+//		stmt.setString("@title", title);
+//		stmt.setString("@stripped", TitleExt.stripTitle(title));
+//		stmt.executeInsert();
+//	}
+//	
+//	private void updateTitles(Connection conn, long id, String title) throws SQLException {
+////		String sql = "INSERT INTO Title (TtMedia_ID, TtTitle, TtStripped) " +
+////				"VALUES (@mediaId, @title, @stripped)";
+////		NamedStatement stmt = new NamedStatement(conn, sql);
+////		stmt.setLong("@mediaId", id);
+////		stmt.setString("@title", title);
+////		stmt.setString("@stripped", TitleExt.stripTitle(title));
+////		stmt.executeInsert();
+//	}
 }

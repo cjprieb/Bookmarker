@@ -16,6 +16,7 @@ import org.joda.time.DateTime;
 import com.google.inject.Inject;
 import com.purplecat.bookmarker.Resources;
 import com.purplecat.bookmarker.extensions.PlaceExt;
+import com.purplecat.bookmarker.extensions.TitleExt;
 import com.purplecat.bookmarker.models.Genre;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.Place;
@@ -27,6 +28,7 @@ import com.purplecat.bookmarker.view.swing.html.SummaryTextRow;
 import com.purplecat.bookmarker.view.swing.observers.LinkClickObserver;
 import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.logs.ILoggingService;
+import com.purplecat.commons.utils.ListUtils;
 import com.purplecat.commons.utils.StringUtils;
 
 public class MediaSummaryPanel {
@@ -295,5 +297,25 @@ public class MediaSummaryPanel {
 			genres.append(genre._name);
 		}
 		_dataGenres.setText(genres.toString());		
+	}
+	
+	protected void setAltTitles(String displayTitle, Iterable<String> altTitles) {	
+		int size = ListUtils.size(altTitles);
+		if ( size > 1 ) {
+			StringBuilder titles = new StringBuilder();
+			String stripped = TitleExt.stripTitle(displayTitle);
+			for ( String s : altTitles ) {
+				if ( !stripped.equals(TitleExt.stripTitle(s)) ) {
+					titles.append(s);
+					break;
+				}
+			}
+			if ( size > 2 ) { titles.append(" (").append(size-2).append(" others)"); }
+			_dataAltTitles.setText(titles.toString());
+			_dataAltTitles.setVisible(true);
+		}
+		else {
+			_dataAltTitles.setVisible(false);	
+		}
 	}
 }

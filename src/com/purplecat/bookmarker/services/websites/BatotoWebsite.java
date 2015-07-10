@@ -140,4 +140,9 @@ public class BatotoWebsite implements IWebsiteParser {
 		return item;
 	}
 
+	@Override
+	public boolean urlMatches(String url) {
+		return !StringUtils.isNullOrEmpty(url) && (url.contains("batoto") || url.contains("bato.to"));
+	}
+
 }

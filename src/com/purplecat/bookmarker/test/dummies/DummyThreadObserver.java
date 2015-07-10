@@ -1,5 +1,6 @@
 package com.purplecat.bookmarker.test.dummies;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import com.google.inject.Singleton;
@@ -63,8 +64,15 @@ public class DummyThreadObserver implements IWebsiteLoadObserver {
 	
 	@Override
 	public void notifyLoadFinished(List<OnlineMediaItem> list) {
+		if ( _list == null ) {
+			_list = new LinkedList<OnlineMediaItem>();
+		}
 		_loadFinished = true;
-		_list = list;
+		for ( OnlineMediaItem item : list ) {
+			if ( !_list.stream().anyMatch(a -> a._id == item._id) ) {
+				_list.add(item);
+			}
+		}
 	}
 	
 

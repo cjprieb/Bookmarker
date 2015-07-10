@@ -205,6 +205,7 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			Assert.assertTrue("list has no items", foundMedia.size() > 0);
 			Assert.assertEquals("wrong id", media._id, foundMedia.get(0)._id);
 			Assert.assertEquals("wrong title", media.getDisplayTitle(), foundMedia.get(0).getDisplayTitle());
+			checkMediaItem(foundMedia.get(0));
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail("Exception occurred");
@@ -360,6 +361,7 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	protected void checkMediaItem(Media media) {
 		Assert.assertTrue("id is not valid", media._id > 0);
 		Assert.assertTrue("no title", !StringUtils.isNullOrEmpty(media.getDisplayTitle()));
+		Assert.assertTrue("no alt title", media._altTitles.size() > 0);
 	}
 	
 	protected void checkSavedMediaItem(Media media) {

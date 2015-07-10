@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -35,13 +36,15 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 	public final ConnectionManager _connectionManager;
 	public final MediaDatabaseRepository _mediaDatabase;
 	public final GenreDatabaseRepository _genreDatabase;
+	public final TitleDatabaseRepository _titleDatabase;
 	 
 	@Inject
-	public OnlineMediaDatabase(ILoggingService logger, ConnectionManager mgr, MediaDatabaseRepository mediaDb, GenreDatabaseRepository genreDb) {
+	public OnlineMediaDatabase(ILoggingService logger, ConnectionManager mgr, MediaDatabaseRepository mediaDb, GenreDatabaseRepository genreDb, TitleDatabaseRepository titleDb) {
 		_logging = logger;
 		_connectionManager = mgr;
 		_mediaDatabase = mediaDb;
 		_genreDatabase = genreDb;
+		_titleDatabase = titleDb;
 	}
 	
 	/**
@@ -140,6 +143,7 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 				//Insert new Media item
 				_logging.debug(4, TAG, "Inserting media");
 				item._mediaId = createMedia(conn, item);
+				_logging.debug(4, TAG, "id: " + item._mediaId);
 			}
 			
 			if ( result != null ) {
@@ -153,9 +157,11 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 					//matching media was found, but not matching online media, 
 					// so reload after insert to load media-specific fields
 					result = queryById(item._id);
+					_logging.debug(4, TAG, "id (queryById): " + result._id);
 				}
 				else {
 					result = item;
+					_logging.debug(4, TAG, "id: " + result._id);
 				}
 			}
 			long maxId = result._id;
@@ -177,6 +183,9 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 	public void insert(OnlineMediaItem item) throws DatabaseException {
 		try {
 			Connection conn = _connectionManager.getConnection();
+			if ( item._mediaId <= 0 ) {
+				item._mediaId = createMedia(conn, item);
+			}
 			insert(conn, item);
 			List<OnlineMediaItem> existingList = queryByMediaId(item._mediaId);
 			updateMedia(conn, item._mediaId, OnlineMediaItemExt.getIdWithMaxPlace(existingList, item));
@@ -252,12 +261,14 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 		return existing;
 	}
 
-	private long createMedia(Connection conn, OnlineMediaItem item) throws SQLException {
+	private long createMedia(Connection conn, OnlineMediaItem item) throws SQLException, DatabaseException {
 		String sql = "INSERT INTO Media (MdDisplayTitle, SvdIsSaved) VALUES (@title, @isSaved)";
 		NamedStatement stmt = new NamedStatement(conn, sql);
 		stmt.setString("@title", item._displayTitle);
 		stmt.setBoolean("@isSaved", item._isSaved);
-		return stmt.executeInsert();
+		long mediaId = stmt.executeInsert();
+		_titleDatabase.updateTitleList(Collections.singleton(item._displayTitle), mediaId);
+		return mediaId;
 	}
 	
 	private void loadGenres(Connection conn, Collection<OnlineMediaItem> list) throws DatabaseException {

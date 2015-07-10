@@ -35,8 +35,9 @@
 * ~~display summary as html~~
 * ~~update count is not total, but rather single parsing~~
 * ~~saved media items don't seem to have a chapter url, nor title url~~
-* refresh duplicates items in list (online update tab)
-* don't show display title in alt titles
+* ~~refresh duplicates items in list (online update tab)~~
+* ~~don't show display title in alt titles~~
+* don't update time when refreshing - keep the oldest time. (but what if it should really be refreshed??)
 
 ## KANGAETE KOTO
 * how to handle multiple updates for the same item??

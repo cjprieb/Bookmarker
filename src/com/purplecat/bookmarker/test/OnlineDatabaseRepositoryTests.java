@@ -16,6 +16,7 @@ import com.google.inject.Injector;
 import com.purplecat.bookmarker.models.Genre;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
+import com.purplecat.bookmarker.models.Place;
 import com.purplecat.bookmarker.services.databases.DatabaseException;
 import com.purplecat.bookmarker.services.databases.GenreDatabaseRepository;
 import com.purplecat.bookmarker.services.databases.IOnlineMediaRepository;
@@ -138,10 +139,53 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	}
 
 	@Test
+	public void testInsertNew() {
+		try {					
+			OnlineMediaItem item = new OnlineMediaItem();
+			item._updatedPlace._volume = 1;
+			item._updatedPlace._chapter = 12;
+			item._mediaId = -1;
+			item._lastReadPlace = new Place();
+			item._displayTitle = GetRandom.getString(10);
+			item._chapterUrl = "http://bato.to/read/_/319045/shana-oh-yoshitsune_v10_ch38_by_easy-going-scans";
+			item._titleUrl = "http://bato.to/comic/_/comics/shana-oh-yoshitsune-r5256";
+			item._updatedDate = new DateTime();
+			item._isIgnored = true;
+			item._newlyAdded = false;
+			item._rating = .75;
+			item._websiteName = "Batoto";
+			_database.insert(item);
+			System.out.println("item created: " + item._id + " (media id: " + item._mediaId + ")");
+			
+			Assert.assertTrue("Invalid id", item._id > 0);
+			item = _database.queryById(item._id);
+			
+			Assert.assertNotNull("item not found", item);
+			
+			long itemId = item._id;
+			long mediaId = item._mediaId;
+			System.out.println("item found: " + item._id + " (media id: " + item._mediaId + ")");
+			
+			OnlineMediaItem actual = _database.findOrCreate(item);
+			Assert.assertNotNull("Item is null", actual);
+			Assert.assertEquals("Invalid id", itemId, actual._id);
+			Assert.assertEquals("Invalid media id", mediaId, actual._mediaId);
+			checkItem(actual);
+			checkEquals(item, actual);
+			
+//			Media media = _savedDatabase.queryById(item._mediaId);
+//			Assert.assertTrue("no alt titles", media._altTitles.size() > 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail("Exception occurred");
+		}
+	}
+
+	@Test
 	public void testUpdate() {
 		try {
 			OnlineMediaItem item = GetRandom.getItem(_randomSavedItems);
-			Media media = this._savedDatabase.queryById(item._mediaId);
+			Media media = _savedDatabase.queryById(item._mediaId);
 			item._updatedPlace._volume = 10;
 			item._updatedPlace._chapter = 38;
 			item._chapterUrl = "http://bato.to/read/_/319045/shana-oh-yoshitsune_v10_ch38_by_easy-going-scans";

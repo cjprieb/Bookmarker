@@ -46,12 +46,10 @@ public class DummyThreadObserver implements IWebsiteLoadObserver {
 	public void notifySiteParsed(WebsiteInfo site, int itemsFound) {
 		_siteLoaded = true;
 		_itemsFound = itemsFound;
-		System.out.println("site parsed: " + itemsFound);
 	}
 	
 	@Override
 	public void notifyItemParsed(OnlineMediaItem item, int itemsParsed, int updateCount) {
-		System.out.println("item parsed: " + updateCount);
 		_itemLoaded = true;
 		_itemsParsed = itemsParsed;
 		_itemsUpdated = updateCount;

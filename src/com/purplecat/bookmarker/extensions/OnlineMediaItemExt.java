@@ -29,10 +29,14 @@ public class OnlineMediaItemExt {
 			existing._rating = newItem._rating;
 		}
 		
-		if ( existing._updatedPlace.compareTo(newItem._updatedPlace) < 0 ) {
+		int placeCompare = existing._updatedPlace.compareTo(newItem._updatedPlace);
+		if ( placeCompare < 0 ) {
 			existing._updatedPlace = newItem._updatedPlace;
 		}
-		existing._updatedDate = newItem._updatedDate;		
+		
+		if ( placeCompare != 0 ) {
+			existing._updatedDate = newItem._updatedDate;
+		}
 	}
 	
 	public static long getIdWithMaxPlace(List<OnlineMediaItem> list, OnlineMediaItem item) {

@@ -3,8 +3,10 @@ package com.purplecat.bookmarker.view.swing.models;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.controller.observers.IItemChangedObserver;
 import com.purplecat.bookmarker.controller.observers.IListLoadedObserver;
+import com.purplecat.bookmarker.controller.observers.ISummaryLoadObserver;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.WebsiteInfo;
@@ -19,9 +21,15 @@ public class SavedMediaTableModel extends TAbstractTableModel<Media> {
 	TTableColumn[] _columns;
 	IResourceService _resources;
 	
-	public SavedMediaTableModel(TTableColumn[] columns, IResourceService resources) {
+	public SavedMediaTableModel(TTableColumn[] columns, Controller ctrl, IResourceService resources) {
 		_columns = columns;
 		_resources = resources;
+
+		MediaListObserver observer = new MediaListObserver();
+		ctrl.observeSavedMediaLoading(observer);
+		ctrl.observeOnlineThreadLoading(observer);
+		ctrl.observeSavedMediaUpdate(observer);
+		ctrl.observeSummaryLoading(observer);
 	}
 	
 	@Override
@@ -82,10 +90,6 @@ public class SavedMediaTableModel extends TAbstractTableModel<Media> {
 		return obj;
 	}
 	
-	public MediaListObserver getObserver() {
-		return new MediaListObserver();
-	}
-	
 	protected void updateItem(Media item) {
 		int iIndex = 0;
 		for ( Media existingItem : _backingList ) {
@@ -95,11 +99,22 @@ public class SavedMediaTableModel extends TAbstractTableModel<Media> {
 				break;
 			}
 			iIndex++;
-		}
-		
+		}		
 	}
 	
-	public class MediaListObserver implements IItemChangedObserver<Media>, IListLoadedObserver<Media>, IWebsiteLoadObserver {
+	protected void updateItem(OnlineMediaItem item) {
+		int iIndex = 0;
+		for ( Media existingItem : _backingList ) {
+			if ( existingItem._id == item._mediaId ) {
+				existingItem.updateFrom(item);
+				SavedMediaTableModel.this.fireTableRowsUpdated(iIndex, iIndex);
+				break;
+			}
+			iIndex++;
+		}
+	}
+	
+	public class MediaListObserver implements IItemChangedObserver<Media>, IListLoadedObserver<Media>, IWebsiteLoadObserver, ISummaryLoadObserver {
 		@Override
 		public void notifyListLoaded(List<Media> list) {
 			_backingList.clear();
@@ -128,15 +143,7 @@ public class SavedMediaTableModel extends TAbstractTableModel<Media> {
 
 		@Override
 		public void notifyItemParsed(OnlineMediaItem item, int itemsParsed, int updateCount) {
-			int iIndex = 0;
-			for ( Media existingItem : _backingList ) {
-				if ( existingItem._id == item._mediaId ) {
-					existingItem.updateFrom(item);
-					SavedMediaTableModel.this.fireTableRowsUpdated(iIndex, iIndex);
-					break;
-				}
-				iIndex++;
-			}
+			updateItem(item);
 		}
 
 		@Override
@@ -145,6 +152,16 @@ public class SavedMediaTableModel extends TAbstractTableModel<Media> {
 		@Override
 		public void notifyLoadFinished(List<OnlineMediaItem> list) {
 			//Filter by Updated?
+		}
+
+		@Override
+		public void notifySummaryLoadStarted(long mediaId) {}
+
+		@Override
+		public void notifySummaryLoadFinished(OnlineMediaItem item) {
+			if ( item != null ) {
+				updateItem(item);
+			}
 		}	
 	}
 	

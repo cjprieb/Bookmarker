@@ -1,11 +1,17 @@
 package com.purplecat.bookmarker.view.swing.components;
 
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
@@ -13,6 +19,8 @@ import javax.swing.table.TableRowSorter;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import com.purplecat.bookmarker.Resources;
+import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.extensions.MediaItemExt;
 import com.purplecat.bookmarker.models.EFavoriteState.FavoriteComparor;
 import com.purplecat.bookmarker.models.Media;
@@ -24,6 +32,7 @@ import com.purplecat.commons.TTableColumn;
 import com.purplecat.commons.extensions.DateTimeFormats.ReverseDateComparor;
 import com.purplecat.commons.swing.AppUtils.IDragDropAction;
 import com.purplecat.commons.swing.TTable;
+import com.purplecat.commons.swing.TablePopupCreator;
 import com.purplecat.commons.swing.Toolbox;
 import com.purplecat.commons.swing.dragdrop.FileDrop;
 import com.purplecat.commons.swing.renderer.ICellRendererFactory;
@@ -36,14 +45,20 @@ public class SavedMediaTableControl {
 	private final JScrollPane _scroll;
 	private final TableRowSorter<SavedMediaTableModel> _sorter;
 	private final TTableColumn[] _columns;
+	private final Controller _controller;
 	private final Toolbox _toolbox;
+	private final IResourceService _resources;
 	
 	@Inject
 	public SavedMediaTableControl(
 			ICellRendererFactory factory, 
+			Controller ctrl, 
 			IResourceService resources, 
 			Toolbox toolbox,
 			@Named("Manga Url") IDragDropAction mangaDropAction) {
+		_resources = resources;
+		_controller = ctrl;
+		_toolbox = toolbox;
 		_columns = new TTableColumn[] {
 				//DataFields.FLAG_COL,
 				DataFields.MEDIA_STATE_COL,
@@ -52,8 +67,7 @@ public class SavedMediaTableControl {
 				DataFields.PLACE_COL,
 				DataFields.DATE_COL
 		};
-		_toolbox = toolbox;
-		_model = new SavedMediaTableModel(_columns, resources);		
+		_model = new SavedMediaTableModel(_columns, ctrl, resources);		
 		_table = new TTable<Media>(factory, new UpdatedMediaRowRenderer());
 		_table.setTemplateModel(_model);
 		_scroll = new JScrollPane(_table);
@@ -62,7 +76,17 @@ public class SavedMediaTableControl {
 		_table.addMouseListener(new DoubleClickListener());
 		
         new FileDrop(_scroll, true, mangaDropAction);
+		
+		setupPopupMenu();
 	}
+	
+	private void setupPopupMenu() {
+		JPopupMenu menu = new JPopupMenu();
+
+		menu.add(new JMenuItem(new RefreshItemAction()));
+		
+		_table.addMouseListener(new TablePopupCreator(_table, menu));
+	}	
 	
 	public TTable<Media> getTable() {
 		return _table;
@@ -112,6 +136,21 @@ public class SavedMediaTableControl {
 				if ( !StringUtils.isNullOrEmpty(url) ) {
 					_toolbox.browse(url);
 				}
+			}
+		}
+	}
+	
+	public class RefreshItemAction extends AbstractAction {		
+		public RefreshItemAction() {
+			this.putValue(Action.NAME, _resources.getString(Resources.string.menuLoadSummary));
+			this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_L);
+		}
+		
+		@Override 
+		public void actionPerformed(ActionEvent e) {
+			Media item = _table.getSelectedItem();
+			if ( item != null ) {
+				_controller.loadMediaSummary(item._id, item._titleUrl);
 			}
 		}
 	}

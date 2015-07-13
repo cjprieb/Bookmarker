@@ -23,6 +23,7 @@ import com.purplecat.bookmarker.Resources;
 import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.controller.observers.IListLoadedObserver;
 import com.purplecat.bookmarker.models.Media;
+import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.view.swing.panels.GlassTimerPanel;
 import com.purplecat.bookmarker.view.swing.panels.OnlineUpdateTab;
 import com.purplecat.bookmarker.view.swing.panels.SavedMediaTab;
@@ -84,6 +85,7 @@ public class MainPanel implements ChangeListener {
 		JMenu updateMenu = new JMenu(_resources.getString(Resources.string.menuOnline));
 		updateMenu.add(new JMenuItem(new LoadUpdatesAction()));
 		updateMenu.add(new JMenuItem(new StopUpdatesAction()));
+		updateMenu.add(new JMenuItem(new RefreshItemAction()));
 		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(updateMenu);
@@ -148,6 +150,30 @@ public class MainPanel implements ChangeListener {
 		public void actionPerformed(ActionEvent e) {
 			_tabbedPane.setSelectedComponent(_onlineUpdateTab.getPanel());
 			_onlineUpdateTab.callLoadUpdates();	
+		}
+	}
+	
+	public class RefreshItemAction extends AbstractAction {		
+		public RefreshItemAction() {
+			this.putValue(Action.NAME, _resources.getString(Resources.string.menuLoadSummary));
+			this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
+			this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_S);
+		}
+		
+		@Override 
+		public void actionPerformed(ActionEvent e) {
+			if ( _tabbedPane.getSelectedComponent() == _onlineUpdateTab.getPanel() ) {
+				OnlineMediaItem item = _onlineUpdateTab.getSelectedItem();
+				if ( item != null ) {
+					_controller.loadMediaSummary(item._mediaId, item._titleUrl);
+				}
+			}
+			else if ( _tabbedPane.getSelectedComponent() == _savedMediaTab.getPanel() ) {
+				Media item = _savedMediaTab.getSelectedItem();
+				if ( item != null ) {
+					_controller.loadMediaSummary(item._id, item._titleUrl);
+				}
+			}
 		}
 	}
 }

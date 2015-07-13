@@ -7,7 +7,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.purplecat.bookmarker.controller.observers.IItemChangedObserver;
 import com.purplecat.bookmarker.controller.observers.IListLoadedObserver;
+import com.purplecat.bookmarker.controller.observers.ISummaryLoadObserver;
 import com.purplecat.bookmarker.controller.observers.SampleTaskObserver;
+import com.purplecat.bookmarker.controller.tasks.LoadMediaSummaryTask;
 import com.purplecat.bookmarker.controller.tasks.SampleTask;
 import com.purplecat.bookmarker.controller.tasks.SavedMediaLoadTask;
 import com.purplecat.bookmarker.controller.tasks.UpdateMangaFromUrlTask;
@@ -34,6 +36,7 @@ public class Controller {
 	private final List<IListLoadedObserver<Media>> _mediaLoadObservers;
 	private final List<IItemChangedObserver<Media>> _mediaUpdateObservers;
 	private List<IWebsiteLoadObserver> _websiteLoadObservers;
+	private List<ISummaryLoadObserver> _summaryLoadObservers;
 	
 	@Inject
 	public Controller(ILoggingService logging, IThreadPool threadPool, SavedMediaService mangaService, WebsiteThreadObserver observer) {
@@ -46,6 +49,7 @@ public class Controller {
 		_mediaLoadObservers = new LinkedList<IListLoadedObserver<Media>>();
 		_mediaUpdateObservers = new LinkedList<IItemChangedObserver<Media>>();
 		_websiteLoadObservers = new LinkedList<IWebsiteLoadObserver>();
+		_summaryLoadObservers = new LinkedList<ISummaryLoadObserver>();
 	}
 	
 	/*------Sample Task action-------*/
@@ -93,7 +97,15 @@ public class Controller {
 		_threadPool.runOnWorkerThread(new UpdateMangaFromUrlTask(_logging, _mediaService, _mediaUpdateObservers, url));
 	}
 	
+	/*------Load Media Summary actions--------*/
+	public void observeSummaryLoading(ISummaryLoadObserver obs) {
+		_summaryLoadObservers.add(obs);
+	}	
+	
 	public void loadMediaSummary(long mediaId, String url) {
-		_threadPool.runOnWorkerThread(new LoadMediaSummary(_logging, _mediaService, _websiteLoadObservers, mediaId, url));		
+		for ( ISummaryLoadObserver obs : _summaryLoadObservers ) {
+			obs.notifySummaryLoadStarted(mediaId);
+		}
+		_threadPool.runOnWorkerThread(new LoadMediaSummaryTask(_logging, _mediaService, _summaryLoadObservers, mediaId, url));		
 	}
 }

@@ -13,6 +13,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import com.google.inject.Inject;
 import com.purplecat.bookmarker.Resources;
 import com.purplecat.bookmarker.controller.Controller;
+import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.WebsiteInfo;
 import com.purplecat.bookmarker.view.swing.actions.LoadUpdatesAction;
 import com.purplecat.bookmarker.view.swing.actions.StopUpdatesAction;
@@ -43,9 +44,8 @@ public class OnlineUpdateTab {
 		UpdateMediaObserverControl updateObserver = new UpdateMediaObserverControl(_resources);
 		
 		{
-			_controller.observeOnlineThreadLoading(_updateMediaTableControl.getModel().getObserver());
-			_controller.observeSavedMediaUpdate(_updateMediaTableControl.getModel().getObserver());
 			_controller.observeOnlineThreadLoading(updateObserver);
+			_controller.observeSummaryLoading(_summaryObserver);
 			_updateMediaTableControl.getTable().addRowSelectionListener(_summaryObserver);
 		}			
 		
@@ -142,5 +142,9 @@ public class OnlineUpdateTab {
 	
 	public void callLoadUpdates() {
 		_controller.loadUpdateMedia(getHoursAgo(), getLoadGenresSetting(), getLoadAllWebsitesSetting(), getSelectedWebsiteInfo());		
+	}
+
+	public OnlineMediaItem getSelectedItem() {
+		return _updateMediaTableControl.getTable().getSelectedItem();
 	}
 }

@@ -1,11 +1,15 @@
 package com.purplecat.bookmarker.view.swing.components;
 
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -14,11 +18,11 @@ import javax.swing.table.TableRowSorter;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import com.purplecat.bookmarker.Resources;
 import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.extensions.OnlineMediaItemExt;
 import com.purplecat.bookmarker.extensions.OnlineMediaItemExt.OnlineBookmarkComparator;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
-import com.purplecat.bookmarker.view.swing.actions.UpdateMediaFromItemAction;
 import com.purplecat.bookmarker.view.swing.models.OnlineUpdateItemTableModel;
 import com.purplecat.bookmarker.view.swing.renderers.DataFields;
 import com.purplecat.bookmarker.view.swing.renderers.OnlineLoadedRowRenderer;
@@ -41,6 +45,7 @@ public class OnlineUpdateItemTableControl {
 	private final TTableColumn[] _columns;
 	private final Controller _controller;
 	private final Toolbox _toolbox;
+	private final IResourceService _resources;
 	
 	@Inject
 	public OnlineUpdateItemTableControl(
@@ -49,6 +54,7 @@ public class OnlineUpdateItemTableControl {
 			IResourceService resources, 
 			Toolbox toolbox,
 			@Named("Manga Url") IDragDropAction mangaDropAction) {
+		_resources = resources;
 		_controller = ctrl;
 		_toolbox = toolbox;
 		_columns = new TTableColumn[] {
@@ -57,7 +63,7 @@ public class OnlineUpdateItemTableControl {
 				DataFields.TITLE_COL,
 				DataFields.PLACE_COL
 		};
-		_model = new OnlineUpdateItemTableModel(_columns, resources);		
+		_model = new OnlineUpdateItemTableModel(_columns, ctrl, resources);		
 		_table = new TTable<OnlineMediaItem>(factory, new OnlineLoadedRowRenderer());
 		_table.setTemplateModel(_model);		
 		_scroll = new JScrollPane(_table);
@@ -81,7 +87,8 @@ public class OnlineUpdateItemTableControl {
 	private void setupPopupMenu() {
 		JPopupMenu menu = new JPopupMenu();
 
-		menu.add(new JMenuItem(new UpdateMediaFromItemAction(_table, _controller)));
+		menu.add(new JMenuItem(new UpdateMediaFromItemAction()));
+		menu.add(new JMenuItem(new RefreshItemAction()));
 		
 		_table.addMouseListener(new TablePopupCreator(_table, menu));
 	}	
@@ -120,6 +127,36 @@ public class OnlineUpdateItemTableControl {
 				if ( !StringUtils.isNullOrEmpty(url) ) {
 					_toolbox.browse(url);
 				}
+			}
+		}
+	}
+	
+	public class RefreshItemAction extends AbstractAction {		
+		public RefreshItemAction() {
+			this.putValue(Action.NAME, _resources.getString(Resources.string.menuLoadSummary));
+			this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_L);
+		}
+		
+		@Override 
+		public void actionPerformed(ActionEvent e) {
+			OnlineMediaItem item = _table.getSelectedItem();
+			if ( item != null ) {
+				_controller.loadMediaSummary(item._mediaId, item._titleUrl);
+			}
+		}
+	}
+	
+	public class UpdateMediaFromItemAction extends AbstractAction {
+		
+		public UpdateMediaFromItemAction() {
+			this.putValue(Action.NAME, _resources.getString(Resources.string.menuAddUpdate));
+			this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_S);
+		}
+		
+		@Override 
+		public void actionPerformed(ActionEvent e) {
+			if ( _table.getSelectedItem() != null && _table.getSelectedItem()._id > 0 ) {
+				_controller.updateMediaFrom(_table.getSelectedItem());
 			}
 		}
 	}

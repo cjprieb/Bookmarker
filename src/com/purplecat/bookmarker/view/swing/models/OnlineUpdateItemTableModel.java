@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
+import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.controller.observers.IItemChangedObserver;
+import com.purplecat.bookmarker.controller.observers.ISummaryLoadObserver;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.WebsiteInfo;
@@ -20,9 +22,14 @@ public class OnlineUpdateItemTableModel extends TAbstractTableModel<OnlineMediaI
 	TTableColumn[] _columns;
 	IResourceService _resources;
 	
-	public OnlineUpdateItemTableModel(TTableColumn[] columns, IResourceService resources) {
+	public OnlineUpdateItemTableModel(TTableColumn[] columns, Controller ctrl, IResourceService resources) {
 		_columns = columns;
 		_resources = resources;
+		
+		OnlineMediaListObserver observer = new OnlineMediaListObserver();
+		ctrl.observeOnlineThreadLoading(observer);
+		ctrl.observeSavedMediaUpdate(observer);
+		ctrl.observeSummaryLoading(observer);
 	}
 	
 	@Override
@@ -137,11 +144,7 @@ public class OnlineUpdateItemTableModel extends TAbstractTableModel<OnlineMediaI
 		}
 	}
 	
-	public OnlineMediaListObserver getObserver() {
-		return new OnlineMediaListObserver();
-	}
-	
-	public class OnlineMediaListObserver implements IItemChangedObserver<Media>, IWebsiteLoadObserver {
+	public class OnlineMediaListObserver implements IItemChangedObserver<Media>, IWebsiteLoadObserver, ISummaryLoadObserver {
 		@Override
 		public void notifyItemUpdated(Media item) {
 			updateItem(item);
@@ -171,6 +174,16 @@ public class OnlineUpdateItemTableModel extends TAbstractTableModel<OnlineMediaI
 		@Override
 		public void notifyLoadFinished(List<OnlineMediaItem> list) {
 		}		
+
+		@Override
+		public void notifySummaryLoadStarted(long mediaId) {}
+
+		@Override
+		public void notifySummaryLoadFinished(OnlineMediaItem item) {
+			if ( item != null ) {
+				updateItem(item);
+			}
+		}	
 	}
 	
 }

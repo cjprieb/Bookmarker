@@ -1,29 +1,25 @@
-package com.purplecat.bookmarker.controller;
+package com.purplecat.bookmarker.controller.tasks;
 
-import java.util.List;
-
-import com.purplecat.bookmarker.controller.observers.IItemChangedObserver;
-import com.purplecat.bookmarker.models.Media;
+import com.purplecat.bookmarker.controller.observers.ISummaryLoadObserver;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.services.SavedMediaService;
 import com.purplecat.bookmarker.services.ServiceException;
-import com.purplecat.bookmarker.services.websites.IWebsiteLoadObserver;
 import com.purplecat.commons.logs.ILoggingService;
 import com.purplecat.commons.threads.IThreadTask;
 
-public class LoadMediaSummary implements IThreadTask {
+public class LoadMediaSummaryTask implements IThreadTask {
 	public static final String TAG = "LoadMediaSummary";
 	
 	private final ILoggingService _logging;
 	private final SavedMediaService _service;
-	private final Iterable<IWebsiteLoadObserver> _observers;
+	private final Iterable<ISummaryLoadObserver> _observers;
 	private final long _mediaId;
 	private final String _url;
 	
 	private OnlineMediaItem _result;
 	private ServiceException _error;
 
-	public LoadMediaSummary(ILoggingService logging, SavedMediaService service, Iterable<IWebsiteLoadObserver> observers, 
+	public LoadMediaSummaryTask(ILoggingService logging, SavedMediaService service, Iterable<ISummaryLoadObserver> observers, 
 			long mediaId, String url) {
 		_logging = logging;
 		_service = service;
@@ -34,10 +30,8 @@ public class LoadMediaSummary implements IThreadTask {
 	
 	@Override
 	public void uiTaskCompleted() {
-		if ( _result != null ) {
-			for ( IWebsiteLoadObserver obs : _observers ) {
-				obs.notifyItemParsed(_result, -1, -1);
-			}
+		for ( ISummaryLoadObserver obs : _observers ) {
+			obs.notifySummaryLoadFinished(_result);
 		}
 	}
 

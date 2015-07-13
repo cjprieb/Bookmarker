@@ -48,6 +48,9 @@ public class WebsiteDateExt {
 				int minutes = Numbers.parseInt(matcher.group(3), 0);		
 				if ( matcher.group(4).equalsIgnoreCase("PM") ) {
 					hours += 12;
+					if ( hours == 24 ) {
+						hours = 0;
+					}
 				}
 				
 				if ( matcher.group(1).toLowerCase().equals("today") ) {

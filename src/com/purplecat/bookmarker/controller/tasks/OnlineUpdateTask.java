@@ -114,7 +114,7 @@ public class OnlineUpdateTask {
 		try {
 			_connectionManager.open();
 			for ( OnlineMediaItem item : siteList ) {
-				_logging.debug(2, TAG, "Looking for item: " + item._displayTitle);
+				_logging.debug(1, TAG, "Looking for item: " + item._displayTitle);
 				OnlineMediaItem found = _repository.findOrCreate(item);
 				iItemsParsed++;
 				if ( found != null ) {

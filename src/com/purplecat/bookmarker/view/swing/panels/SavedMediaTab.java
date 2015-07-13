@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 
 import com.google.inject.Inject;
 import com.purplecat.bookmarker.controller.Controller;
+import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.view.swing.components.SavedMediaTableControl;
 import com.purplecat.bookmarker.view.swing.observers.SavedMediaSummaryObserver;
 
@@ -17,9 +18,7 @@ public class SavedMediaTab {
 	@Inject SavedMediaTableControl _savedMediaTableControl;
 	
 	public void create() {		
-		_controller.observeSavedMediaLoading(_savedMediaTableControl.getModel().getObserver());
-		_controller.observeOnlineThreadLoading(_savedMediaTableControl.getModel().getObserver());
-		_controller.observeSavedMediaUpdate(_savedMediaTableControl.getModel().getObserver());
+		_controller.observeSummaryLoading(_summaryObserver);
 		_savedMediaTableControl.getTable().addRowSelectionListener(_summaryObserver);
 
 		_panel = new JPanel();
@@ -43,5 +42,9 @@ public class SavedMediaTab {
 	
 	public void updateSummaryPanel() {
 		_summaryPanel.setSummaryView(_summaryObserver.getSummaryPanel());
+	}
+
+	public Media getSelectedItem() {
+		return _savedMediaTableControl.getTable().getSelectedItem();
 	}
 }

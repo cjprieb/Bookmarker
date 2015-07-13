@@ -12,7 +12,7 @@
 	* ~~limit parsing to X hours ago~~
 	* ~~parse genres option~~
 	* ~~limit to single website~~
-* 2 add F5 genre/summary loading
+* 2 ~~add F5 genre/summary loading~~
 * 2 Add egscans support
 	tests
 * 1 create "add url" dialog
@@ -37,7 +37,9 @@
 * ~~saved media items don't seem to have a chapter url, nor title url~~
 * ~~refresh duplicates items in list (online update tab)~~
 * ~~don't show display title in alt titles~~
-* don't update time when refreshing - keep the oldest time. (but what if it should really be refreshed??)
+* ~~don't update time when refreshing - keep the oldest time. (but what if it should really be refreshed??)~~
+* ~~add timer indication of loading~~
+* ~~get rid of "search for series of same"~~
 
 ## KANGAETE KOTO
 * how to handle multiple updates for the same item??

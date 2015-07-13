@@ -1,8 +1,8 @@
 package com.purplecat.bookmarker.test;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.joda.time.DateTime;
 import org.junit.Assert;
@@ -168,32 +168,48 @@ public class WebsiteLoadingTests extends DatabaseConnectorTestBase {
 		}
 	}
 	
-//	@Test
-//	public void loadWebsitesTwice() {
-//		Injector injector = Guice.createInjector(new DatabaseWebsiteScrapingModule());		
-//		OnlineUpdateTask _service = injector.getInstance(OnlineUpdateTask.class);	
-//		DummyThreadObserver _observer = injector.getInstance(DummyThreadObserver.class);
-//		SampleWebsiteList _websites = injector.getInstance(SampleWebsiteList.class);
-//		
-//		int hoursAgo = _websites.getSampleHoursAgo();
-//		_service.loadOnlineUpdates(hoursAgo, false, _websites.getList());
-//		_service.loadOnlineUpdates(hoursAgo, false, _websites.getList());
-//		
-//		List<OnlineMediaItem> list = _observer.getList();
-//		Assert.assertNotNull("list is null", list);
-//		Assert.assertTrue("list has no items", list.size() > 0);
-//		Assert.assertTrue(_observer.getItemsFound() > 0);
-//		Assert.assertEquals(_observer.getItemsParsed(), _observer.getItemsFound());
-//		
-//		Set<Long> mediaIdsInList = new HashSet<Long>();
-//		for ( OnlineMediaItem item : _observer.getList() ) {
-//			if ( mediaIdsInList.contains(item._mediaId) ) {
-//				Assert.fail("media item already in list: " + item._mediaId);
-//			}
-//			else {
-//				mediaIdsInList.add(item._mediaId);
-//			}
-//		}
-//	}
+	@Test
+	public void loadWebsitesTwice() {
+		Injector injector = Guice.createInjector(new DatabaseWebsiteScrapingModule());		
+		OnlineUpdateTask _service = injector.getInstance(OnlineUpdateTask.class);	
+		DummyThreadObserver _observer = injector.getInstance(DummyThreadObserver.class);
+		SampleWebsiteList _websites = injector.getInstance(SampleWebsiteList.class);
+		
+		int hoursAgo = _websites.getSampleHoursAgo();
+		_service.loadOnlineUpdates(hoursAgo, false, _websites.getList());
+		
+		Map<Long, DateTime> times = _observer.getList().stream().collect(Collectors.toMap(m -> m._id, m -> m._updatedDate));
+		
+		for ( OnlineMediaItem item : _observer.getList() ) {
+			System.out.println("ITEM " + item._displayTitle + " (" + item._id + "): " + item._updatedDate);
+		}
+		
+		for ( Long key : times.keySet() ) {
+			System.out.println("ITEM (" + key + "): " + times.get(key));
+		}
+		
+		try {
+			synchronized(this) {
+				this.wait(1000);
+			}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		_service.loadOnlineUpdates(hoursAgo, false, _websites.getList());
+		
+		List<OnlineMediaItem> list = _observer.getList();
+		Assert.assertNotNull("list is null", list);
+		Assert.assertTrue("list has no items", list.size() > 0);
+		Assert.assertTrue(_observer.getItemsFound() > 0);
+		
+		for ( OnlineMediaItem item : _observer.getList() ) {
+			System.out.println("ITEM " + item._displayTitle + " (" + item._id + "): " + item._updatedDate);
+			DateTime earlierDate = times.get(item._id);
+			Assert.assertEquals("dates not equal for " + item._id, earlierDate, item._updatedDate);
+		}
+		
+	}
 
 }

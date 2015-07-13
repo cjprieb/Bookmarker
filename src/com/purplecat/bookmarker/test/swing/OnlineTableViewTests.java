@@ -20,6 +20,7 @@ import com.purplecat.bookmarker.test.dummies.DummyDragDrop;
 import com.purplecat.bookmarker.test.modules.TestBookmarkerModule;
 import com.purplecat.bookmarker.view.swing.components.OnlineUpdateItemTableControl;
 import com.purplecat.bookmarker.view.swing.models.OnlineUpdateItemTableModel;
+import com.purplecat.bookmarker.view.swing.models.OnlineUpdateItemTableModel.OnlineMediaListObserver;
 import com.purplecat.bookmarker.view.swing.renderers.BookmarkerRendererFactory;
 import com.purplecat.bookmarker.view.swing.renderers.DataFields;
 import com.purplecat.commons.IResourceService;
@@ -36,6 +37,8 @@ public class OnlineTableViewTests {
 	WebsiteInfo _site;
 	Controller _controller;
 	Toolbox _toolbox;
+	OnlineUpdateItemTableModel _model;
+	OnlineMediaListObserver _observer;
 	
 	@Before
 	public void setup() {
@@ -54,45 +57,42 @@ public class OnlineTableViewTests {
 		_controller = injector.getInstance(Controller.class);
 		_imageResources = injector.getInstance(IImageRepository.class);
 		_toolbox = injector.getInstance(Toolbox.class);
+		_model = new OnlineUpdateItemTableModel(_columns, _controller, _resources);
+		_observer = _model.new OnlineMediaListObserver();
 	}
 	
 	@Test 
-	public void onlineTableModel_SiteStarted() {
-		OnlineUpdateItemTableModel model = new OnlineUpdateItemTableModel(_columns, _resources);
-		
-		model.getObserver().notifySiteStarted(_site);		
-		assertEquals(1, model.getRowCount());
-		assertEquals(_site._name, model.getItemAt(0)._displayTitle);
-		assertEquals(_site._website, model.getItemAt(0)._titleUrl);
-		assertNull(model.getItemAt(0)._updatedDate);
+	public void onlineTableModel_SiteStarted() {		
+		_observer.notifySiteStarted(_site);		
+		assertEquals(1, _model.getRowCount());
+		assertEquals(_site._name, _model.getItemAt(0)._displayTitle);
+		assertEquals(_site._website, _model.getItemAt(0)._titleUrl);
+		assertNull(_model.getItemAt(0)._updatedDate);
 		
 		//Don't duplicate
-		model.getObserver().notifySiteStarted(_site);		
-		assertEquals(1, model.getRowCount());
+		_observer.notifySiteStarted(_site);		
+		assertEquals(1, _model.getRowCount());
 	}
 	
 	@Test 
 	public void onlineTableModel_SiteParsed() {
-		OnlineUpdateItemTableModel model = new OnlineUpdateItemTableModel(_columns, _resources);
-
-		model.getObserver().notifySiteStarted(_site);
-		model.getObserver().notifySiteParsed(_site, 10);
-		assertEquals(1, model.getRowCount());
-		assertEquals(_site._name, model.getItemAt(0)._displayTitle);
-		assertEquals(_site._website, model.getItemAt(0)._titleUrl);
-		assertNotNull(model.getItemAt(0)._updatedDate);
+		_observer.notifySiteStarted(_site);
+		_observer.notifySiteParsed(_site, 10);
+		assertEquals(1, _model.getRowCount());
+		assertEquals(_site._name, _model.getItemAt(0)._displayTitle);
+		assertEquals(_site._website, _model.getItemAt(0)._titleUrl);
+		assertNotNull(_model.getItemAt(0)._updatedDate);
 	}
 	
 	@Test 
 	public void onlineTableModel_ItemParsed() {
-		OnlineUpdateItemTableModel model = new OnlineUpdateItemTableModel(_columns, _resources);
 		OnlineMediaItem item = getRandomItem();
 
-		model.getObserver().notifySiteStarted(_site);
-		model.getObserver().notifyItemParsed(item, 1, 1);
+		_observer.notifySiteStarted(_site);
+		_observer.notifyItemParsed(item, 1, 1);
 		
-		assertEquals(2, model.getRowCount());
-		assertEquals(item, model.getItemAt(1));
+		assertEquals(2, _model.getRowCount());
+		assertEquals(item, _model.getItemAt(1));
 	}
 	
 	@Test 
@@ -100,7 +100,8 @@ public class OnlineTableViewTests {
 		BookmarkerRendererFactory factory = new BookmarkerRendererFactory(_imageResources, _resources);
 		OnlineUpdateItemTableControl tableControl = new OnlineUpdateItemTableControl(factory, _controller, _resources, _toolbox, new DummyDragDrop());
 		OnlineUpdateItemTableModel model = tableControl.getModel();
-		_controller.observeOnlineThreadLoading(model.getObserver());
+		OnlineMediaListObserver observer = _model.new OnlineMediaListObserver();
+		_controller.observeOnlineThreadLoading(observer);
 		_controller.loadUpdateMedia(8, true, false, _site);
 		
 		assertTrue("list has no elements", model.getRowCount() > 1);

@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 
 import com.google.inject.Inject;
 import com.purplecat.bookmarker.controller.observers.IItemChangedObserver;
+import com.purplecat.bookmarker.controller.observers.ISummaryLoadObserver;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.WebsiteInfo;
@@ -14,7 +15,8 @@ import com.purplecat.bookmarker.view.swing.panels.SavedMediaSummaryPanel;
 import com.purplecat.bookmarker.view.swing.panels.SummarySidebar;
 import com.purplecat.commons.swing.IRowSelectionListener;
 
-public class SavedMediaSummaryObserver implements IRowSelectionListener<Media>, IItemChangedObserver<Media>, IWebsiteLoadObserver {	
+public class SavedMediaSummaryObserver implements IRowSelectionListener<Media>, IItemChangedObserver<Media>, 
+	IWebsiteLoadObserver, ISummaryLoadObserver {	
 	@Inject SavedMediaSummaryPanel _mediaSummaryPanel;
 	@Inject SummarySidebar _parentSummaryPanel;
 	
@@ -63,6 +65,20 @@ public class SavedMediaSummaryObserver implements IRowSelectionListener<Media>, 
 	public void notifySiteFinished(WebsiteInfo site) {}
 
 	@Override
-	public void notifyLoadFinished(List<OnlineMediaItem> list) {}
+	public void notifyLoadFinished(List<OnlineMediaItem> list) {}	
+
+	@Override
+	public void notifySummaryLoadStarted(long mediaId) {
+		_mediaSummaryPanel.showLoadingBar(true);
+	}
+
+	@Override
+	public void notifySummaryLoadFinished(OnlineMediaItem item) {
+		if ( item != null && _currentMedia != null && _currentMedia._id == item._mediaId ) {
+			_currentMedia.updateFrom(item);
+			_mediaSummaryPanel.update(_currentMedia);			
+		}
+		_mediaSummaryPanel.showLoadingBar(false);
+	}
 	
 }

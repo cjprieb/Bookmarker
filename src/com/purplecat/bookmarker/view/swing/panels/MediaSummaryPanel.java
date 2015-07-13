@@ -318,4 +318,10 @@ public class MediaSummaryPanel {
 			_dataAltTitles.setVisible(false);	
 		}
 	}
+
+	public void showLoadingBar(boolean showIt) {
+		if ( _progress != null ) {
+			_progress.setVisible(showIt);
+		}
+	}
 }

@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.json.Json;
@@ -15,9 +16,11 @@ import org.joda.time.DateTime;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.purplecat.bookmarker.extensions.OnlineMediaItemExt;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.Place;
+import com.purplecat.bookmarker.services.ServiceException;
 import com.purplecat.bookmarker.services.databases.DatabaseException;
 import com.purplecat.bookmarker.services.databases.IMediaRepository;
 import com.purplecat.bookmarker.services.databases.IOnlineMediaRepository;
@@ -103,14 +106,29 @@ public class SampleOnlineMangaDatabase extends SampleDatabaseService<OnlineMedia
 				item._lastReadDate = media.get(0)._lastReadDate;
 				item._lastReadPlace = media.get(0)._lastReadPlace;
 				item._isSaved = media.get(0)._isSaved;
+				
+				long mediaId = item._mediaId;
+				Optional<OnlineMediaItem> result = this._map.values().stream().filter(m -> m._mediaId == mediaId).findFirst();
+				if ( result.isPresent() ) {
+					OnlineMediaItemExt.copyNewToExisting(item, result.get());
+					item = result.get();
+				}
+			}
+			if ( item._mediaId <= 0 ) {
+				_maxIndex++;
+				item._mediaId = _maxIndex;
+				
+				Media media1 = new Media();
+				media1._id = _maxIndex;
+				media1.setDisplayTitle(item._displayTitle);
+				_mediaRepository.insert(media1);
 			}
 		} catch (DatabaseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		if ( item._mediaId <= 0 ) {
-			_maxIndex++;
-			item._mediaId = _maxIndex;
+		} catch (ServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		if ( item._id <= 0 ) {
 			insert(item);

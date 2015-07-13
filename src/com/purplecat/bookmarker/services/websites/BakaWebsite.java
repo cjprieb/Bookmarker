@@ -51,7 +51,7 @@ public class BakaWebsite implements IWebsiteParser {
 				}
 				else if ( title.equals("genre") ) {
 					for ( Element genreLink : contentDiv.select("a") ) {
-						if ( !genreLink.text().equals("Search for series") ) {
+						if ( !genreLink.text().startsWith("Search for") ) {
 							item._genres.add(_genreDatabase.find(genreLink.text()));
 						}
 					}					

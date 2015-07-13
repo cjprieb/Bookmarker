@@ -74,7 +74,7 @@ public class BatotoWebsite implements IWebsiteParser {
 					currentItem._websiteName = _info._name;
 					currentItem._displayTitle = titleLink.text();
 					currentItem._titleUrl = titleLink.attr("href");
-					_logging.debug(0, TAG, "Parsing: " + currentItem._displayTitle + " (" + currentItem._titleUrl + ")");
+//					_logging.debug(0, TAG, "Parsing: " + currentItem._displayTitle + " (" + currentItem._titleUrl + ")");
 				} catch (NullPointerException e) {
 					currentItem = null;
 					_logging.error(TAG, "Row could not be parsed as expected: " + row.html());

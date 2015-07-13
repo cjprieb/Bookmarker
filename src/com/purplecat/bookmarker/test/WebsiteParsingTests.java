@@ -120,6 +120,9 @@ public class WebsiteParsingTests {
 		if ( item._genres.size() == 0) {
 			System.err.println("No genres found for " + item._displayTitle);
 		}
+		else if ( item._genres.stream().anyMatch(m -> m._name.startsWith("Search for")) ){
+			Assert.fail("invalid genre in list");
+		}
 		Assert.assertNotNull("no summary", item._summary);
 		if ( item._summary.length() == 0) {
 			System.err.println("No summary found for " + item._displayTitle);

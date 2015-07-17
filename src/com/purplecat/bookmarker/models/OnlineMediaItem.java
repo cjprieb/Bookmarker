@@ -66,12 +66,14 @@ public class OnlineMediaItem extends BaseDatabaseItem implements Comparable<Onli
 	 */
 	public String _websiteName;
 	
+	public EStoryState _storyState;
+	
 	public OnlineMediaItem() {
 		_genres = new HashSet<Genre>();
 	}
 	
 	public boolean isUpdated() {
-		if ( _isSaved && _lastReadPlace != null ) {
+		if ( _isSaved && _lastReadPlace != null && !ignoreUpdate() ) {
 			return _lastReadPlace.compareTo(_updatedPlace) < 0;
 		}
 		else {
@@ -81,11 +83,25 @@ public class OnlineMediaItem extends BaseDatabaseItem implements Comparable<Onli
 	
 	public boolean isRead() {
 		if ( _isSaved && _lastReadPlace != null ) {
-			return _lastReadPlace.compareTo(_updatedPlace) >= 0;
+			return _lastReadPlace.compareTo(_updatedPlace) >= 0 || ignoreUpdate();
 		}
 		else {
 			return false;
 		}
+	}
+	
+	public boolean ignoreUpdate() {
+		boolean ignore = _isIgnored;
+		if ( _storyState != null ) {
+			switch ( _storyState ) {
+				case DONT_READ:
+				case NEW_BOOKMARK:
+				case MIDDLE_CHAPTER: 
+				case MIDDLE_CHAPTER_BORED: 	ignore = true;	break;
+				default:					ignore = false;	break;
+			}
+		}
+		return(ignore);
 	}
 	
 	@Override

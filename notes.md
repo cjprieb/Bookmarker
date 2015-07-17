@@ -12,7 +12,11 @@
 	* ~~limit parsing to X hours ago~~
 	* ~~parse genres option~~
 	* ~~limit to single website~~
-* 2 ~~add F5 genre/summary loading~~
+* ~~2 add F5 genre/summary loading~~
+* ~~1 add story state support to online bookmarks~~
+* ~~1 add ratings to online bookmarks~~
+* 4 update from summary panel
+* 2 add recently added support
 * 2 Add egscans support
 	tests
 * 1 create "add url" dialog
@@ -21,13 +25,13 @@
 * 2 remove unwanted genres
 * 4 dialog for genres
 * 4 dialog for editing manga
-* 4 update from summary panel
 * 8 add tv shows tab
 * 2 add links to URLs in summary
 * ~~1 add summary to (saved) media item~~
 * ~~1 display alt titles~~
 * 4 specify preferred order for websites
 * 1 save online update tab control values
+* 4 load existing online bookmarks on load
 
 ## BUGS
 * ~~No title or chapter links for media summaries~~

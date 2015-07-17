@@ -21,18 +21,11 @@ public class StoryStateExt {
 	public static StoryStateModel getView(Media view) {
 		StoryStateModel imageModel = new StoryStateModel();
 		
-		EStoryState state = view._isComplete ? EStoryState.FINISHED_BOOKMARK : EStoryState.LAST_AVAILABLE_CHAPTER;
-		/*BookmarkFolder folder = view.getFolder();
-		if (  folder != null ) {
-			state =  folder.getStoryState();
-		}*/
+		EStoryState state = view._storyState;
 		imageModel._imageKey = getImageKey(state, false); //false=not movie
 		
 		if ( view.isUpdated() ) {
 			imageModel._updateMode = StoryStateModel.FULL_UPDATE;
-					/*(folder == null || !folder.ignoreUpdates()) ? 
-					Options.get(BookmarkOptions.UPDATED_COLOR) : 
-					Options.get(BookmarkOptions.MUTED_UPDATED_COLOR);*/
 		}
 		else {
 			imageModel._updateMode = StoryStateModel.NOT_UPDATED;
@@ -45,19 +38,10 @@ public class StoryStateExt {
 		StoryStateModel imageModel = new StoryStateModel();
 		
 		if ( view._id > 0 ) {
-			
-			//EStoryState state = view._isComplete ? EStoryState.FINISHED_BOOKMARK : EStoryState.LAST_AVAILABLE_CHAPTER;
-			/*BookmarkFolder folder = view.getFolder();
-			if (  folder != null ) {
-				state =  folder.getStoryState();
-			}*/
 			imageModel._imageKey = getImageKey(EStoryState.LAST_AVAILABLE_CHAPTER, false); //false=not movie
 			
 			if ( view._isSaved ) {
 				imageModel._updateMode = view.isUpdated() ? StoryStateModel.FULL_UPDATE : StoryStateModel.MUTED_UPDATE;
-						/*(folder == null || !folder.ignoreUpdates()) ? 
-						Options.get(BookmarkOptions.UPDATED_COLOR) : 
-						Options.get(BookmarkOptions.MUTED_UPDATED_COLOR);*/
 			}
 			else {
 				imageModel._updateMode = StoryStateModel.NOT_UPDATED;

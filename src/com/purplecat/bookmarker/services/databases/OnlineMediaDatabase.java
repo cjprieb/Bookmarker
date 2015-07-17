@@ -13,6 +13,7 @@ import java.util.Set;
 import com.google.inject.Inject;
 import com.purplecat.bookmarker.extensions.OnlineMediaItemExt;
 import com.purplecat.bookmarker.extensions.PlaceExt;
+import com.purplecat.bookmarker.extensions.StoryStateExt;
 import com.purplecat.bookmarker.models.Genre;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
@@ -26,7 +27,7 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 	
 	private static final String SELECT_ITEMS = "SELECT UpdateBookmark._id, UpbkMedia_id _mediaId, UpbkChapterUrl _chapterUrl, UpbkTitleUrl _titleUrl, UpbkWebsiteName _websiteName,"
 			+ " UpbkIsIgnored _isIgnored, UpbkDate _updatedDate, UpbkRating _rating, UpbkPlace _updatedPlace, UpbkNewlyAdded _newlyAdded,"
-			+ " MdDisplayTitle _displayTitle, SvdIsSaved _isSaved, SvhstDate _lastReadDate, SvhstPlace _lastReadPlace"
+			+ " MdDisplayTitle _displayTitle, SvdIsSaved _isSaved, SvhstDate _lastReadDate, SvhstPlace _lastReadPlace, SvdStoryState _storyState"
 			+ " FROM UpdateBookmark INNER JOIN Media on Media._id = UpbkMedia_id"
 			+ " LEFT JOIN SavedHistory on SavedHistory._id = SvdHistory_ID";
 	
@@ -69,6 +70,7 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 		item._updatedPlace = PlaceExt.parse(result.getString("_updatedPlace"));
 		item._lastReadDate = result.getDateFromString("_lastReadDate");
 		item._lastReadPlace = PlaceExt.parse(result.getString("_lastReadPlace"));
+		item._storyState = StoryStateExt.parse(result.getInt("_storyState"));
 		return item;
 	}
 

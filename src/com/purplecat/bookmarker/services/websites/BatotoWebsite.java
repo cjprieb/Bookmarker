@@ -5,6 +5,8 @@ import java.net.SocketTimeoutException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.joda.time.DateTime;
 import org.jsoup.Jsoup;
@@ -20,6 +22,7 @@ import com.purplecat.bookmarker.models.Place;
 import com.purplecat.bookmarker.models.WebsiteInfo;
 import com.purplecat.bookmarker.services.ServiceException;
 import com.purplecat.bookmarker.services.databases.IGenreRepository;
+import com.purplecat.commons.extensions.Numbers;
 import com.purplecat.commons.logs.ILoggingService;
 import com.purplecat.commons.utils.StringUtils;
 
@@ -29,6 +32,9 @@ public class BatotoWebsite implements IWebsiteParser {
 	protected final WebsiteInfo _info;
 	protected final ILoggingService _logging;
 	protected final IGenreRepository _genreDatabase;
+	
+	//(4.62 - 128votes)
+	protected final Pattern _ratingPattern = Pattern.compile("([\\d\\.]+)");
 	
 	@Inject
 	public BatotoWebsite(ILoggingService logging, IGenreRepository genres) {
@@ -128,7 +134,15 @@ public class BatotoWebsite implements IWebsiteParser {
 					}
 				}
 			}
-			
+			//(4.62 - 128votes)
+			Element ratingElement = doc.select(".rating").first();
+			if ( ratingElement != null ) {
+				System.out.println("class: " + ratingElement.text());
+				Matcher matcher = _ratingPattern.matcher(ratingElement.text());
+				if ( matcher.find() ) {
+					item._rating = Numbers.parseDouble(matcher.group(1), 0) / 5.0; //out of 5, make it out of 1
+				}
+			}
 		} 
 		catch (SocketTimeoutException e) {
 			_logging.error(TAG, "Timeout loading item: " + item);			

@@ -127,6 +127,10 @@ public class WebsiteParsingTests {
 		if ( item._summary.length() == 0) {
 			System.err.println("No summary found for " + item._displayTitle);
 		}
+		Assert.assertTrue("invalid rating", item._rating < 11);
+		if ( item._rating == 0) {
+			System.err.println("No rating found for " + item._displayTitle);
+		}
 	}
 
 }

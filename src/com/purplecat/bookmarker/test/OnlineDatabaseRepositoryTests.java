@@ -99,6 +99,9 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			Assert.assertEquals("Element doesn't match genre size", expected._genres.size(), actual._genres.size());
 			checkItem(actual);
 			checkEquals(expected, actual);
+			
+			Media actualMedia = _savedDatabase.queryById(expected._mediaId);
+			checkEquals(actualMedia, expected);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail("Exception occurred");
@@ -345,9 +348,22 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 		Assert.assertEquals("newlyAdded mismatch", expected._newlyAdded, actual._newlyAdded);
 		Assert.assertEquals("rating mismatch", expected._rating, actual._rating, .0005);
 		Assert.assertEquals("website name mismatch", expected._websiteName, actual._websiteName);
+		Assert.assertEquals("story state mismatch", expected._storyState, actual._storyState);
 		
 		Assert.assertEquals("media mismatch", expected._mediaId, actual._mediaId);
 		Assert.assertEquals("title mismatch", expected._displayTitle, actual._displayTitle);
+		Assert.assertEquals("saved place", expected._lastReadPlace, actual._lastReadPlace);
+		if ( expected._lastReadDate != null && actual._lastReadDate != null ) {
+			Assert.assertTrue("saved date", expected._lastReadDate.compareTo(actual._lastReadDate) == 0);
+		}
+		else {
+			Assert.assertEquals("saved date", expected._lastReadDate, actual._lastReadDate);
+		}
+	}
+	
+	protected void checkEquals(Media expected, OnlineMediaItem actual) {
+		Assert.assertEquals("is saved mismatch", expected._isSaved, actual._isSaved);
+		Assert.assertEquals("story state mismatch", expected._storyState, actual._storyState);
 		Assert.assertEquals("saved place", expected._lastReadPlace, actual._lastReadPlace);
 		if ( expected._lastReadDate != null && actual._lastReadDate != null ) {
 			Assert.assertTrue("saved date", expected._lastReadDate.compareTo(actual._lastReadDate) == 0);

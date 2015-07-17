@@ -18,6 +18,7 @@ import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.WebsiteInfo;
 import com.purplecat.bookmarker.services.ServiceException;
 import com.purplecat.bookmarker.services.databases.IGenreRepository;
+import com.purplecat.commons.extensions.Numbers;
 import com.purplecat.commons.logs.ILoggingService;
 import com.purplecat.commons.utils.StringUtils;
 
@@ -55,6 +56,12 @@ public class BakaWebsite implements IWebsiteParser {
 							item._genres.add(_genreDatabase.find(genreLink.text()));
 						}
 					}					
+				}
+				else if ( title.equals("user rating") ) {
+					Element bold = contentDiv.select("b").first();
+					if ( bold != null ) {				
+						item._rating = Numbers.parseDouble(bold.text(), 0) / 10.0;// out of 10, make it 1
+					}
 				}
 			}		
 		} 

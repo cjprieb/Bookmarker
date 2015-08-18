@@ -35,13 +35,15 @@ public class PlaceEditor extends JPanel {
 	@Inject public IImageRepository _imageResources;
 	@Inject public Toolbox _toolbox;
 	
-	public PlaceEditor() {
-		initGUI();
-		addListeners();
-	}
+	public PlaceEditor() {	}
 	
 	public void enableUpdateButton(boolean showUpdate) {
 		_showUpdate = showUpdate;
+	}
+	
+	public void createControl() {
+		initGUI();
+		addListeners();	
 	}
 	
 	/*
@@ -104,12 +106,9 @@ public class PlaceEditor extends JPanel {
 			mLblExtra = new JLabel();
 		}
 		{
-			mBtnUpdate = new JButton();
+			mBtnUpdate = new JButton(_imageResources.getImage(Resources.image.appGreenCheckId));
 			mBtnUpdate.setVisible(_showUpdate);
-			if ( _showUpdate ) {
-				mBtnUpdate.setIcon(_imageResources.getImage(Resources.image.appGreenCheckId));	
-				_toolbox.setButtonInsets(new Insets(2, 2, 2, 2), mBtnUpdate);
-			}
+			_toolbox.setButtonInsets(new Insets(2, 2, 2, 2), mBtnUpdate);
 		}
 		mPnlPlaceLayout.setHorizontalGroup(mPnlPlaceLayout.createSequentialGroup()
 			.addContainerGap()

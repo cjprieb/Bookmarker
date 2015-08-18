@@ -251,8 +251,8 @@ public class MediaSummaryPanel {
 	}
 
 	protected void setSummary(String sSummary) {
-		_logger.debug(2, TAG, "Setting summary: " + sSummary);
-		_logger.debug(3, TAG, "Is summary visible: " + _dataSummary._textArea.isVisible());
+//		_logger.debug(2, TAG, "Setting summary: " + sSummary);
+//		_logger.debug(3, TAG, "Is summary visible: " + _dataSummary._textArea.isVisible());
 		if ( !StringUtils.isNullOrEmpty(sSummary) ) {
 			_dataSummary.setText("<html>" + sSummary);
 		}

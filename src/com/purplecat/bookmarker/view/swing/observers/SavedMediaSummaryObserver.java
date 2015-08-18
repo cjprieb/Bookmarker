@@ -21,14 +21,27 @@ import com.purplecat.bookmarker.view.swing.panels.SummarySidebar;
 import com.purplecat.commons.swing.IRowSelectionListener;
 
 public class SavedMediaSummaryObserver implements IRowSelectionListener<Media>, IItemChangedObserver<Media>, 
-	IWebsiteLoadObserver, ISummaryLoadObserver, ISummaryPanelListener {	
+	IWebsiteLoadObserver, ISummaryLoadObserver, IMediaItemEditor {	
 	
-	@Inject Controller _controller;
-	@Inject SavedMediaSummaryPanel _mediaSummaryPanel;
-	@Inject EditMediaSummaryPanel _editMediaSummaryPanel;
-	@Inject SummarySidebar _parentSummaryPanel;
+	final Controller _controller;
+	final SavedMediaSummaryPanel _mediaSummaryPanel;
+	final EditMediaSummaryPanel _editMediaSummaryPanel;
+	final SummarySidebar _parentSummaryPanel;
 	
 	Media _currentMedia;
+	
+	@Inject
+	public SavedMediaSummaryObserver(Controller controller,	SavedMediaSummaryPanel mediaSummaryPanel, EditMediaSummaryPanel editMediaSummaryPanel,
+	SummarySidebar parentSummaryPanel) {
+		_controller = controller;
+		_mediaSummaryPanel = mediaSummaryPanel;
+		_editMediaSummaryPanel = editMediaSummaryPanel;
+		_parentSummaryPanel = parentSummaryPanel;
+		
+		_controller.observeSavedMediaUpdate(this);
+		_editMediaSummaryPanel.setMediaItemEditor(this);
+		
+	}
 	
 	public JPanel getSummaryPanel() {
 		return _mediaSummaryPanel.getPanel();
@@ -57,6 +70,7 @@ public class SavedMediaSummaryObserver implements IRowSelectionListener<Media>, 
 
 	@Override
 	public void notifyItemUpdated(Media item) {
+		System.out.println("notifyItemUpdated: " + item);
 		if ( _currentMedia._id == item._id ) {
 			_currentMedia = item;
 			_mediaSummaryPanel.update(_currentMedia);
@@ -103,13 +117,13 @@ public class SavedMediaSummaryObserver implements IRowSelectionListener<Media>, 
 	}
 
 	@Override
-	public void notifyCategoryChanged(String categoryName) {
+	public void addCategory(String categoryName) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void notifyPlaceChanged(Place place) {
+	public void updatePlace(Place place) {
 		if ( _currentMedia != null ) {
 			_currentMedia._lastReadPlace = place;
 			_controller.updateMedia(_currentMedia);
@@ -117,15 +131,15 @@ public class SavedMediaSummaryObserver implements IRowSelectionListener<Media>, 
 	}
 
 	@Override
-	public void notifyStoryStateChanged(EStoryState state) {
-//		if ( _currentMedia != null ) {
-//			_currentMedia._storyState = state;
-//			_controller.updateMedia(_currentMedia);
-//		}
+	public void updateStoryState(EStoryState state) {
+		if ( _currentMedia != null ) {
+			_currentMedia._storyState = state;
+			_controller.updateMedia(_currentMedia);
+		}
 	}
 
 	@Override
-	public void notifyFavoriteStateChanged(EFavoriteState state) {
+	public void updateFavoriteState(EFavoriteState state) {
 		if ( _currentMedia != null ) {
 			_currentMedia._rating = state;
 			_controller.updateMedia(_currentMedia);

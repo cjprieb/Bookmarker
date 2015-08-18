@@ -2,8 +2,6 @@ package com.purplecat.bookmarker.view.swing.panels;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -20,14 +18,14 @@ import com.purplecat.bookmarker.models.Place;
 import com.purplecat.bookmarker.view.swing.components.FavoriteStateButton;
 import com.purplecat.bookmarker.view.swing.components.PlaceEditor;
 import com.purplecat.bookmarker.view.swing.components.StoryStateButton;
-import com.purplecat.bookmarker.view.swing.observers.ISummaryPanelListener;
+import com.purplecat.bookmarker.view.swing.observers.IMediaItemEditor;
 import com.purplecat.commons.IResourceService;
 
 public class EditMediaSummaryPanel implements ActionListener, ChangeListener {
 	protected JPanel _panel;
 	protected JPanel _categoryComboBox; //CategoryComboBox
 	protected JButton _addCategoryButton;	
-	protected List<ISummaryPanelListener> _listenerList;
+	protected IMediaItemEditor _mediaItemEditor;
 
 	@Inject public PlaceEditor _placeEditor;
 	@Inject public FavoriteStateButton _favStateButton;
@@ -35,17 +33,13 @@ public class EditMediaSummaryPanel implements ActionListener, ChangeListener {
 	
 	@Inject public IResourceService _resources; 
 	
-	public EditMediaSummaryPanel() {
-		_listenerList = new LinkedList<ISummaryPanelListener>();
-	}
-	
 	public void create() {		
 		initGUI();
 		addListeners();		
 	}
 	
-	public void addListener(ISummaryPanelListener listener) {
-		_listenerList.add(listener);
+	public void setMediaItemEditor(IMediaItemEditor editor) {
+		_mediaItemEditor = editor;
 	}
 	
 	public JPanel getPanel() {
@@ -72,8 +66,8 @@ public class EditMediaSummaryPanel implements ActionListener, ChangeListener {
 		GroupLayout panelLayout = new GroupLayout(_panel);
 		_panel.setLayout(panelLayout);
 		{
-			_placeEditor = new PlaceEditor();
 			_placeEditor.enableUpdateButton(true);
+			_placeEditor.createControl();
 		}
 		{			
 			EStoryState[] order = { EStoryState.LAST_AVAILABLE_CHAPTER, EStoryState.FINISHED_BOOKMARK };
@@ -148,24 +142,15 @@ public class EditMediaSummaryPanel implements ActionListener, ChangeListener {
 	}
 	
 	protected void firePlaceChanged() {
-		Place newPlace = _placeEditor.getPlace();
-		for ( ISummaryPanelListener l : _listenerList ) {
-			l.notifyPlaceChanged(newPlace);
-		}
+		_mediaItemEditor.updatePlace(_placeEditor.getPlace());
 	}
 	
 	protected void fireStoryStateChanged() {
-		EStoryState state = _storyStateButton.getStoryState();
-		for ( ISummaryPanelListener l : _listenerList ) {
-			l.notifyStoryStateChanged(state);
-		}
+		_mediaItemEditor.updateStoryState(_storyStateButton.getStoryState());
 	}
 	
 	protected void fireFavoriteStateChanged() {
-		EFavoriteState state = _favStateButton.getFavoriteState();
-		for ( ISummaryPanelListener l : _listenerList ) {
-			l.notifyFavoriteStateChanged(state);
-		}
+		_mediaItemEditor.updateFavoriteState(_favStateButton.getFavoriteState());
 	}
 	
 	public void setPlace(Place p) {

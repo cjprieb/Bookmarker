@@ -28,16 +28,16 @@ import com.purplecat.commons.threads.IThreadPool;
 public class Controller {
 	public static final String TAG = "Controller";
 
-	private final ILoggingService _logging;	
-	private final IThreadPool _threadPool;	
-	private final SavedMediaService _mediaService;
-	private final WebsiteThreadObserver _observer;
+	public final ILoggingService _logging;	
+	public final IThreadPool _threadPool;	
+	public final SavedMediaService _mediaService;
+	public final WebsiteThreadObserver _observer;
 	
-	private final List<SampleTaskObserver> _sampleTaskObservers;
-	private final List<IListLoadedObserver<Media>> _mediaLoadObservers;
-	private final List<IItemChangedObserver<Media>> _mediaUpdateObservers;
-	private List<IWebsiteLoadObserver> _websiteLoadObservers;
-	private List<ISummaryLoadObserver> _summaryLoadObservers;
+	public final List<SampleTaskObserver> _sampleTaskObservers;
+	public final List<IListLoadedObserver<Media>> _mediaLoadObservers;
+	public final List<IItemChangedObserver<Media>> _mediaUpdateObservers;	
+	public final List<IWebsiteLoadObserver> _websiteLoadObservers;
+	public final List<ISummaryLoadObserver> _summaryLoadObservers;
 	
 	@Inject
 	public Controller(ILoggingService logging, IThreadPool threadPool, SavedMediaService mangaService, WebsiteThreadObserver observer) {
@@ -99,7 +99,7 @@ public class Controller {
 	}
 
 	public void updateMedia(Media media) {
-		_threadPool.runOnWorkerThread(new UpdateSavedMediaTask(_logging, _mediaService, _mediaUpdateObservers, media));
+		_threadPool.runOnWorkerThread(new UpdateSavedMediaTask(this, media));
 	}
 	
 	/*------Load Media Summary actions--------*/
@@ -111,6 +111,6 @@ public class Controller {
 		for ( ISummaryLoadObserver obs : _summaryLoadObservers ) {
 			obs.notifySummaryLoadStarted(mediaId);
 		}
-		_threadPool.runOnWorkerThread(new LoadMediaSummaryTask(_logging, _mediaService, _summaryLoadObservers, mediaId, url));		
+		_threadPool.runOnWorkerThread(new LoadMediaSummaryTask(this, mediaId, url));		
 	}
 }

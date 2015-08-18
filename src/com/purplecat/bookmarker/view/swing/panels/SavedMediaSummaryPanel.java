@@ -11,13 +11,13 @@ public class SavedMediaSummaryPanel extends MediaSummaryPanel {
 		setUpdateColor(view._isSaved && view.isUpdated(), view.isRead());
 //		setAuthor(view._author);
 		if ( view.isUpdated() ) {
-			setPlaceAndDateTime(view._lastReadPlace, view._lastReadDate, view._updatedPlace, view._updatedDate);
+			setPlaceAndDateTime(view._lastReadPlace, view._lastReadDate, view._updatedPlace, view._updatedDate, true);
 		}
 		else {
-			setPlaceAndDateTime(view._lastReadPlace, view._lastReadDate, null, null);			
+			setPlaceAndDateTime(view._lastReadPlace, view._lastReadDate, null, null, true);			
 		}
 		setGenres(view._genres);
-//		setCategories(view._categories);
+		_dataCategories.setVisible(false);
 		_dataRating.setVisible(false);
 //		setType(view._type);
 		setSummary(view._summary);

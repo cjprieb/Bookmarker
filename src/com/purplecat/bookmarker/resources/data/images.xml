@@ -8,7 +8,7 @@
 	<image name="appRedXId">redcross.png</image>
 <!--  Bookmarker Icons -->
     <image name="imgEmblemHeartId">heart.png</image>
-	<image name="imgFavBlankStarId">blank-star.png</image>
+	<image name="imgFavBlankStarId">blankstar.png</image>
 	<image name="imgFavStarId">star.png</image>
 	<image name="imgFavGoodId">good.png</image>
 	<image name="imgFavMehId">meh.png</image>

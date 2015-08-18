@@ -1,6 +1,5 @@
 package com.purplecat.bookmarker.view.swing;
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -47,7 +46,6 @@ public class MainPanel implements ChangeListener {
 
 	public JPanel create(GlassTimerPanel timerGlassPane) {
 		_panel = new JPanel();
-		_panel.setPreferredSize(new Dimension(900, 600));
 		
 		_tabbedPane = new JTabbedPane();
 		_tabbedPane.addChangeListener(this);

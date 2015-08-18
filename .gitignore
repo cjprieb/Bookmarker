@@ -14,3 +14,4 @@ hs_err_pid*
 logs.txt
 bookmarker.db
 notes.html
+data/summaries

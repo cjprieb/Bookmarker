@@ -18,6 +18,7 @@ import com.purplecat.bookmarker.services.websites.IWebsiteLoadObserver;
 import com.purplecat.bookmarker.services.websites.IWebsiteParser;
 import com.purplecat.bookmarker.sql.IConnectionManager;
 import com.purplecat.commons.logs.ILoggingService;
+import com.purplecat.commons.utils.StringUtils;
 
 public class OnlineUpdateTask {
 	final String TAG = "OnlineUpdateTask";
@@ -145,10 +146,21 @@ public class OnlineUpdateTask {
 			if ( isStopped() ) {
 				break;
 			}
-			OnlineMediaItem newItem = scraper.loadItem(item);
 			iItemsParsed++;
+			if ( !StringUtils.isNullOrEmpty(item._summary) && item._genres.size() > 0 ) {
+				_logging.debug(2, TAG, "Not loading summary for " + item._displayTitle);
+				_observer.notifyItemParsed(item, iItemsParsed, updatedMediaIds.size());
+				continue;
+			}
+			OnlineMediaItem newItem = scraper.loadItem(item);
 			if ( newItem != null ) {
 				_logging.debug(2, TAG, "Item parsed: " + item);
+				if ( item._summary != null ) {
+					_logging.debug(3, TAG, "Summary: " + (item._summary.length() < 30 ? item._summary : item._summary.substring(0, 30)));
+				}
+				else {
+					_logging.debug(3, TAG, "Summary: [null]");
+				}
 				try {
 					_connectionManager.open();
 					_repository.update(newItem);

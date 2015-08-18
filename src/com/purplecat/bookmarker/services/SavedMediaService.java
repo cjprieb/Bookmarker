@@ -229,4 +229,23 @@ public class SavedMediaService {
 		}
 		return onlineItem;
 	}
+
+	public Media update(Media item) throws ServiceException {
+		ServiceException serviceException = null;
+		try {
+			_connectionManager.open();
+			_database.update(item);	
+		}
+		catch (DatabaseException e) {
+			_logging.error("Saved Media Service", "Exception updating item", e);
+			serviceException = new ServiceException("Error saving update for media item " + item._id, ServiceException.SQL_ERROR);
+		}
+		finally {
+			_connectionManager.close();
+		}
+		if ( serviceException != null ) {
+			throw serviceException;
+		}
+		return item;
+	}
 }

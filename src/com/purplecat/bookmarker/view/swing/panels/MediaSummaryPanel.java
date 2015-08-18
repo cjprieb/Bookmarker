@@ -223,16 +223,20 @@ public class MediaSummaryPanel {
 		return _panel;
 	}
 
-	protected void setPlaceAndDateTime(Place lastReadPlace, DateTime lastReadDate,
-			Place updatedPlace, DateTime updatedDate) {
-				String lastReadStr = PlaceExt.formatPlaceAndDate(_resources, lastReadPlace, lastReadDate);
-				_dataLastRead.setText(lastReadStr);
-				_dataLastRead.setVisible(lastReadStr.length() > 0);	
+	protected void setPlaceAndDateTime(Place lastReadPlace, DateTime lastReadDate, Place updatedPlace, DateTime updatedDate, boolean includeLastReadDate) {
+		if ( includeLastReadDate ) {
+			String lastReadStr = PlaceExt.formatPlaceAndDate(_resources, lastReadPlace, lastReadDate);
+			_dataLastRead.setText(lastReadStr);
+			_dataLastRead.setVisible(lastReadStr.length() > 0);
+		}
+		else {
+			_dataLastRead.setVisible(false);
+		}
 			
-				String updatedStr = PlaceExt.formatPlaceAndDate(_resources, updatedPlace, updatedDate);
-				_dataUpdated.setText(updatedStr);
-				_dataUpdated.setVisible(updatedStr.length() > 0);	
-			}
+		String updatedStr = PlaceExt.formatPlaceAndDate(_resources, updatedPlace, updatedDate);
+		_dataUpdated.setText(updatedStr);
+		_dataUpdated.setVisible(updatedStr.length() > 0);	
+	}
 
 	protected void setUpdateColor(boolean isUpdated, boolean isRead) {
 		Color textColor = Color.black;
@@ -247,11 +251,13 @@ public class MediaSummaryPanel {
 	}
 
 	protected void setSummary(String sSummary) {
+		_logger.debug(2, TAG, "Setting summary: " + sSummary);
+		_logger.debug(3, TAG, "Is summary visible: " + _dataSummary._textArea.isVisible());
 		if ( !StringUtils.isNullOrEmpty(sSummary) ) {
 			_dataSummary.setText("<html>" + sSummary);
 		}
 		else {
-			_dataSummary.setText("");
+			_dataSummary.setText("<html>");
 		}
 	}
 

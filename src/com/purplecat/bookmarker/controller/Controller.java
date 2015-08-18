@@ -13,6 +13,7 @@ import com.purplecat.bookmarker.controller.tasks.LoadMediaSummaryTask;
 import com.purplecat.bookmarker.controller.tasks.SampleTask;
 import com.purplecat.bookmarker.controller.tasks.SavedMediaLoadTask;
 import com.purplecat.bookmarker.controller.tasks.UpdateMangaFromUrlTask;
+import com.purplecat.bookmarker.controller.tasks.UpdateSavedFromOnlineTask;
 import com.purplecat.bookmarker.controller.tasks.UpdateSavedMediaTask;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
@@ -90,11 +91,15 @@ public class Controller {
 	}
 	
 	public void updateMediaFrom(OnlineMediaItem selectedItem) {
-		_threadPool.runOnWorkerThread(new UpdateSavedMediaTask(_mediaService, _mediaUpdateObservers, selectedItem));
+		_threadPool.runOnWorkerThread(new UpdateSavedFromOnlineTask(_logging, _mediaService, _mediaUpdateObservers, selectedItem));
 	}
 
 	public void updateMangaFromUrl(String url) {
 		_threadPool.runOnWorkerThread(new UpdateMangaFromUrlTask(_logging, _mediaService, _mediaUpdateObservers, url));
+	}
+
+	public void updateMedia(Media media) {
+		_threadPool.runOnWorkerThread(new UpdateSavedMediaTask(_logging, _mediaService, _mediaUpdateObservers, media));
 	}
 	
 	/*------Load Media Summary actions--------*/

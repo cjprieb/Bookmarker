@@ -6,13 +6,14 @@ import com.purplecat.bookmarker.models.OnlineMediaItem;
 @Singleton
 public class OnlineMediaSummaryPanel extends MediaSummaryPanel {
 	public void update(OnlineMediaItem view) {
-		_dataTitle.setText(view._displayTitle);		
-//		setAltTitles(view._altTitles);
+		_dataTitle.setText(view._displayTitle);	
+		_dataAltTitles.setVisible(false);
 		setUpdateColor(view._isSaved && view.isUpdated(), view.isRead());
 //		setAuthor(view._author);
-		setPlaceAndDateTime(view._lastReadPlace, view._lastReadDate, view._updatedPlace, view._updatedDate);
+		setPlaceAndDateTime(view._lastReadPlace, view._lastReadDate, view._updatedPlace, view._updatedDate, view._isSaved);
 		setGenres(view._genres);
-//		setCategories(view._categories);
+		_dataCategories.setVisible(false);
+		_dataDescription.setVisible(false);
 		_dataRating.setVisible(true);
 		setRating(view._rating);
 //		setType(view._type);

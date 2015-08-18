@@ -9,7 +9,7 @@ import com.purplecat.bookmarker.services.ServiceException;
 import com.purplecat.commons.logs.ILoggingService;
 import com.purplecat.commons.threads.IThreadTask;
 
-public class UpdateSavedMediaTask implements IThreadTask {
+public class UpdateSavedFromOnlineTask implements IThreadTask {
 	public static final String TAG = "UpdateSavedMediaTask";
 	
 	ILoggingService _logging;
@@ -18,13 +18,13 @@ public class UpdateSavedMediaTask implements IThreadTask {
 	ServiceException _error;
 	Iterable<IItemChangedObserver<Media>> _observers;
 	SavedMediaService _mediaService;
-	Media _updateItem;
+	OnlineMediaItem _onlineItem;
 	
-	public UpdateSavedMediaTask(ILoggingService logging, SavedMediaService service, Iterable<IItemChangedObserver<Media>> obs, Media item) {
+	public UpdateSavedFromOnlineTask(ILoggingService logging, SavedMediaService service, Iterable<IItemChangedObserver<Media>> obs, OnlineMediaItem onlineItem) {
 		_logging = logging;
 		_observers = obs;
 		_mediaService = service;
-		_updateItem = item;
+		_onlineItem = onlineItem;
 	}
 	
 	@Override
@@ -37,10 +37,10 @@ public class UpdateSavedMediaTask implements IThreadTask {
 	@Override
 	public void workerTaskStart() {		
 		try {
-			_result = _mediaService.update(_updateItem);
+			_result = _mediaService.updateFromOnlineItem(_onlineItem);
 		} catch (ServiceException e) {
 			_error = e;
-			_logging.error(TAG, "Could not update item", e);
+			_logging.error(TAG, "Could not update from online item", e);
 		}
 	}
 }

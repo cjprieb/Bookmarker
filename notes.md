@@ -26,7 +26,7 @@
 * 4 dialog for genres
 * 4 dialog for editing manga
 * 8 add tv shows tab
-* 2 add links to URLs in summary
+* 1 add links to URLs in summary
 * ~~1 add summary to (saved) media item~~
 * ~~1 display alt titles~~
 * 4 specify preferred order for websites
@@ -44,6 +44,8 @@
 * ~~don't update time when refreshing - keep the oldest time. (but what if it should really be refreshed??)~~
 * ~~add timer indication of loading~~
 * ~~get rid of "search for series of same"~~
+* don't download genre/summary if already exists
+* fix summary bar dynamic width problems
 
 ## KANGAETE KOTO
 * how to handle multiple updates for the same item??
@@ -52,10 +54,9 @@
 * how to handle story state
 * check if updated items are completed or not
 * check if item is novel or not
-* load ratings
+* ~~load ratings~~
 * load categories
 * whether to save summaries
-* save control settings
 * go further back to find saved media?
 * how to handle database cleaning
 

@@ -17,6 +17,7 @@ import com.purplecat.commons.swing.Toolbox;
 public class SummarySidebar {
 	private JPanel _panel;
 	private JScrollPane _scrollPane;
+	private JPanel _editorPane;
 	
 	@Inject Toolbox _toolbox;
 	
@@ -29,17 +30,17 @@ public class SummarySidebar {
 		_scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		_scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
-		JPanel editPanel = new JPanel();
-		editPanel.setLayout(new BorderLayout());		
+		_editorPane = new JPanel();
+		_editorPane.setLayout(new BorderLayout());		
 		{
 			GroupLayout layout = new GroupLayout(_panel);
 			_panel.setLayout(layout);
 			layout.setVerticalGroup(layout.createSequentialGroup()
 				.addComponent(_scrollPane, GroupLayout.PREFERRED_SIZE, 100, Short.MAX_VALUE)
-				.addComponent(editPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE));
+				.addComponent(_editorPane, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE));
 			layout.setHorizontalGroup(layout.createParallelGroup()
 				.addComponent(_scrollPane, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 100, Short.MAX_VALUE)
-				.addComponent(editPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE));
+				.addComponent(_editorPane, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE));
 		}
 	}
 	
@@ -51,5 +52,13 @@ public class SummarySidebar {
 		if ( panel != null ) {
 			_scrollPane.setViewportView(panel);
 		}
+	}
+	
+	public void setEditorView(JPanel panel) {
+		_editorPane.removeAll();
+		if ( panel != null ) {
+			_editorPane.add(panel);
+		}
+		_panel.validate();
 	}
 }

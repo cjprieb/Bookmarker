@@ -17,10 +17,12 @@ import com.purplecat.bookmarker.extensions.StoryStateExt;
 import com.purplecat.bookmarker.models.Genre;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
+import com.purplecat.bookmarker.services.ISummaryRepository;
 import com.purplecat.bookmarker.sql.ConnectionManager;
 import com.purplecat.bookmarker.sql.NamedResultSet;
 import com.purplecat.bookmarker.sql.NamedStatement;
 import com.purplecat.commons.logs.ILoggingService;
+import com.purplecat.commons.utils.StringUtils;
 
 public class OnlineMediaDatabase implements IOnlineMediaRepository {
 	public static final String TAG = "MangaDatabaseConnector";
@@ -38,14 +40,17 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 	public final MediaDatabaseRepository _mediaDatabase;
 	public final GenreDatabaseRepository _genreDatabase;
 	public final TitleDatabaseRepository _titleDatabase;
+	public final ISummaryRepository _summaryRepository;
 	 
 	@Inject
-	public OnlineMediaDatabase(ILoggingService logger, ConnectionManager mgr, MediaDatabaseRepository mediaDb, GenreDatabaseRepository genreDb, TitleDatabaseRepository titleDb) {
+	public OnlineMediaDatabase(ILoggingService logger, ConnectionManager mgr, MediaDatabaseRepository mediaDb, GenreDatabaseRepository genreDb, 
+			TitleDatabaseRepository titleDb, ISummaryRepository summaryRepository) {
 		_logging = logger;
 		_connectionManager = mgr;
 		_mediaDatabase = mediaDb;
 		_genreDatabase = genreDb;
 		_titleDatabase = titleDb;
+		_summaryRepository = summaryRepository;
 	}
 	
 	/**
@@ -106,6 +111,7 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 			}
 			if ( item != null ) {
 				item._genres.addAll(_genreDatabase.queryByMediaId(item._mediaId));
+				item._summary = _summaryRepository.loadSummary(item._mediaId, item._websiteName);
 			}
 		} catch (SQLException e) {
 			throw new DatabaseException("queryForId failed", sql, e);
@@ -224,6 +230,9 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 			_genreDatabase.updateGenreList(item._genres, item._mediaId);
 			List<OnlineMediaItem> existingList = queryByMediaId(item._mediaId);
 			updateMedia(conn, item._mediaId, OnlineMediaItemExt.getIdWithMaxPlace(existingList, item));
+			if ( !StringUtils.isNullOrEmpty(item._summary) ) {
+				_summaryRepository.saveSummary(item._mediaId, item._websiteName, item._summary);
+			}
 		} catch (SQLException e) {
 			throw new DatabaseException("Update failed", sql, e);
 		} 
@@ -255,6 +264,7 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 			while ( result.next() ) {
 				OnlineMediaItem item = loadOnlineMediaFromResultSet(result);
 				item._genres.addAll(genres);
+				item._summary = _summaryRepository.loadSummary(item._mediaId, item._websiteName);
 				existing.add(item);
 			}
 		} catch (SQLException e) {

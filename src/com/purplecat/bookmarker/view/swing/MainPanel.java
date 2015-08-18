@@ -3,6 +3,7 @@ package com.purplecat.bookmarker.view.swing;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -28,12 +29,15 @@ import com.purplecat.bookmarker.view.swing.panels.OnlineUpdateTab;
 import com.purplecat.bookmarker.view.swing.panels.SavedMediaTab;
 import com.purplecat.bookmarker.view.swing.panels.SummarySidebar;
 import com.purplecat.commons.IResourceService;
+import com.purplecat.commons.logs.ILoggingService;
 import com.purplecat.commons.swing.Toolbox;
 
 @Singleton
 public class MainPanel implements ChangeListener {
+	private static final String TAG = "MainPanel";
 	
 	@Inject Controller _controller;
+	@Inject ILoggingService _logging;
 	@Inject IResourceService _resources;
 	@Inject Toolbox _toolbox;
 	
@@ -76,6 +80,7 @@ public class MainPanel implements ChangeListener {
 				)
 				.addContainerGap());
 		
+		loadPreferences();
 		return _panel;
 	}
 	
@@ -88,6 +93,25 @@ public class MainPanel implements ChangeListener {
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(updateMenu);
 		return menuBar;
+	}
+	
+	public void loadPreferences() {
+		_logging.debug(1, TAG, "Loading MainPanel preferences");
+		Preferences prefs = Preferences.userNodeForPackage(getClass());
+		
+		int tabIndex = prefs.getInt("main-tabIndex", 0);
+		_logging.debug(2, TAG, "Selected tab: " + tabIndex);
+		if ( tabIndex >= 0 && tabIndex < _tabbedPane.getTabCount() ) {
+			_tabbedPane.setSelectedIndex(tabIndex);
+		}		
+	}
+	
+	public void savePreferences() {
+		_logging.debug(1, TAG, "Saving MainPanel preferences");
+		Preferences prefs = Preferences.userNodeForPackage(getClass());
+		prefs.putInt("main-tabIndex", _tabbedPane.getSelectedIndex());
+		
+		_onlineUpdateTab.savePreferences();
 	}
 	
 	@Override

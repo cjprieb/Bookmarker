@@ -2,6 +2,7 @@ package com.purplecat.bookmarker.view.swing.panels;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.prefs.Preferences;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -23,11 +24,14 @@ import com.purplecat.bookmarker.view.swing.components.WebsiteDropdown;
 import com.purplecat.bookmarker.view.swing.observers.OnlineMediaSummaryObserver;
 import com.purplecat.bookmarker.view.swing.observers.UpdateMediaObserverControl;
 import com.purplecat.commons.IResourceService;
+import com.purplecat.commons.logs.ILoggingService;
 import com.purplecat.commons.swing.Toolbox;
 
 public class OnlineUpdateTab {
+	private static final String TAG = "MainPanel";
 	
 	@Inject Controller _controller;
+	@Inject ILoggingService _logging;
 	@Inject IResourceService _resources;
 	@Inject Toolbox _toolbox;
 	@Inject SummarySidebar _summaryPanel;
@@ -114,6 +118,8 @@ public class OnlineUpdateTab {
 				.addPreferredGap(ComponentPlacement.RELATED)
 				.addComponent(updateObserver.getProgressBar(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)				
 				.addContainerGap());
+		
+		loadPreferences();
 	}
 	
 	public JPanel getPanel() {
@@ -146,5 +152,36 @@ public class OnlineUpdateTab {
 
 	public OnlineMediaItem getSelectedItem() {
 		return _updateMediaTableControl.getTable().getSelectedItem();
+	}
+	
+	public void loadPreferences() {
+		_logging.debug(1, TAG, "Loading OnlineUpdateTab preferences");
+		Preferences prefs = Preferences.userNodeForPackage(getClass());
+		_logging.debug(3, TAG, "hours ago: " + prefs.getInt("update-hoursAgo", 8));
+		_spinner.setValue(prefs.getInt("update-hoursAgo", 8));
+		_chkLoadGenres.setSelected(prefs.getBoolean("update-loadGenres", true));
+		_chkAllWebsites.setSelected(prefs.getBoolean("update-allWebsites", false));
+		
+		String websiteName = prefs.get("update-selectedWebsite", "");
+		for ( int i = 0; i < _websiteDropdown.getItemCount(); i++ ) {
+			WebsiteInfo info = _websiteDropdown.getItemAt(i);
+			if ( info._name.equals(websiteName) ) {
+				_websiteDropdown.setSelectedIndex(i);
+				break;
+			}
+		}
+		
+		_websiteDropdown.setEnabled(!_chkAllWebsites.isSelected());
+	}
+	
+	public void savePreferences() {
+		_logging.debug(2, TAG, "Saving OnlineUpdateTab preferences");
+		Preferences prefs = Preferences.userNodeForPackage(getClass());
+		_logging.debug(3, TAG, "hours ago: " + (int)_spinner.getHourValue());
+		
+		prefs.putInt("update-hoursAgo", (int)_spinner.getHourValue());
+		prefs.putBoolean("update-allWebsites", _chkAllWebsites.isSelected());
+		prefs.putBoolean("update-loadGenres", _chkLoadGenres.isSelected());
+		prefs.put("update-selectedWebsite", ((WebsiteInfo)_websiteDropdown.getSelectedItem())._name);
 	}
 }

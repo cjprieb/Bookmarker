@@ -25,10 +25,7 @@ import com.purplecat.commons.swing.MyApplication;
 import com.purplecat.commons.swing.renderer.ICellRendererFactory;
 
 public class BookmarkerStart extends MyApplication implements IWebsiteLoadObserver {
-	//TODO: move to seperate class
-	public static final String CONNECTION_PREFIX = "jdbc:sqlite:";	
-	public static final String DATABASE_PATH = "../BookmarkView/databases/bookmarker.db";
-
+	
 	public static void main(String[] args) {
 		try {
 			Class.forName("org.sqlite.JDBC");
@@ -74,7 +71,7 @@ public class BookmarkerStart extends MyApplication implements IWebsiteLoadObserv
 
 	@Override
 	protected void setupActions() {
-		this.loadPreferences(Preferences.userNodeForPackage(getClass()), false);
+		this.loadPreferences(Preferences.userNodeForPackage(getClass()), true);
 		_controller.observeOnlineThreadLoading(this);
 	}
 
@@ -93,8 +90,8 @@ public class BookmarkerStart extends MyApplication implements IWebsiteLoadObserv
 
 	@Override
 	protected void applicationQuit() {
-		// TODO Auto-generated method stub
-		
+		this.savePreferences(Preferences.userNodeForPackage(getClass()), true);
+		_mainPanel.savePreferences();
 	}
 
 	@Override

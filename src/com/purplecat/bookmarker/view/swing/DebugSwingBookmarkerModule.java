@@ -24,7 +24,7 @@ import com.purplecat.bookmarker.sql.IConnectionManager;
 import com.purplecat.bookmarker.view.swing.actions.UrlDragDropAction.AddMangaUrlDropAction;
 import com.purplecat.bookmarker.view.swing.renderers.BookmarkerRendererFactory;
 import com.purplecat.commons.IResourceService;
-import com.purplecat.commons.logs.FileLog;
+import com.purplecat.commons.logs.ConsoleLog;
 import com.purplecat.commons.logs.ILoggingService;
 import com.purplecat.commons.swing.AppUtils.IDragDropAction;
 import com.purplecat.commons.swing.IImageRepository;
@@ -36,13 +36,12 @@ import com.purplecat.commons.swing.Toolbox;
 import com.purplecat.commons.swing.renderer.ICellRendererFactory;
 import com.purplecat.commons.threads.IThreadPool;
 
-public class SwingBookmarkerModule extends AbstractModule {
+public class DebugSwingBookmarkerModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
 		//Utility Items
-		bind(ILoggingService.class).to(FileLog.class);
-//		bind(ILoggingService.class).to(ConsoleLog.class);
+		bind(ILoggingService.class).to(ConsoleLog.class);
 		bind(String.class).annotatedWith(Names.named("Resource File")).toInstance("com.purplecat.bookmarker.Resources");
 		bind(String.class).annotatedWith(Names.named("Project Path")).toInstance("/com/purplecat/bookmarker/");
 		bind(ISettingsService.class).to(DefaultSettingsService.class);
@@ -57,7 +56,7 @@ public class SwingBookmarkerModule extends AbstractModule {
 		bind(UrlPatternService.class);
 		bind(IWebsiteLoadObserver.class).to(WebsiteThreadObserver.class);
 		bind(IWebsiteList.class).to(DefaultWebsiteList.class);
-		bind(String.class).annotatedWith(Names.named("JDBC URL")).toInstance("jdbc:sqlite:databases/bookmarker.db");
+		bind(String.class).annotatedWith(Names.named("JDBC URL")).toInstance("jdbc:sqlite:../BookmarkView/databases/bookmarker.db");
 		
 		//Swing Interface Items
 		bind(IThreadPool.class).to(SwingThreadPool.class);

@@ -12,8 +12,9 @@ import com.purplecat.commons.swing.renderer.ITableRowRenderer;
 
 public class UpdatedMediaRowRenderer implements ITableRowRenderer<Media> {
 	@Override
-	public void renderRow(TTable<Media> table, Component component, Media view, boolean isOdd) {
+	public void renderRow(TTable<Media> table, Component component, Media view, int row, int column) {
 		//RECENT UPDATES HIGHLIGHTING
+		boolean isOdd = (row % 2 == 1);
 		if ( view.isUpdated() && view._updatedDate != null ) {
 			Duration duration = new Duration(view._updatedDate, DateTime.now());
 			if ( duration.getStandardHours() < 24 ) {

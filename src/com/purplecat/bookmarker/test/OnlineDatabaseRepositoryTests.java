@@ -171,6 +171,7 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			
 			OnlineMediaItem actual = _database.findOrCreate(item);
 			Assert.assertNotNull("Item is null", actual);
+			Assert.assertFalse("Item is marked new", actual._newlyAdded);
 			Assert.assertEquals("Invalid id", itemId, actual._id);
 			Assert.assertEquals("Invalid media id", mediaId, actual._mediaId);
 			checkItem(actual);
@@ -254,9 +255,11 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			item._chapterUrl = "http://bato.to/read/_/319045/shana-oh-yoshitsune_v10_ch38_by_easy-going-scans";
 			item._titleUrl = "http://bato.to/comic/_/comics/shana-oh-yoshitsune-r5256";
 			item._updatedDate = new DateTime();
+			item._newlyAdded = true;
 			OnlineMediaItem result = _database.findOrCreate(item);
 			
-			Assert.assertNotNull("Item is null", result);			
+			Assert.assertNotNull("Item is null", result);		
+			Assert.assertTrue("Item is marked new", result._newlyAdded);	
 			Assert.assertTrue("Invalid id", result._id > 0);
 			Assert.assertTrue("Invalid media id", result._mediaId > 0);
 			
@@ -283,6 +286,7 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			item._chapterUrl = "http://bato.to/read/_/319045/shana-oh-yoshitsune_v10_ch38_by_easy-going-scans";
 			item._titleUrl = "http://bato.to/comic/_/comics/shana-oh-yoshitsune-r5256";
 			item._updatedDate = new DateTime();
+			item._newlyAdded = true;
 			OnlineMediaItem result = _database.findOrCreate(item);
 			
 			Assert.assertNotNull("Item is null", result);			
@@ -297,6 +301,65 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			
 			checkItem(result);
 			checkEquals(item, result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail("Exception occurred");
+		}
+	}
+
+	@Test
+	public void testSavedFindOrCreateSame() {
+		try {					
+			OnlineMediaItem item = GetRandom.getItem(_randomSavedItems);
+			item._id = 0;
+			item._mediaId = 0;
+			item._chapterUrl = "http://bato.to/read/_/3190456/shana-oh-yoshitsune_v10_ch38_by_easy-going-scans";
+			item._titleUrl = "http://bato.to/comic/_/comics/shana-oh-yoshitsune-r52566";
+			item._updatedDate = new DateTime();
+			item._newlyAdded = true;
+			OnlineMediaItem result = _database.findOrCreate(item);
+			
+			Assert.assertNotNull("Item is null", result);			
+			Assert.assertTrue("Invalid id", result._id > 0);
+			Assert.assertTrue("Invalid media id", result._mediaId > 0);
+			Assert.assertTrue("no genres", result._genres.size() > 0);
+			
+			Media mediaItem = _savedDatabase.queryById(item._mediaId);
+			Assert.assertEquals(item._chapterUrl, mediaItem._updatedUrl);
+			Assert.assertEquals(item._updatedPlace, mediaItem._updatedPlace);
+			Assert.assertEquals(item._updatedDate, mediaItem._updatedDate);
+			
+			checkItem(result);
+			checkEquals(item, result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail("Exception occurred");
+		}
+	}
+
+	@Test
+	public void testSavedFindOrCreateSlightlyOlder() {
+		try {					
+			OnlineMediaItem item = GetRandom.getItem(_randomSavedItems);
+			item._id = 0;
+			item._mediaId = 0;
+			item._chapterUrl = "http://bato.to/read/_/3190456/shana-oh-yoshitsune_v10_ch38_by_easy-going-scans";
+			item._titleUrl = "http://bato.to/comic/_/comics/shana-oh-yoshitsune-r52566";
+			item._updatedDate = item._updatedDate.plusMinutes(2);
+			OnlineMediaItem result = _database.findOrCreate(item);
+			
+			Assert.assertNotNull("Item is null", result);			
+			Assert.assertTrue("Invalid id", result._id > 0);
+			Assert.assertTrue("Invalid media id", result._mediaId > 0);
+			Assert.assertTrue("no genres", result._genres.size() > 0);
+			Assert.assertFalse("Item is marked newly added", item._newlyAdded);
+			
+			Media mediaItem = _savedDatabase.queryById(item._mediaId);
+			Assert.assertEquals(item._chapterUrl, mediaItem._updatedUrl);
+			Assert.assertEquals(item._updatedPlace, mediaItem._updatedPlace);
+			Assert.assertNotEquals(item._updatedDate, mediaItem._updatedDate);
+			
+			checkItem(result);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail("Exception occurred");
@@ -348,7 +411,9 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 		Assert.assertEquals("newlyAdded mismatch", expected._newlyAdded, actual._newlyAdded);
 		Assert.assertEquals("rating mismatch", expected._rating, actual._rating, .0005);
 		Assert.assertEquals("website name mismatch", expected._websiteName, actual._websiteName);
-		Assert.assertEquals("story state mismatch", expected._storyState, actual._storyState);
+		if ( expected._storyState != null ) {
+			Assert.assertEquals("story state mismatch", expected._storyState, actual._storyState);
+		}
 		
 		Assert.assertEquals("media mismatch", expected._mediaId, actual._mediaId);
 		Assert.assertEquals("title mismatch", expected._displayTitle, actual._displayTitle);

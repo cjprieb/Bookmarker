@@ -71,7 +71,7 @@ public class SavedMediaSummaryObserver implements IRowSelectionListener<Media>, 
 	@Override
 	public void notifyItemUpdated(Media item) {
 		System.out.println("notifyItemUpdated: " + item);
-		if ( _currentMedia._id == item._id ) {
+		if ( _currentMedia != null && _currentMedia._id == item._id ) {
 			_currentMedia = item;
 			_mediaSummaryPanel.update(_currentMedia);
 			updateEditorPanel();

@@ -30,6 +30,7 @@ public class DummyOnlineItemRepository implements IOnlineMediaRepository {
 			return item;
 		}	
 		else {
+			item._newlyAdded = true;
 			insert(item);
 			return item;
 		}

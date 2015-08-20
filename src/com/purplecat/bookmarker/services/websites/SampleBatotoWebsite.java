@@ -16,7 +16,7 @@ import com.purplecat.commons.tests.GetRandom;
 
 public class SampleBatotoWebsite extends BatotoWebsite {
 	
-//	private int _fileIndex = 0;
+	private int _fileIndex = 0;
 	private int _loadItemCount = 0;
 	
 	@Inject
@@ -26,8 +26,9 @@ public class SampleBatotoWebsite extends BatotoWebsite {
 	
 	@Override
 	protected Document getDocument() throws IOException {
-//		String fileName = _fileIndex % 2 == 0 ? "sample_batoto_2.html" : "sample_batoto.html";
-		String fileName = "sample_batoto.html";
+		String fileName = _fileIndex % 2 == 0 ? "sample_batoto.html" : "sample_batoto_3.html";
+		_fileIndex++;
+//		String fileName = "sample_batoto.html";
 		File in = new File(fileName);
 		if ( !in.exists() ) {
 			_logging.debug(0, TAG, "sample file not found: " + in.getAbsolutePath());

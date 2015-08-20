@@ -9,8 +9,9 @@ import com.purplecat.commons.swing.renderer.ITableRowRenderer;
 
 public class AuthorMediaRowRenderer implements ITableRowRenderer<Media> {
 	@Override
-	public void renderRow(TTable<Media> table, Component component, Media view, boolean isOdd) {
+	public void renderRow(TTable<Media> table, Component component, Media view, int row, int column) {
 		int iCount = 0;
+		boolean isOdd = (row % 2 == 1);
 //TODO: author renderer
 //		if ( view.getAuthor() != null ) {
 //			for ( int i = 0; i < mModel.getRowCount(); i++ ) {

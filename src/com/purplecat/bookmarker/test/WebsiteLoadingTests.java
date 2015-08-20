@@ -1,5 +1,6 @@
 package com.purplecat.bookmarker.test;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,10 +28,10 @@ import com.purplecat.bookmarker.services.websites.WebsiteThreadObserver;
 import com.purplecat.bookmarker.sql.IConnectionManager;
 import com.purplecat.bookmarker.test.OnlineUpdateThreadTests.DummyThreadPool;
 import com.purplecat.bookmarker.test.dummies.DummyConnectionManager;
+import com.purplecat.bookmarker.test.dummies.DummySummaryRepository;
 import com.purplecat.bookmarker.test.dummies.DummyThreadObserver;
 import com.purplecat.bookmarker.test.dummies.SampleDatabaseService.SampleGenreDatabase;
 import com.purplecat.bookmarker.test.dummies.SampleDatabaseService.SamplePatternDatabase;
-import com.purplecat.bookmarker.test.dummies.DummySummaryRepository;
 import com.purplecat.bookmarker.test.dummies.SampleMangaDatabase;
 import com.purplecat.bookmarker.test.dummies.SampleOnlineMangaDatabase;
 import com.purplecat.bookmarker.test.dummies.SampleWebsiteList;
@@ -185,7 +186,11 @@ public class WebsiteLoadingTests extends DatabaseConnectorTestBase {
 		
 		for ( OnlineMediaItem item : _observer.getList() ) {
 			System.out.println("ITEM " + item._displayTitle + " (" + item._id + "): " + item._updatedDate);
+			Assert.assertTrue("Item isn't new: " + item._displayTitle, item._newlyAdded);
 		}
+		
+		List<OnlineMediaItem> origList = new LinkedList<OnlineMediaItem>();
+		origList.addAll(_observer.getList());
 		
 		for ( Long key : times.keySet() ) {
 			System.out.println("ITEM (" + key + "): " + times.get(key));
@@ -207,10 +212,18 @@ public class WebsiteLoadingTests extends DatabaseConnectorTestBase {
 		Assert.assertTrue("list has no items", list.size() > 0);
 		Assert.assertTrue(_observer.getItemsFound() > 0);
 		
-		for ( OnlineMediaItem item : _observer.getList() ) {
+		for ( OnlineMediaItem item : list ) {
 			System.out.println("ITEM " + item._displayTitle + " (" + item._id + "): " + item._updatedDate);
 			DateTime earlierDate = times.get(item._id);
-			Assert.assertEquals("dates not equal for " + item._id, earlierDate, item._updatedDate);
+			if ( earlierDate != null ) {
+				Assert.assertEquals("dates not equal for " + item._id, earlierDate, item._updatedDate);
+			}
+			if ( origList.stream().anyMatch(orig -> orig._id == item._id) ) {
+				Assert.assertFalse("Item is still new: " + item._displayTitle, item._newlyAdded);
+			}
+			else {
+				Assert.assertTrue("Item isn't new: " + item._displayTitle, item._newlyAdded);
+			}
 		}
 		
 	}

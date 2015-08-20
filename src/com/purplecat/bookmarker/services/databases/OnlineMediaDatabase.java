@@ -160,6 +160,7 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 			}
 			else {
 				_logging.debug(4, TAG, "Inserting online item");
+				item._newlyAdded = true;
 				insert(conn, item);
 				if ( item._mediaId > 0 ) {
 					//matching media was found, but not matching online media, 

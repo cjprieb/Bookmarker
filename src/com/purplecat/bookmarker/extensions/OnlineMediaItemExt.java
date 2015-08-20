@@ -3,6 +3,8 @@ package com.purplecat.bookmarker.extensions;
 import java.util.Comparator;
 import java.util.List;
 
+import org.joda.time.Duration;
+
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 
 public class OnlineMediaItemExt {
@@ -10,13 +12,17 @@ public class OnlineMediaItemExt {
 	/**
 	 * Only copies the data found from scraping the website,
 	 * as newItem was generated from the parsing and doesn't
-	 * yet have any user data (like _isIgnored and _isNewlyAdded)
+	 * yet have any user data (like _isIgnored)
 	 * _displayTitle and _websiteName don't have to be copied since 
 	 * they were used to look up the database item.
 	 * @param newItem Object parsed from the website
 	 * @param existing Object found in the database
 	 */
 	public static void copyNewToExisting(OnlineMediaItem newItem, OnlineMediaItem existing) {		
+		if ( newItem._rating > 0 ) {
+			existing._rating = newItem._rating;
+		}
+		
 		if ( newItem._chapterUrl != null && newItem._chapterUrl.length() > 0 ) {
 			existing._chapterUrl = newItem._chapterUrl;
 		}
@@ -25,17 +31,22 @@ public class OnlineMediaItemExt {
 			existing._titleUrl = newItem._titleUrl;
 		}
 		
-		if ( newItem._rating > 0 ) {
-			existing._rating = newItem._rating;
-		}
-		
+		//Make sure 
 		int placeCompare = existing._updatedPlace.compareTo(newItem._updatedPlace);
-		if ( placeCompare < 0 ) {
+		if ( placeCompare <= 0 ) {
 			existing._updatedPlace = newItem._updatedPlace;
+			if ( placeCompare < 0 ) {
+			}
 		}
-		
-		if ( placeCompare != 0 ) {
+
+		Duration timeDiff = new Duration(existing._updatedDate, newItem._updatedDate);
+		if ( placeCompare != 0 || 
+				(existing._updatedDate.isBefore(newItem._updatedDate) && timeDiff.getStandardHours() > 24) ) {			
 			existing._updatedDate = newItem._updatedDate;
+			existing._newlyAdded = true;
+		}
+		else {
+			existing._newlyAdded = false;
 		}
 	}
 	

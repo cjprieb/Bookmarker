@@ -131,6 +131,7 @@ public class SampleOnlineMangaDatabase extends SampleDatabaseService<OnlineMedia
 			e.printStackTrace();
 		}
 		if ( item._id <= 0 ) {
+			item._newlyAdded = true;
 			insert(item);
 		}
 		return item;

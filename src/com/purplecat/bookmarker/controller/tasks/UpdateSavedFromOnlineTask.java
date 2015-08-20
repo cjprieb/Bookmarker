@@ -1,6 +1,5 @@
 package com.purplecat.bookmarker.controller.tasks;
 
-import com.google.inject.Inject;
 import com.purplecat.bookmarker.controller.observers.IItemChangedObserver;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;

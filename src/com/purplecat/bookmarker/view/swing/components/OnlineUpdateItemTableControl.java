@@ -64,7 +64,7 @@ public class OnlineUpdateItemTableControl {
 				DataFields.PLACE_COL
 		};
 		_model = new OnlineUpdateItemTableModel(_columns, ctrl, resources);		
-		_table = new TTable<OnlineMediaItem>(factory, new OnlineLoadedRowRenderer());
+		_table = new TTable<OnlineMediaItem>(factory, new OnlineLoadedRowRenderer(_columns));
 		_table.setTemplateModel(_model);		
 		_scroll = new JScrollPane(_table);
 		_sorter = new OnlineBookmarkSorter(_model);

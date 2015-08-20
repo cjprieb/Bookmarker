@@ -154,19 +154,26 @@ public class MediaDatabaseRepository implements IMediaRepository {
 	@Override
 	public List<Media> queryByTitle(String title) throws DatabaseException {
 		List<Media> list = new LinkedList<Media>();
-		String sql = "SELECT TtMedia_ID FROM Title WHERE TtStripped LIKE @title";
+		String sql = "SELECT TtMedia_ID, TtTitle FROM Title WHERE TtStripped = @title";
 		try {
-			_logging.debug(3, TAG, "Querying by title");
-			
-			Connection conn = _connectionManager.getConnection();
 			String strippedTitle = TitleExt.stripTitle(title);
 			List<Long> idList = new ArrayList<Long>();
-
+			
+			_logging.debug(3, TAG, "Querying by title: " + strippedTitle);
+			
+			Connection conn = _connectionManager.getConnection();
 			NamedStatement stmt = new NamedStatement(conn, sql);
 			stmt.setString("@title", strippedTitle);
+			
+			_logging.debug(4, TAG, "Starting query");
 			NamedResultSet result = stmt.executeQuery();
+			_logging.debug(4, TAG, "result returned");
+			
 			while ( result.next() ) {
-				idList.add(result.getLong("TtMedia_ID"));
+				long mediaId = result.getLong("TtMedia_ID");
+				String matchedTitle = result.getString("TtTitle");
+				_logging.debug(5, TAG, "Adding: " + mediaId + " - " + matchedTitle);
+				idList.add(mediaId);
 			}
 
 			_logging.debug(4, TAG, "Ids found: " + idList.size());

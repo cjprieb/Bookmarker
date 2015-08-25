@@ -127,6 +127,7 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			item._newlyAdded = false;
 			item._rating = .75;
 			item._websiteName = "Batoto";
+			item._folderId = media._folderId;
 			_database.insert(item);
 			
 			Assert.assertTrue("Invalid id", item._id > 0);
@@ -182,6 +183,23 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail("Exception occurred");
+		}
+	}
+	
+	@Test
+	public void testStoryState() {		
+		try {
+			OnlineMediaItem item = GetRandom.getItem(_randomSavedItems);
+			Media media = _savedDatabase.queryById(item._mediaId);
+			media._folderId = 2;
+			_savedDatabase.update(media);
+			
+			OnlineMediaItem actual = _database.queryByMediaId(media._id).get(0);
+			checkItem(actual);
+			Assert.assertEquals(media._folderId, actual._folderId);
+		} catch (DatabaseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -354,10 +372,10 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			Assert.assertTrue("no genres", result._genres.size() > 0);
 			Assert.assertFalse("Item is marked newly added", item._newlyAdded);
 			
-			Media mediaItem = _savedDatabase.queryById(item._mediaId);
-			Assert.assertEquals(item._chapterUrl, mediaItem._updatedUrl);
-			Assert.assertEquals(item._updatedPlace, mediaItem._updatedPlace);
-			Assert.assertNotEquals(item._updatedDate, mediaItem._updatedDate);
+//			Media mediaItem = _savedDatabase.queryById(item._mediaId);
+//			Assert.assertEquals(item._chapterUrl, mediaItem._updatedUrl);
+//			Assert.assertEquals(item._updatedPlace, mediaItem._updatedPlace);
+//			Assert.assertNotEquals(item._updatedDate, mediaItem._updatedDate);
 			
 			checkItem(result);
 		} catch (Exception e) {
@@ -411,10 +429,7 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 		Assert.assertEquals("newlyAdded mismatch", expected._newlyAdded, actual._newlyAdded);
 		Assert.assertEquals("rating mismatch", expected._rating, actual._rating, .0005);
 		Assert.assertEquals("website name mismatch", expected._websiteName, actual._websiteName);
-		if ( expected._storyState != null ) {
-			Assert.assertEquals("story state mismatch", expected._storyState, actual._storyState);
-		}
-		
+		Assert.assertEquals("story state mismatch", expected._folderId, actual._folderId);
 		Assert.assertEquals("media mismatch", expected._mediaId, actual._mediaId);
 		Assert.assertEquals("title mismatch", expected._displayTitle, actual._displayTitle);
 		Assert.assertEquals("saved place", expected._lastReadPlace, actual._lastReadPlace);
@@ -428,7 +443,7 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 	
 	protected void checkEquals(Media expected, OnlineMediaItem actual) {
 		Assert.assertEquals("is saved mismatch", expected._isSaved, actual._isSaved);
-		Assert.assertEquals("story state mismatch", expected._storyState, actual._storyState);
+		Assert.assertEquals("story state mismatch", expected._folderId, actual._folderId);
 		Assert.assertEquals("saved place", expected._lastReadPlace, actual._lastReadPlace);
 		if ( expected._lastReadDate != null && actual._lastReadDate != null ) {
 			Assert.assertTrue("saved date", expected._lastReadDate.compareTo(actual._lastReadDate) == 0);

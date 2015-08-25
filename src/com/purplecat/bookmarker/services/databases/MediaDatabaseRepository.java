@@ -15,7 +15,6 @@ import com.google.inject.Inject;
 import com.purplecat.bookmarker.controller.observers.IListLoadedObserver;
 import com.purplecat.bookmarker.extensions.FavoriteStateExt;
 import com.purplecat.bookmarker.extensions.PlaceExt;
-import com.purplecat.bookmarker.extensions.StoryStateExt;
 import com.purplecat.bookmarker.extensions.TitleExt;
 import com.purplecat.bookmarker.models.Genre;
 import com.purplecat.bookmarker.models.Media;
@@ -30,7 +29,7 @@ public class MediaDatabaseRepository implements IMediaRepository {
 	public static final String TAG = "MediaDatabaseRepository";
 	
 	private static final String SELECT_MEDIA = "SELECT Media._id _id, MdDisplayTitle _displayTitle, MdIsComplete _isComplete, MdMainUrl _titleUrl, SvdIsSaved _isSaved, "
-			+ " SvdStoryState _storyState, SvdRating _rating, SvdIsFlagged _isFlagged, SvdNotes _notes, "
+			+ " SvdStoryState _storyState, SvdRating _rating, SvdIsFlagged _isFlagged, SvdNotes _notes, SvdFolder_ID _folderId,"
 										+ " hist.svhstDate _lastReadDate, hist.svhstPlace _lastReadPlace, hist.SvhstUrl _chapterUrl, "
 										+ " CASE WHEN svdisSaved THEN upbkchapterUrl ELSE upbktitleUrl END _updatedUrl, upbkdate _updatedDate, upbkplace _updatedPlace"
 										+ " FROM MEDIA" + 
@@ -68,7 +67,7 @@ public class MediaDatabaseRepository implements IMediaRepository {
 		media._titleUrl = result.getString("_titleUrl");
 		media._lastReadDate = result.getDateFromString("_lastReadDate");
 		media._lastReadPlace = PlaceExt.parse(result.getString("_lastReadPlace"));
-		media._storyState = StoryStateExt.parse(result.getInt("_storyState"));
+		media._folderId = result.getLong("_folderId");
 		media._rating= FavoriteStateExt.parse(result.getInt("_rating"));
 		media._notes = result.getString("_notes");
 		media._updatedUrl = result.getString("_updatedUrl");
@@ -203,8 +202,8 @@ public class MediaDatabaseRepository implements IMediaRepository {
 		if ( item._isSaved == false ) {
 			throw new ServiceException("Media item must be 'saved'.", ServiceException.INVALID_DATA);
 		}
-		String sql = "INSERT INTO Media (MdDisplayTitle, MdIsComplete, MdMainUrl, SvdIsSaved, SvdStoryState, SvdRating, SvdNotes)"
-				+ " VALUES (@title, @complete, @titleUrl, @saved, @state, @rating, @notes)";
+		String sql = "INSERT INTO Media (MdDisplayTitle, MdIsComplete, MdMainUrl, SvdIsSaved, SvdFolder_ID, SvdRating, SvdNotes)"
+				+ " VALUES (@title, @complete, @titleUrl, @saved, @folder, @rating, @notes)";
 		try {
 			Connection conn = _connectionManager.getConnection();
 			conn.setAutoCommit(false);
@@ -214,7 +213,7 @@ public class MediaDatabaseRepository implements IMediaRepository {
 			stmt.setBoolean("@complete", item._isComplete);
 			stmt.setString("@titleUrl", item._titleUrl);
 			stmt.setBoolean("@saved", item._isSaved);
-			stmt.setInt("@state", item._storyState.getValue());
+			stmt.setLong("@folder", item._folderId);
 			stmt.setInt("@rating", item._rating.getValue());
 			stmt.setString("@notes", item._notes);
 			stmt.setString("@titleUrl", item._titleUrl);
@@ -239,14 +238,14 @@ public class MediaDatabaseRepository implements IMediaRepository {
 				conn.setAutoCommit(false);
 				
 				sql = "UPDATE Media SET MdDisplayTitle = @title, MdIsComplete = @complete, MdMainUrl = @titleUrl,"
-						+ " SvdIsSaved = @saved, SvdStoryState = @state, SvdRating = @rating, SvdNotes = @notes WHERE _id = @id";
+						+ " SvdIsSaved = @saved, SvdFolder_ID = @folder, SvdRating = @rating, SvdNotes = @notes WHERE _id = @id";
 				NamedStatement stmt = new NamedStatement(conn, sql);
 				stmt.setLong("@id", item._id);
 				stmt.setString("@title", item.getDisplayTitle());
 				stmt.setBoolean("@complete", item._isComplete);
 				stmt.setString("@titleUrl", item._titleUrl);
 				stmt.setBoolean("@saved", item._isSaved);
-				stmt.setInt("@state", item._storyState.getValue());
+				stmt.setLong("@folder", item._folderId);
 				stmt.setInt("@rating", item._rating.getValue());
 				stmt.setString("@notes", item._notes);
 				stmt.executeUpdate();

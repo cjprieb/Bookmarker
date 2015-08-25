@@ -2,6 +2,7 @@ package com.purplecat.bookmarker.view.swing.panels;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.prefs.Preferences;
 
 import javax.swing.GroupLayout;
@@ -16,6 +17,7 @@ import com.purplecat.bookmarker.Resources;
 import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.WebsiteInfo;
+import com.purplecat.bookmarker.services.websites.IWebsiteLoadObserver;
 import com.purplecat.bookmarker.view.swing.actions.LoadUpdatesAction;
 import com.purplecat.bookmarker.view.swing.actions.StopUpdatesAction;
 import com.purplecat.bookmarker.view.swing.components.HourSpinner;
@@ -49,6 +51,7 @@ public class OnlineUpdateTab {
 		
 		{
 			_controller.observeOnlineThreadLoading(updateObserver);
+			_controller.observeOnlineThreadLoading(new OnlineUpdateTabObserver());
 			_controller.observeSummaryLoading(_summaryObserver);
 			_updateMediaTableControl.getTable().addRowSelectionListener(_summaryObserver);
 		}			
@@ -183,5 +186,27 @@ public class OnlineUpdateTab {
 		prefs.putBoolean("update-allWebsites", _chkAllWebsites.isSelected());
 		prefs.putBoolean("update-loadGenres", _chkLoadGenres.isSelected());
 		prefs.put("update-selectedWebsite", ((WebsiteInfo)_websiteDropdown.getSelectedItem())._name);
+	}
+
+	class OnlineUpdateTabObserver implements IWebsiteLoadObserver {
+		@Override
+		public void notifyLoadStarted() {}
+	
+		@Override
+		public void notifySiteStarted(WebsiteInfo site) {}
+	
+		@Override
+		public void notifySiteParsed(WebsiteInfo site, int itemsFound) {}
+	
+		@Override
+		public void notifyItemParsed(OnlineMediaItem item, int itemsParsed, int totalUpdateCount) {}
+	
+		@Override
+		public void notifySiteFinished(WebsiteInfo site) {
+			_updateMediaTableControl.getModel().removeItemsOlderThan(getHoursAgo(), site._name);
+		}
+	
+		@Override
+		public void notifyLoadFinished(List<OnlineMediaItem> list) {}
 	}
 }

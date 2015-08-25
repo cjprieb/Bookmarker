@@ -2,6 +2,7 @@ package com.purplecat.bookmarker.extensions;
 
 import com.purplecat.bookmarker.Resources;
 import com.purplecat.bookmarker.models.EStoryState;
+import com.purplecat.bookmarker.models.Folder;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.StoryStateModel;
@@ -18,10 +19,10 @@ public class StoryStateExt {
 		return(EStoryState.LAST_AVAILABLE_CHAPTER);
 	}
 	
-	public static StoryStateModel getView(Media view) {
+	public static StoryStateModel getView(Media view, Folder folder) {
 		StoryStateModel imageModel = new StoryStateModel();
 		
-		EStoryState state = view._storyState;
+		EStoryState state = folder != null ? folder._storyState : EStoryState.LAST_AVAILABLE_CHAPTER;
 		imageModel._imageKey = getImageKey(state, false); //false=not movie
 		
 		if ( view.isUpdated() ) {
@@ -34,14 +35,16 @@ public class StoryStateExt {
 		return(imageModel);		
 	}
 	
-	public static StoryStateModel getView(OnlineMediaItem view) {
+	public static StoryStateModel getView(OnlineMediaItem view, Folder folder) {
 		StoryStateModel imageModel = new StoryStateModel();
+		boolean ignored = folder != null ? folder.ignoreUpdate() : false;
 		
 		if ( view._id > 0 ) {
+			
 			imageModel._imageKey = getImageKey(EStoryState.LAST_AVAILABLE_CHAPTER, false); //false=not movie
 			
 			if ( view._isSaved ) {
-				imageModel._updateMode = view.isUpdated() ? StoryStateModel.FULL_UPDATE : StoryStateModel.MUTED_UPDATE;
+				imageModel._updateMode = (view.isUpdated() && !ignored) ? StoryStateModel.FULL_UPDATE : StoryStateModel.MUTED_UPDATE;
 			}
 			else {
 				imageModel._updateMode = StoryStateModel.NOT_UPDATED;
@@ -69,22 +72,22 @@ public class StoryStateExt {
 		return(key);
 	}
 	
-	/*public static boolean isIgnoreUpdateState(BookmarkFolder folder) {
-		boolean ignore = false;
-		if ( folder != null ) {
-			ignore = folder.ignoreUpdates();
-//			switch ( folder.getStoryState() ) {
+//	public static boolean isIgnoreUpdateState(EStoryState state) {
+//		boolean ignore = false;
+//		if ( state != null ) {
+////			ignore = folder.ignoreUpdates();
+//			switch ( state ) {
 //				case DONT_READ:
 //				case NEW_BOOKMARK:
 //				case MIDDLE_CHAPTER: 
 //				case MIDDLE_CHAPTER_BORED: 	ignore = true;	break;
 //				default:					ignore = false;	break;
 //			}
-		}
-		return(ignore);
-	}
+//		}
+//		return(ignore);
+//	}
 	
-	public static int getCompareValue(EStoryState state) {
+	/*public static int getCompareValue(EStoryState state) {
 		int key = 0;
 		if ( state != null ) {
 			switch (state) {

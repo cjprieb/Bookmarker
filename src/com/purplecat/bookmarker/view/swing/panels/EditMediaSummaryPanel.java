@@ -14,6 +14,7 @@ import com.google.inject.Inject;
 import com.purplecat.bookmarker.Resources;
 import com.purplecat.bookmarker.models.EFavoriteState;
 import com.purplecat.bookmarker.models.EStoryState;
+import com.purplecat.bookmarker.models.Folder;
 import com.purplecat.bookmarker.models.Place;
 import com.purplecat.bookmarker.view.swing.components.FavoriteStateButton;
 import com.purplecat.bookmarker.view.swing.components.PlaceEditor;
@@ -166,6 +167,16 @@ public class EditMediaSummaryPanel implements ActionListener, ChangeListener {
 	public void setStoryState(EStoryState state) {
 		_storyStateButton.setEnabled(state != null);
 		_storyStateButton.setStoryState(state);
+	}
+	
+	public void setStoryState(Folder folder) {
+		_storyStateButton.setEnabled(false);
+		if ( folder != null ) {
+			_storyStateButton.setStoryState(folder._storyState);
+		}
+		else {
+			_storyStateButton.setStoryState(EStoryState.LAST_AVAILABLE_CHAPTER);
+		}
 	}
 	
 	public void enablePlaceEditor(boolean b) {

@@ -79,6 +79,7 @@ public class BookmarkerStart extends MyApplication implements IWebsiteLoadObserv
 	protected void finalInitialization() {
 		assert(EventQueue.isDispatchThread());
 		_timerGlassPane.startTimer();
+		_controller.loadFolders();
 		_controller.loadSavedMedia();
 	}
 

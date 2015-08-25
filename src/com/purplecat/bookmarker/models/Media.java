@@ -28,7 +28,9 @@ public class Media extends BaseDatabaseItem implements Comparable<Media> {
 	
 	public EFavoriteState _rating;
 	
-	public EStoryState _storyState;
+//	public EStoryState _storyState;
+	
+	public long _folderId;
 	
 	public String _summary;
 	
@@ -118,7 +120,7 @@ public class Media extends BaseDatabaseItem implements Comparable<Media> {
 		media._lastReadPlace = this._lastReadPlace.copy();
 		media._updatedDate = this._updatedDate;
 		media._updatedPlace = (this._updatedPlace != null ? this._updatedPlace.copy() : null);
-		media._storyState = this._storyState;
+		media._folderId = this._folderId;
 		media._notes = this._notes;
 		media._rating = this._rating;
 		media._isComplete = this._isComplete;

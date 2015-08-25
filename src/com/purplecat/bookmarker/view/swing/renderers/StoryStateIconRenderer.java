@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 
 import com.purplecat.bookmarker.Resources;
+import com.purplecat.bookmarker.controller.FolderCache;
 import com.purplecat.bookmarker.extensions.StoryStateExt;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
@@ -18,9 +19,11 @@ import com.purplecat.commons.swing.IImageRepository;
 public class StoryStateIconRenderer extends EnablableTableCellRenderer {	
 	
 	final IImageRepository _repository;
+	final FolderCache _folders;
 	
-	public StoryStateIconRenderer(IImageRepository repository) {
+	public StoryStateIconRenderer(IImageRepository repository, FolderCache folders) {
 		_repository = repository;		
+		_folders = folders;
 	}
 	
 	@Override
@@ -28,10 +31,12 @@ public class StoryStateIconRenderer extends EnablableTableCellRenderer {
 		StoryStateModel image = null;
 		if ( value != null ) {		
 			if ( value instanceof Media ) {
-				image = StoryStateExt.getView((Media)value);
+				Media media = (Media)value;
+				image = StoryStateExt.getView(media, _folders.getById(media._folderId));
 			}			
 			else if ( value instanceof OnlineMediaItem ) {
-				image = StoryStateExt.getView((OnlineMediaItem)value);
+				OnlineMediaItem onlineItem = (OnlineMediaItem)value;
+				image = StoryStateExt.getView(onlineItem, _folders.getById(onlineItem._folderId));
 			}	
 			/*else if ( value instanceof ScheduledItem ) {
 				image = StoryStateFormat.getStoryStateImage((ScheduledItem)value);

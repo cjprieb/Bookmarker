@@ -5,9 +5,12 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
+import com.google.inject.Inject;
 import com.purplecat.bookmarker.controller.Controller;
+import com.purplecat.bookmarker.controller.FolderCache;
 import com.purplecat.bookmarker.controller.observers.IItemChangedObserver;
 import com.purplecat.bookmarker.controller.observers.ISummaryLoadObserver;
+import com.purplecat.bookmarker.models.Folder;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.WebsiteInfo;
@@ -21,15 +24,21 @@ public class OnlineUpdateItemTableModel extends TAbstractTableModel<OnlineMediaI
 	List<OnlineMediaItem> _backingList = new LinkedList<OnlineMediaItem>();
 	TTableColumn[] _columns;
 	IResourceService _resources;
+	FolderCache _folderCache;
 	
-	public OnlineUpdateItemTableModel(TTableColumn[] columns, Controller ctrl, IResourceService resources) {
-		_columns = columns;
+	@Inject
+	public OnlineUpdateItemTableModel(Controller ctrl, IResourceService resources, FolderCache folders) {
 		_resources = resources;
+		_folderCache = folders;
 		
 		OnlineMediaListObserver observer = new OnlineMediaListObserver();
 		ctrl.observeOnlineThreadLoading(observer);
 		ctrl.observeSavedMediaUpdate(observer);
 		ctrl.observeSummaryLoading(observer);
+	}
+	
+	public void setColumns(TTableColumn[] columns) {
+		_columns = columns;
 	}
 	
 	@Override
@@ -143,6 +152,20 @@ public class OnlineUpdateItemTableModel extends TAbstractTableModel<OnlineMediaI
 			iIndex++;
 		}
 	}
+
+	public void removeItemsOlderThan(int hoursAgo, String siteName) {
+		DateTime oldestDate = DateTime.now().minusHours(hoursAgo);
+		_backingList.removeIf(item -> {
+			Folder folder = _folderCache.getById(item._folderId);
+			if ( item._websiteName.equals(siteName) && item._id > 0 && ( item.isRead() || 
+				!item._isSaved ||
+				(folder != null && folder.ignoreUpdate()) ) ) {
+				return item._updatedDate.isBefore(oldestDate);
+			}
+			return false;
+		});
+		fireTableDataChanged();
+	}
 	
 	public class OnlineMediaListObserver implements IItemChangedObserver<Media>, IWebsiteLoadObserver, ISummaryLoadObserver {
 		@Override
@@ -184,6 +207,5 @@ public class OnlineUpdateItemTableModel extends TAbstractTableModel<OnlineMediaI
 				updateItem(item);
 			}
 		}	
-	}
-	
+	}	
 }

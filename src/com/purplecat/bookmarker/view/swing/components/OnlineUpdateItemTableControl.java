@@ -53,7 +53,8 @@ public class OnlineUpdateItemTableControl {
 			Controller ctrl, 
 			IResourceService resources, 
 			Toolbox toolbox,
-			@Named("Manga Url") IDragDropAction mangaDropAction) {
+			@Named("Manga Url") IDragDropAction mangaDropAction,
+			OnlineUpdateItemTableModel model) {
 		_resources = resources;
 		_controller = ctrl;
 		_toolbox = toolbox;
@@ -63,7 +64,10 @@ public class OnlineUpdateItemTableControl {
 				DataFields.TITLE_COL,
 				DataFields.PLACE_COL
 		};
-		_model = new OnlineUpdateItemTableModel(_columns, ctrl, resources);		
+		
+		_model = model;	
+		_model.setColumns(_columns);
+		
 		_table = new TTable<OnlineMediaItem>(factory, new OnlineLoadedRowRenderer(_columns));
 		_table.setTemplateModel(_model);		
 		_scroll = new JScrollPane(_table);

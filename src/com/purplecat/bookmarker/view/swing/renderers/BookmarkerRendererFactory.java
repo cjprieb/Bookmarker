@@ -5,6 +5,7 @@ import javax.swing.table.TableCellRenderer;
 
 import com.google.inject.Inject;
 import com.purplecat.bookmarker.Resources;
+import com.purplecat.bookmarker.controller.FolderCache;
 import com.purplecat.bookmarker.models.Place;
 import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.TTableColumn;
@@ -16,11 +17,13 @@ public class BookmarkerRendererFactory implements ICellRendererFactory {
 	
 	final IImageRepository _repository;
 	final IResourceService _resources;
+	final FolderCache _folders;
 	
 	@Inject 
-	public BookmarkerRendererFactory(IImageRepository repository, IResourceService resources) {
+	public BookmarkerRendererFactory(IImageRepository repository, IResourceService resources, FolderCache folders) {
 		_repository = repository;
 		_resources = resources;
+		_folders = folders;
 	}
 	
 	@Override
@@ -61,7 +64,7 @@ public class BookmarkerRendererFactory implements ICellRendererFactory {
 		else if ( type == DataFields.MEDIA_STATE_COL || 
 				type == DataFields.ONLINE_STATE_COL /*||
 				type == DataFields.SCHEDULED_STATE_COL*/ ) {
-			renderer = new StoryStateIconRenderer(_repository);	
+			renderer = new StoryStateIconRenderer(_repository, _folders);	
 		}
 		else if ( type == DataFields.FLAG_COL ) {
 			renderer = new FlagIconRenderer(_repository);	

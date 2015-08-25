@@ -13,7 +13,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.purplecat.bookmarker.controller.observers.IListLoadedObserver;
 import com.purplecat.bookmarker.models.EFavoriteState;
-import com.purplecat.bookmarker.models.EStoryState;
 import com.purplecat.bookmarker.models.Genre;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.services.ServiceException;
@@ -162,7 +161,7 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			media._lastReadPlace._chapter++;
 			media._chapterUrl = "http://sampleurl";
 			media._titleUrl = "http://www.sampleurl.com/thetitle";
-			media._storyState = EStoryState.NEW_BOOKMARK;
+			media._folderId = 2;
 			media._notes = "Some notes!";
 			media._rating = EFavoriteState.GOOD;
 			media._lastReadDate = new DateTime();
@@ -190,7 +189,7 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			media._lastReadPlace._chapter++;
 			media._chapterUrl = "http://sampleurl";
 			media._titleUrl = "http://www.sampleurl.com/thetitle";
-			media._storyState = EStoryState.NEW_BOOKMARK;
+			media._folderId = 2;
 			media._notes = "Some notes!";
 			media._rating = EFavoriteState.GOOD;
 			media._lastReadDate = new DateTime();
@@ -220,7 +219,7 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			media.setDisplayTitle(GetRandom.getString(6));
 			media._lastReadPlace._chapter++;
 			media._chapterUrl = "http://sampleurl";
-			media._storyState = EStoryState.MIDDLE_CHAPTER;
+			media._folderId = 4;
 			media._notes = "Some notes!";
 			media._rating = EFavoriteState.AWESOME;
 			media._isComplete = true;
@@ -251,7 +250,6 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			media._lastReadPlace._chapter++;
 			media._chapterUrl = "http://sampleurl";
 			media._titleUrl = "http://www.sampleurl.com/thetitle";
-			media._storyState = EStoryState.NEW_BOOKMARK;
 			media._notes = "Some notes!";
 			media._rating = EFavoriteState.GOOD;
 			media._lastReadDate = new DateTime();
@@ -389,11 +387,10 @@ public class MangaDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			Assert.assertEquals("last read date mismatch", expected._lastReadDate, actual._lastReadDate);
 		}
 		Assert.assertEquals("place mismatch", expected._lastReadPlace, actual._lastReadPlace);
-		//Assert.assertEquals("folder mismatch", expected._folder, actual._folder);
+		Assert.assertEquals("folder mismatch", expected._folderId, actual._folderId);
 		//Assert.assertEquals("updated mismatch", expected._isUpdated, actual._isUpdated);
 		Assert.assertEquals("updated mismatch", expected._notes, actual._notes);
 		Assert.assertEquals("updated mismatch", expected._rating, actual._rating);
-		Assert.assertEquals("updated mismatch", expected._storyState, actual._storyState);
 		Assert.assertEquals("updated mismatch", expected._isComplete, actual._isComplete);
 		Assert.assertEquals("title url mismatch", expected._titleUrl, actual._titleUrl);
 		Assert.assertEquals("chapter url mismatch", expected._chapterUrl, actual._chapterUrl);

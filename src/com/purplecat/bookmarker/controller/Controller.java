@@ -5,10 +5,12 @@ import java.util.List;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.purplecat.bookmarker.controller.observers.IFoldersObserver;
 import com.purplecat.bookmarker.controller.observers.IItemChangedObserver;
 import com.purplecat.bookmarker.controller.observers.IListLoadedObserver;
 import com.purplecat.bookmarker.controller.observers.ISummaryLoadObserver;
 import com.purplecat.bookmarker.controller.observers.SampleTaskObserver;
+import com.purplecat.bookmarker.controller.tasks.LoadFolders;
 import com.purplecat.bookmarker.controller.tasks.LoadMediaSummaryTask;
 import com.purplecat.bookmarker.controller.tasks.SampleTask;
 import com.purplecat.bookmarker.controller.tasks.SavedMediaLoadTask;
@@ -18,6 +20,7 @@ import com.purplecat.bookmarker.controller.tasks.UpdateSavedMediaTask;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.WebsiteInfo;
+import com.purplecat.bookmarker.services.IFolderRepository;
 import com.purplecat.bookmarker.services.SavedMediaService;
 import com.purplecat.bookmarker.services.websites.IWebsiteLoadObserver;
 import com.purplecat.bookmarker.services.websites.WebsiteThreadObserver;
@@ -31,6 +34,7 @@ public class Controller {
 	public final ILoggingService _logging;	
 	public final IThreadPool _threadPool;	
 	public final SavedMediaService _mediaService;
+	public final IFolderRepository _folderRepository;
 	public final WebsiteThreadObserver _observer;
 	
 	public final List<SampleTaskObserver> _sampleTaskObservers;
@@ -38,19 +42,22 @@ public class Controller {
 	public final List<IItemChangedObserver<Media>> _mediaUpdateObservers;	
 	public final List<IWebsiteLoadObserver> _websiteLoadObservers;
 	public final List<ISummaryLoadObserver> _summaryLoadObservers;
+	public final List<IFoldersObserver> _folderObservers;
 	
 	@Inject
-	public Controller(ILoggingService logging, IThreadPool threadPool, SavedMediaService mangaService, WebsiteThreadObserver observer) {
+	public Controller(ILoggingService logging, IThreadPool threadPool, SavedMediaService mangaService, WebsiteThreadObserver observer, IFolderRepository folders) {
 		_logging = logging;
 		_threadPool = threadPool;		
 		_mediaService = mangaService;
 		_observer = observer;
+		_folderRepository = folders;
 		
 		_sampleTaskObservers = new LinkedList<SampleTaskObserver>();
 		_mediaLoadObservers = new LinkedList<IListLoadedObserver<Media>>();
 		_mediaUpdateObservers = new LinkedList<IItemChangedObserver<Media>>();
 		_websiteLoadObservers = new LinkedList<IWebsiteLoadObserver>();
 		_summaryLoadObservers = new LinkedList<ISummaryLoadObserver>();
+		_folderObservers = new LinkedList<IFoldersObserver>();
 	}
 	
 	/*------Sample Task action-------*/
@@ -112,5 +119,14 @@ public class Controller {
 			obs.notifySummaryLoadStarted(mediaId);
 		}
 		_threadPool.runOnWorkerThread(new LoadMediaSummaryTask(this, mediaId, url));		
+	}
+	
+	/*------Load Folders actions--------*/
+	public void observerFolders(IFoldersObserver observer) {
+		_folderObservers.add(observer);
+	}
+	
+	public void loadFolders() {
+		_threadPool.runOnWorkerThread(new LoadFolders(this));		
 	}
 }

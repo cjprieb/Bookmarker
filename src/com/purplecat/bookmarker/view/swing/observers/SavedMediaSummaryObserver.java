@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 
 import com.google.inject.Inject;
 import com.purplecat.bookmarker.controller.Controller;
+import com.purplecat.bookmarker.controller.FolderCache;
 import com.purplecat.bookmarker.controller.observers.IItemChangedObserver;
 import com.purplecat.bookmarker.controller.observers.ISummaryLoadObserver;
 import com.purplecat.bookmarker.models.EFavoriteState;
@@ -27,16 +28,18 @@ public class SavedMediaSummaryObserver implements IRowSelectionListener<Media>, 
 	final SavedMediaSummaryPanel _mediaSummaryPanel;
 	final EditMediaSummaryPanel _editMediaSummaryPanel;
 	final SummarySidebar _parentSummaryPanel;
+	final FolderCache _folders;
 	
 	Media _currentMedia;
 	
 	@Inject
 	public SavedMediaSummaryObserver(Controller controller,	SavedMediaSummaryPanel mediaSummaryPanel, EditMediaSummaryPanel editMediaSummaryPanel,
-	SummarySidebar parentSummaryPanel) {
+	SummarySidebar parentSummaryPanel, FolderCache folders) {
 		_controller = controller;
 		_mediaSummaryPanel = mediaSummaryPanel;
 		_editMediaSummaryPanel = editMediaSummaryPanel;
 		_parentSummaryPanel = parentSummaryPanel;
+		_folders = folders;
 		
 		_controller.observeSavedMediaUpdate(this);
 		_editMediaSummaryPanel.setMediaItemEditor(this);
@@ -49,8 +52,8 @@ public class SavedMediaSummaryObserver implements IRowSelectionListener<Media>, 
 	
 	public void updateEditorPanel() {
 		_editMediaSummaryPanel.setFavoriteState(_currentMedia._rating);
-		_editMediaSummaryPanel.setStoryState(_currentMedia._storyState);
-		_editMediaSummaryPanel.setPlace(_currentMedia._lastReadPlace);		
+		_editMediaSummaryPanel.setPlace(_currentMedia._lastReadPlace);
+		_editMediaSummaryPanel.setStoryState(_folders.getById(_currentMedia._folderId));
 	}
 
 	@Override
@@ -132,10 +135,11 @@ public class SavedMediaSummaryObserver implements IRowSelectionListener<Media>, 
 
 	@Override
 	public void updateStoryState(EStoryState state) {
-		if ( _currentMedia != null ) {
-			_currentMedia._storyState = state;
-			_controller.updateMedia(_currentMedia);
-		}
+		//TODO: edit story state from summary
+//		if ( _currentMedia != null ) {
+//			_currentMedia._storyState = state;
+//			_controller.updateMedia(_currentMedia);
+//		}
 	}
 
 	@Override

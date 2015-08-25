@@ -44,7 +44,7 @@
 * ~~don't update time when refreshing - keep the oldest time. (but what if it should really be refreshed??)~~
 * ~~add timer indication of loading~~
 * ~~get rid of "search for series of same"~~
-* don't download genre/summary if already exists
+* ~~don't download genre/summary if already exists~~
 * fix summary bar dynamic width problems
 
 ## KANGAETE KOTO

@@ -6,6 +6,9 @@ import com.purplecat.bookmarker.models.OnlineMediaItem;
 @Singleton
 public class OnlineMediaSummaryPanel extends MediaSummaryPanel {
 	public void update(OnlineMediaItem view) {
+		if ( view == null ) {
+			throw new NullPointerException("OnlineMediaItem cannot be null");
+		}
 		_dataTitle.setText(view._displayTitle);	
 		_dataAltTitles.setVisible(false);
 		setUpdateColor(view._isSaved && view.isUpdated(), view.isRead());
@@ -18,7 +21,7 @@ public class OnlineMediaSummaryPanel extends MediaSummaryPanel {
 		setRating(view._rating);
 //		setType(view._type);
 		setSummary(view._summary);
-		setLink(_dataChapterLink, "");
+		setLink(_dataChapterLink, view._lastReadUrl);
 		setLink(_dataSiteLink, view._titleUrl);
 		setLink(_dataUpdatedLink, view._chapterUrl);
 	}

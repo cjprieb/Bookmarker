@@ -38,7 +38,9 @@ public class OnlineMediaSummaryObserver implements IRowSelectionListener<OnlineM
 			_mediaSummaryPanel.create();
 		}
 		_currentMedia = e.getTable().getSelectedItem();
-		_mediaSummaryPanel.update(_currentMedia);
+		if ( _currentMedia != null ) {
+			_mediaSummaryPanel.update(_currentMedia);
+		}
 		_parentSummaryPanel.setSummaryView(_mediaSummaryPanel.getPanel());
 		_parentSummaryPanel.setEditorView(null);
 	}

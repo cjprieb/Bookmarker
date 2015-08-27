@@ -102,7 +102,7 @@ public class Controller {
 	}
 
 	public void updateMangaFromUrl(String url) {
-		_threadPool.runOnWorkerThread(new UpdateMangaFromUrlTask(_logging, _mediaService, _mediaUpdateObservers, url));
+		_threadPool.runOnWorkerThread(new UpdateMangaFromUrlTask(this, url));
 	}
 
 	public void updateMedia(Media media) {

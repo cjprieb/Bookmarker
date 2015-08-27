@@ -68,6 +68,8 @@ public class OnlineMediaItem extends BaseDatabaseItem implements Comparable<Onli
 	
 	public long _folderId;
 	
+	public String _lastReadUrl = "";
+	
 	public OnlineMediaItem() {
 		_genres = new HashSet<Genre>();
 	}
@@ -136,6 +138,7 @@ public class OnlineMediaItem extends BaseDatabaseItem implements Comparable<Onli
 		media._lastReadPlace = (this._lastReadPlace != null ? this._lastReadPlace.copy() : null);
 		media._updatedDate = this._updatedDate;
 		media._updatedPlace = this._updatedPlace.copy();
+		media._lastReadUrl = this._lastReadUrl;
 		//media._storyState = this._storyState;
 		//media._notes = this._notes;
 		media._rating = this._rating;
@@ -149,6 +152,7 @@ public class OnlineMediaItem extends BaseDatabaseItem implements Comparable<Onli
 		this._isSaved = item._isSaved;
 		this._lastReadDate = item._lastReadDate;
 		this._lastReadPlace = (item._lastReadPlace != null ? item._lastReadPlace.copy() : null);
+		this._lastReadUrl = item._chapterUrl;
 		this._genres.clear();
 		this._genres.addAll(item._genres);
 	}

@@ -170,6 +170,7 @@ public class OnlineUpdateItemTableModel extends TAbstractTableModel<OnlineMediaI
 	public class OnlineMediaListObserver implements IItemChangedObserver<Media>, IWebsiteLoadObserver, ISummaryLoadObserver {
 		@Override
 		public void notifyItemUpdated(Media item) {
+//			System.out.println("notifying updates that media item has been updated: " + item);
 			updateItem(item);
 		}
 		

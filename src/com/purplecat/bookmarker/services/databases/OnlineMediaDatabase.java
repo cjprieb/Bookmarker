@@ -28,7 +28,7 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 	
 	private static final String SELECT_ITEMS = "SELECT UpdateBookmark._id, UpbkMedia_id _mediaId, UpbkChapterUrl _chapterUrl, UpbkTitleUrl _titleUrl, UpbkWebsiteName _websiteName,"
 			+ " UpbkIsIgnored _isIgnored, UpbkDate _updatedDate, UpbkRating _rating, UpbkPlace _updatedPlace, UpbkNewlyAdded _newlyAdded,"
-			+ " MdDisplayTitle _displayTitle, SvdIsSaved _isSaved, SvhstDate _lastReadDate, SvhstPlace _lastReadPlace, SvdFolder_Id _folderId"
+			+ " MdDisplayTitle _displayTitle, SvdIsSaved _isSaved, SvhstDate _lastReadDate, SvhstPlace _lastReadPlace, SvdFolder_Id _folderId, SvhstUrl _lastReadUrl"
 			+ " FROM UpdateBookmark INNER JOIN Media on Media._id = UpbkMedia_id"
 			+ " LEFT JOIN SavedHistory on SavedHistory._id = SvdHistory_ID";
 	
@@ -75,6 +75,7 @@ public class OnlineMediaDatabase implements IOnlineMediaRepository {
 		item._lastReadDate = result.getDateFromString("_lastReadDate");
 		item._lastReadPlace = PlaceExt.parse(result.getString("_lastReadPlace"));
 		item._folderId = result.getInt("_folderId");
+		item._lastReadUrl = result.getString("_lastReadUrl");
 		return item;
 	}
 

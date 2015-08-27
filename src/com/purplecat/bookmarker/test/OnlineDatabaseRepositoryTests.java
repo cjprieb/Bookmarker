@@ -128,6 +128,7 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			item._rating = .75;
 			item._websiteName = "Batoto";
 			item._folderId = media._folderId;
+			item._lastReadUrl = media._chapterUrl;
 			_database.insert(item);
 			
 			Assert.assertTrue("Invalid id", item._id > 0);
@@ -209,7 +210,7 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			OnlineMediaItem item = GetRandom.getItem(_randomSavedItems);
 			Media media = _savedDatabase.queryById(item._mediaId);
 			item._updatedPlace._volume = 10;
-			item._updatedPlace._chapter = 38;
+			item._updatedPlace._chapter = 380;
 			item._chapterUrl = "http://bato.to/read/_/319045/shana-oh-yoshitsune_v10_ch38_by_easy-going-scans";
 			item._titleUrl = "http://bato.to/comic/_/comics/shana-oh-yoshitsune-r5256";
 			item._updatedDate = new DateTime();
@@ -343,6 +344,7 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 			Assert.assertTrue("no genres", result._genres.size() > 0);
 			
 			Media mediaItem = _savedDatabase.queryById(item._mediaId);
+			System.out.println("(saveOrCreateSame) media item found: " + mediaItem);
 			Assert.assertEquals(item._chapterUrl, mediaItem._updatedUrl);
 			Assert.assertEquals(item._updatedPlace, mediaItem._updatedPlace);
 			Assert.assertEquals(item._updatedDate, mediaItem._updatedDate);
@@ -433,6 +435,7 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 		Assert.assertEquals("media mismatch", expected._mediaId, actual._mediaId);
 		Assert.assertEquals("title mismatch", expected._displayTitle, actual._displayTitle);
 		Assert.assertEquals("saved place", expected._lastReadPlace, actual._lastReadPlace);
+		Assert.assertEquals("last read url", expected._lastReadUrl, actual._lastReadUrl);
 		if ( expected._lastReadDate != null && actual._lastReadDate != null ) {
 			Assert.assertTrue("saved date", expected._lastReadDate.compareTo(actual._lastReadDate) == 0);
 		}
@@ -445,6 +448,7 @@ public class OnlineDatabaseRepositoryTests extends DatabaseConnectorTestBase {
 		Assert.assertEquals("is saved mismatch", expected._isSaved, actual._isSaved);
 		Assert.assertEquals("story state mismatch", expected._folderId, actual._folderId);
 		Assert.assertEquals("saved place", expected._lastReadPlace, actual._lastReadPlace);
+		Assert.assertEquals("last read url", expected._chapterUrl, actual._lastReadUrl);
 		if ( expected._lastReadDate != null && actual._lastReadDate != null ) {
 			Assert.assertTrue("saved date", expected._lastReadDate.compareTo(actual._lastReadDate) == 0);
 		}

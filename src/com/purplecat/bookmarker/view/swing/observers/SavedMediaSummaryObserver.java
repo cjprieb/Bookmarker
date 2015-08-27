@@ -65,7 +65,9 @@ public class SavedMediaSummaryObserver implements IRowSelectionListener<Media>, 
 			_editMediaSummaryPanel.create();
 		}
 		_currentMedia = e.getTable().getSelectedItem();
-		_mediaSummaryPanel.update(_currentMedia);
+		if ( _currentMedia != null ) {
+			_mediaSummaryPanel.update(_currentMedia);
+		}
 		_parentSummaryPanel.setSummaryView(_mediaSummaryPanel.getPanel());
 		_parentSummaryPanel.setEditorView(_editMediaSummaryPanel.getPanel());
 		updateEditorPanel();
@@ -73,7 +75,7 @@ public class SavedMediaSummaryObserver implements IRowSelectionListener<Media>, 
 
 	@Override
 	public void notifyItemUpdated(Media item) {
-		System.out.println("notifyItemUpdated: " + item);
+//		System.out.println("notifyItemUpdated: " + item);
 		if ( _currentMedia != null && _currentMedia._id == item._id ) {
 			_currentMedia = item;
 			_mediaSummaryPanel.update(_currentMedia);

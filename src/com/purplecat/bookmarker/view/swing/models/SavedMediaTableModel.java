@@ -145,6 +145,9 @@ public class SavedMediaTableModel extends TAbstractTableModel<Media> {
 		public void notifyItemParsed(OnlineMediaItem item, int itemsParsed, int updateCount) {
 			updateItem(item);
 		}
+		
+		@Override
+		public void notifyItemRemoved(OnlineMediaItem newItem, int itemsParsed, int size) {}
 
 		@Override
 		public void notifySiteFinished(WebsiteInfo site) {}

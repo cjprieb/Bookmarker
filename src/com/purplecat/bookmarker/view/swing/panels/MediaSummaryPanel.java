@@ -302,7 +302,8 @@ public class MediaSummaryPanel {
 			if ( genres.length() > 0 ) { genres.append(", "); }
 			genres.append(genre._name);
 		}
-		_dataGenres.setText(genres.toString());		
+		_dataGenres.setText(genres.toString());	
+		_dataGenres.setVisible(true);
 	}
 	
 	protected void setAltTitles(String displayTitle, Iterable<String> altTitles) {	

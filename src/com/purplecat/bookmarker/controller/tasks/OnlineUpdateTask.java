@@ -13,6 +13,7 @@ import com.purplecat.bookmarker.extensions.OnlineMediaItemExt.OnlineBookmarkComp
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.services.ServiceException;
 import com.purplecat.bookmarker.services.databases.DatabaseException;
+import com.purplecat.bookmarker.services.databases.IGenreRepository;
 import com.purplecat.bookmarker.services.databases.IOnlineMediaRepository;
 import com.purplecat.bookmarker.services.websites.IWebsiteLoadObserver;
 import com.purplecat.bookmarker.services.websites.IWebsiteParser;
@@ -27,18 +28,23 @@ public class OnlineUpdateTask {
 	final IOnlineMediaRepository _repository;
 	final ILoggingService _logging;
 	final IConnectionManager _connectionManager;
+	final IGenreRepository _genreRepository;
 	
 	private boolean _isRunning = false;
 	private boolean _stopRunning = false;
 	
+//	private List<Genre> _genres = new LinkedList<Genre>();
+	
 	private OnlineBookmarkComparator _bookmarkComparer = new OnlineBookmarkComparator();
 	
 	@Inject
-	public OnlineUpdateTask(IWebsiteLoadObserver obs, IOnlineMediaRepository repository, ILoggingService logging, IConnectionManager mgr) {
+	public OnlineUpdateTask(IWebsiteLoadObserver obs, IOnlineMediaRepository repository, 
+			ILoggingService logging, IConnectionManager mgr, IGenreRepository genreRepository) {
 		_observer = obs;
 		_repository = repository;
 		_logging = logging;
 		_connectionManager = mgr;
+		_genreRepository = genreRepository;
 	}
 
 	public synchronized boolean isRunning() {
@@ -71,17 +77,21 @@ public class OnlineUpdateTask {
 		
 		Set<Long> updatedMediaIds = new HashSet<Long>();
 		DateTime minDateToLoad = DateTime.now().minusHours(hoursAgo);
+//		try {
+//			_genres = _genreRepository.query();			
+//		}
+//		catch (DatabaseException e) {
+//			_logging.error(TAG, "Database error loading genres", e);
+//		} 
 		
 		for ( IWebsiteParser scraper : selectedWebsites ) {
 			if ( isStopped() ) {
 				break;
 			}
-			
-			_observer.notifySiteStarted(scraper.getInfo());
-			try {
-				List<OnlineMediaItem> siteList = scraper.load(minDateToLoad);
+			try {	
+				_observer.notifySiteStarted(scraper.getInfo());
 				
-				//NOTE: check for duplicates and such here?
+				List<OnlineMediaItem> siteList = scraper.load(minDateToLoad);
 				
 				_logging.debug(0, TAG, "Site parsed: " + scraper.getInfo()._name);
 				_observer.notifySiteParsed(scraper.getInfo(), siteList.size());				
@@ -120,11 +130,16 @@ public class OnlineUpdateTask {
 				iItemsParsed++;
 				if ( found != null ) {
 					_logging.debug(2, TAG, "DB Item found: " + found);
-					retList.add(found);
 					if ( found.isUpdated() ) { 
 						updatedMediaIds.add(item._mediaId); 
 					}
-					_observer.notifyItemParsed(found, iItemsParsed, updatedMediaIds.size());
+					if ( IncludeOnlineUpdateItem(item) ) {
+						retList.add(found);
+						_observer.notifyItemParsed(found, iItemsParsed, updatedMediaIds.size());			
+					}
+					else {
+						_observer.notifyItemRemoved(found, iItemsParsed, updatedMediaIds.size());					
+					}
 				}
 				else {
 					_logging.debug(2, TAG, "No match for: " + item);
@@ -149,7 +164,12 @@ public class OnlineUpdateTask {
 			iItemsParsed++;
 			if ( !StringUtils.isNullOrEmpty(item._summary) && item._genres.size() > 0 ) {
 				_logging.debug(2, TAG, "Not loading summary for " + item._displayTitle);
-				_observer.notifyItemParsed(item, iItemsParsed, updatedMediaIds.size());
+				if ( IncludeOnlineUpdateItem(item) ) {
+					_observer.notifyItemParsed(item, iItemsParsed, updatedMediaIds.size());			
+				}
+				else {
+					_observer.notifyItemRemoved(item, iItemsParsed, updatedMediaIds.size());					
+				}
 				continue;
 			}
 			OnlineMediaItem newItem = scraper.loadItem(item);
@@ -171,11 +191,24 @@ public class OnlineUpdateTask {
 				finally {
 					_connectionManager.close();
 				}
-				_observer.notifyItemParsed(newItem, iItemsParsed, updatedMediaIds.size());
+				if ( IncludeOnlineUpdateItem(newItem) ) {
+					_observer.notifyItemParsed(newItem, iItemsParsed, updatedMediaIds.size());			
+				}
+				else {
+					_observer.notifyItemRemoved(newItem, iItemsParsed, updatedMediaIds.size());					
+				}
 			}
 			else {
 				_logging.debug(2, TAG, "Updated Item was null after load: " + item);
 			}
-		}		
+		}
+	}
+	
+	public boolean IncludeOnlineUpdateItem(OnlineMediaItem item) {
+		if ( item._genres == null ) {
+			return true;
+		}
+		boolean bResult = item.isUpdated() || item._genres.stream().allMatch(genre -> genre._include);
+		return bResult;
 	}
 }

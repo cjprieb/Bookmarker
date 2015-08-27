@@ -42,8 +42,7 @@ public class SavedMediaSummaryObserver implements IRowSelectionListener<Media>, 
 		_folders = folders;
 		
 		_controller.observeSavedMediaUpdate(this);
-		_editMediaSummaryPanel.setMediaItemEditor(this);
-		
+		_editMediaSummaryPanel.setMediaItemEditor(this);		
 	}
 	
 	public JPanel getSummaryPanel() {
@@ -100,6 +99,9 @@ public class SavedMediaSummaryObserver implements IRowSelectionListener<Media>, 
 			updateEditorPanel();	
 		}
 	}
+	
+	@Override
+	public void notifyItemRemoved(OnlineMediaItem newItem, int iItemsParsed, int size) {}
 
 	@Override
 	public void notifySiteFinished(WebsiteInfo site) {}

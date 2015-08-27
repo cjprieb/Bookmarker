@@ -1,5 +1,8 @@
 package com.purplecat.bookmarker.test;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +18,9 @@ import com.google.inject.Injector;
 import com.google.inject.name.Names;
 import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.controller.tasks.OnlineUpdateTask;
+import com.purplecat.bookmarker.models.Genre;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
+import com.purplecat.bookmarker.services.IFolderRepository;
 import com.purplecat.bookmarker.services.ISummaryRepository;
 import com.purplecat.bookmarker.services.UrlPatternService;
 import com.purplecat.bookmarker.services.databases.IGenreRepository;
@@ -30,6 +35,7 @@ import com.purplecat.bookmarker.test.dummies.DummyConnectionManager;
 import com.purplecat.bookmarker.test.dummies.DummySummaryRepository;
 import com.purplecat.bookmarker.test.dummies.DummyThreadObserver;
 import com.purplecat.bookmarker.test.dummies.DummyThreadPool;
+import com.purplecat.bookmarker.test.dummies.SampleDatabaseService.SampleFolderDatabase;
 import com.purplecat.bookmarker.test.dummies.SampleDatabaseService.SampleGenreDatabase;
 import com.purplecat.bookmarker.test.dummies.SampleDatabaseService.SamplePatternDatabase;
 import com.purplecat.bookmarker.test.dummies.SampleMangaDatabase;
@@ -42,6 +48,7 @@ import com.purplecat.commons.swing.IImageRepository;
 import com.purplecat.commons.swing.SwingImageRepository;
 import com.purplecat.commons.swing.SwingResourceService;
 import com.purplecat.commons.swing.Toolbox;
+import com.purplecat.commons.tests.GetRandom;
 import com.purplecat.commons.threads.IThreadPool;
 
 public class WebsiteLoadingTests extends DatabaseConnectorTestBase {
@@ -66,6 +73,7 @@ public class WebsiteLoadingTests extends DatabaseConnectorTestBase {
 			bind(IGenreRepository.class).to(SampleGenreDatabase.class);
 			bind(IOnlineMediaRepository.class).to(SampleOnlineMangaDatabase.class);
 			bind(ISummaryRepository.class).to(DummySummaryRepository.class);
+			bind(IFolderRepository.class).to(SampleFolderDatabase.class);
 			bind(Controller.class);
 			bind(WebsiteThreadObserver.class);
 			bind(IWebsiteList.class).to(SampleWebsiteList.class);
@@ -77,6 +85,37 @@ public class WebsiteLoadingTests extends DatabaseConnectorTestBase {
 			bind(IResourceService.class).to(SwingResourceService.class);
 			bind(IImageRepository.class).to(SwingImageRepository.class);
 		}
+	}
+	
+	@Test
+	public void removeInvalidGenres() {
+		Injector injector = Guice.createInjector(new DatabaseWebsiteScrapingModule());		
+		OnlineUpdateTask _service = injector.getInstance(OnlineUpdateTask.class);	
+		
+		OnlineMediaItem item = new OnlineMediaItem();
+		item._displayTitle = GetRandom.getString(10);
+		
+		Genre genre = new Genre();
+		genre._name = GetRandom.getString(10);
+		genre._id = GetRandom.getInteger();
+		genre._include = true;
+		item._genres.add(genre);
+		
+		genre = new Genre();
+		genre._name = GetRandom.getString(10);
+		genre._id = GetRandom.getInteger();
+		genre._include = true;
+		item._genres.add(genre);
+		
+		assertTrue(_service.IncludeOnlineUpdateItem(item));
+		
+		genre = new Genre();
+		genre._name = GetRandom.getString(10);
+		genre._id = GetRandom.getInteger();
+		genre._include = false;
+		item._genres.add(genre);
+		
+		assertFalse(_service.IncludeOnlineUpdateItem(item));
 	}
 	
 	@Test

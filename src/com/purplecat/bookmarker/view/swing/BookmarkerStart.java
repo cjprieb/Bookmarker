@@ -112,6 +112,9 @@ public class BookmarkerStart extends MyApplication implements IWebsiteLoadObserv
 			updateIcon(Color.yellow, Color.black, totalUpdateCount);
 		}
 	}
+	
+	@Override
+	public void notifyItemRemoved(OnlineMediaItem newItem, int itemsParsed, int size) {}
 
 	@Override
 	public void notifySiteFinished(WebsiteInfo site) {}

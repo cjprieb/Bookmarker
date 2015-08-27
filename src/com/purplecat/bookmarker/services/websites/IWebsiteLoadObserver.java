@@ -17,6 +17,8 @@ public interface IWebsiteLoadObserver {
 	
 	public void notifySiteFinished(WebsiteInfo site);
 	
-	public void notifyLoadFinished(List<OnlineMediaItem> list);	
+	public void notifyLoadFinished(List<OnlineMediaItem> list);
+
+	public void notifyItemRemoved(OnlineMediaItem newItem, int iItemsParsed, int size);	
 
 }

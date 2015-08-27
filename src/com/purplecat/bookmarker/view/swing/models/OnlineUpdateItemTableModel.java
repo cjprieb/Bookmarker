@@ -147,9 +147,25 @@ public class OnlineUpdateItemTableModel extends TAbstractTableModel<OnlineMediaI
 			if ( onlineItem._mediaId == item._id ) {
 				onlineItem.updateFrom(item);
 				OnlineUpdateItemTableModel.this.fireTableRowsUpdated(iIndex, iIndex);
+				//don't break - there may be more than one match
+			}
+			iIndex++;
+		}
+	}
+	
+	private void removeItem(OnlineMediaItem updatedItem) {
+		boolean bFound = false;
+		int iIndex = 0;
+		for ( OnlineMediaItem item : _backingList ) {
+			if ( item._id == updatedItem._id ) {					
+				bFound = true;				
 				break;
 			}
 			iIndex++;
+		}
+		if ( bFound ) {
+			_backingList.remove(iIndex);
+			OnlineUpdateItemTableModel.this.fireTableRowsDeleted(iIndex, iIndex);
 		}
 	}
 
@@ -190,6 +206,11 @@ public class OnlineUpdateItemTableModel extends TAbstractTableModel<OnlineMediaI
 		@Override
 		public void notifyItemParsed(OnlineMediaItem item, int itemsParsed, int updateCount) {
 			updateItem(item);
+		}
+		
+		@Override
+		public void notifyItemRemoved(OnlineMediaItem item, int itemsParsed, int itemsUpdated) {
+			removeItem(item);
 		}
 
 		@Override

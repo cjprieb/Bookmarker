@@ -84,6 +84,13 @@ public class UpdateMediaObserverControl implements IWebsiteLoadObserver {
 			updateIcons(Color.yellow, Color.black, _updateCount);
 		}
 	}
+	
+	@Override
+	public void notifyItemRemoved(OnlineMediaItem newItem, int itemsParsed, int size) {
+		if ( itemsParsed >= -1 ) {
+			_progressBar.setValue(itemsParsed);
+		}		
+	}
 
 	@Override
 	public void notifySiteFinished(WebsiteInfo site) {

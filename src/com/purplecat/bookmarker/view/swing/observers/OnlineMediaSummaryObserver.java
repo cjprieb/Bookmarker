@@ -5,8 +5,10 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import com.google.inject.Inject;
+import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.controller.observers.IItemChangedObserver;
 import com.purplecat.bookmarker.controller.observers.ISummaryLoadObserver;
+import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.WebsiteInfo;
 import com.purplecat.bookmarker.services.websites.IWebsiteLoadObserver;
@@ -15,11 +17,30 @@ import com.purplecat.bookmarker.view.swing.panels.SummarySidebar;
 import com.purplecat.commons.swing.IRowSelectionListener;
 
 public class OnlineMediaSummaryObserver implements IRowSelectionListener<OnlineMediaItem>, IItemChangedObserver<OnlineMediaItem>, 
-	IWebsiteLoadObserver, ISummaryLoadObserver {	
-	@Inject OnlineMediaSummaryPanel _mediaSummaryPanel;
-	@Inject SummarySidebar _parentSummaryPanel;
+	IWebsiteLoadObserver, ISummaryLoadObserver {
+	
+	Controller _controller;
+	OnlineMediaSummaryPanel _mediaSummaryPanel;
+	SummarySidebar _parentSummaryPanel;
 	
 	OnlineMediaItem _currentMedia;
+	
+	@Inject
+	public OnlineMediaSummaryObserver(Controller controller, OnlineMediaSummaryPanel mediaSummaryPanel, SummarySidebar parentSummaryPanel) {
+		_controller = controller;
+		_mediaSummaryPanel = mediaSummaryPanel;
+		_parentSummaryPanel = parentSummaryPanel;
+		
+		_controller.observeSavedMediaUpdate(new IItemChangedObserver<Media>() {
+			@Override
+			public void notifyItemUpdated(Media item) {
+				if ( _currentMedia != null && _currentMedia._mediaId == item._id ) {
+					_currentMedia.updateFrom(item);
+					_mediaSummaryPanel.update(_currentMedia);
+				}
+			}			
+		});	
+	}
 	
 	public JPanel getSummaryPanel() {
 		return _mediaSummaryPanel.getPanel();
@@ -62,6 +83,14 @@ public class OnlineMediaSummaryObserver implements IRowSelectionListener<OnlineM
 	@Override
 	public void notifyItemParsed(OnlineMediaItem item, int itemsParsed,	int totalUpdateCount) {
 		updateItem(item);
+	}
+	
+	@Override
+	public void notifyItemRemoved(OnlineMediaItem newItem, int iItemsParsed, int size) {
+		if ( _currentMedia != null && _currentMedia._id == newItem._id ) {
+			_currentMedia = null;
+			_mediaSummaryPanel.clear();
+		}
 	}
 
 	@Override

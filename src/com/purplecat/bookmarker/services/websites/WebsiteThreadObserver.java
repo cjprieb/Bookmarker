@@ -7,6 +7,7 @@ import com.google.inject.Inject;
 import com.purplecat.bookmarker.controller.tasks.OnlineUpdateTask;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
 import com.purplecat.bookmarker.models.WebsiteInfo;
+import com.purplecat.bookmarker.services.databases.IGenreRepository;
 import com.purplecat.bookmarker.services.databases.IOnlineMediaRepository;
 import com.purplecat.bookmarker.sql.IConnectionManager;
 import com.purplecat.commons.logs.ILoggingService;
@@ -31,11 +32,12 @@ public class WebsiteThreadObserver implements IWebsiteLoadObserver, Runnable {
 	private Iterable<IWebsiteLoadObserver> _observers;
 	
 	@Inject
-	public WebsiteThreadObserver(IThreadPool threadPool, IWebsiteList websites, IOnlineMediaRepository onlineRepository, ILoggingService logging, IConnectionManager mgr) {
+	public WebsiteThreadObserver(IThreadPool threadPool, IWebsiteList websites, IOnlineMediaRepository onlineRepository, 
+			ILoggingService logging, IConnectionManager mgr, IGenreRepository genreRepository) {
 		_threadPool = threadPool;
 		_websites = websites;
 		_onlineRepository = onlineRepository;
-		_task = new OnlineUpdateTask(this, _onlineRepository, logging, mgr);
+		_task = new OnlineUpdateTask(this, _onlineRepository, logging, mgr, genreRepository);
 	}
 	
 	public void setLoadParameters(int hoursAgo, boolean loadGenres, boolean loadAll, WebsiteInfo selectedWebsite, Iterable<IWebsiteLoadObserver> observers) {
@@ -83,7 +85,12 @@ public class WebsiteThreadObserver implements IWebsiteLoadObserver, Runnable {
 
 	@Override
 	public void notifyItemParsed(OnlineMediaItem item, int itemsParsed, int itemsUpdated) {
-		_threadPool.runOnUIThread(new RunItemParsed(item, itemsParsed, itemsUpdated));
+		_threadPool.runOnUIThread(new RunItemParsed(item, itemsParsed, itemsUpdated, false));
+	}
+	
+	@Override
+	public void notifyItemRemoved(OnlineMediaItem item, int itemsParsed, int itemsUpdated) {
+		_threadPool.runOnUIThread(new RunItemParsed(item, itemsParsed, itemsUpdated, true));
 	}
 
 	@Override
@@ -141,17 +148,24 @@ public class WebsiteThreadObserver implements IWebsiteLoadObserver, Runnable {
 		OnlineMediaItem _item;
 		int _itemsParsed;
 		int _itemsUpdated;
+		boolean _removeIt;
 		
-		public RunItemParsed(OnlineMediaItem item, int itemsParsed, int itemsUpdated) {
+		public RunItemParsed(OnlineMediaItem item, int itemsParsed, int itemsUpdated, boolean removeIt) {
 			super(_observers);
 			_item = item;
 			_itemsParsed = itemsParsed;
 			_itemsUpdated = itemsUpdated;
+			_removeIt = removeIt;
 		}
 		
 		@Override
 		public void run(IWebsiteLoadObserver obs) {
-			obs.notifyItemParsed(_item, _itemsParsed, _itemsUpdated);
+			if ( _removeIt ) {
+				obs.notifyItemRemoved(_item, _itemsParsed, _itemsUpdated);
+			}
+			else {
+				obs.notifyItemParsed(_item, _itemsParsed, _itemsUpdated);
+			}
 		}
 	}
 

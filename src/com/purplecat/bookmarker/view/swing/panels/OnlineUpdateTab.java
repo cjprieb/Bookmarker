@@ -200,6 +200,9 @@ public class OnlineUpdateTab {
 	
 		@Override
 		public void notifyItemParsed(OnlineMediaItem item, int itemsParsed, int totalUpdateCount) {}
+		
+		@Override
+		public void notifyItemRemoved(OnlineMediaItem newItem, int itemsParsed, int size) {}
 	
 		@Override
 		public void notifySiteFinished(WebsiteInfo site) {

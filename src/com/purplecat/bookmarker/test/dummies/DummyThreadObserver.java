@@ -56,6 +56,13 @@ public class DummyThreadObserver implements IWebsiteLoadObserver {
 	}
 	
 	@Override
+	public void notifyItemRemoved(OnlineMediaItem newItem, int itemsParsed, int updateCount) {
+		_itemLoaded = true;
+		_itemsParsed = itemsParsed;
+		_itemsUpdated = updateCount;
+	}
+	
+	@Override
 	public void notifySiteFinished(WebsiteInfo site) {
 		_siteFinished = true;
 	}

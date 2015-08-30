@@ -50,9 +50,11 @@ public class SavedMediaSummaryObserver implements IRowSelectionListener<Media>, 
 	}
 	
 	public void updateEditorPanel() {
-		_editMediaSummaryPanel.setFavoriteState(_currentMedia._rating);
-		_editMediaSummaryPanel.setPlace(_currentMedia._lastReadPlace);
-		_editMediaSummaryPanel.setStoryState(_folders.getById(_currentMedia._folderId));
+		if ( _currentMedia != null ) {
+			_editMediaSummaryPanel.setFavoriteState(_currentMedia._rating);
+			_editMediaSummaryPanel.setPlace(_currentMedia._lastReadPlace);
+			_editMediaSummaryPanel.setStoryState(_folders.getById(_currentMedia._folderId));
+		}
 	}
 
 	@Override

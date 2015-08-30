@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
+import com.purplecat.bookmarker.extensions.MediaItemExt;
 import com.purplecat.bookmarker.extensions.TitleExt;
 
 public class Media extends BaseDatabaseItem implements Comparable<Media> {
@@ -63,7 +64,7 @@ public class Media extends BaseDatabaseItem implements Comparable<Media> {
 	}
 	
 	public boolean isUpdated() {
-		if ( _isSaved && _updatedPlace != null ) {
+		if ( _isSaved && _updatedPlace != null && !MediaItemExt.isIgnored(_folderId) ) {
 			return _lastReadPlace.compareTo(_updatedPlace) < 0;
 		}
 		else {

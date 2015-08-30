@@ -22,7 +22,7 @@ public class StoryStateExt {
 	public static StoryStateModel getView(Media view, Folder folder) {
 		StoryStateModel imageModel = new StoryStateModel();
 		
-		EStoryState state = folder != null ? folder._storyState : EStoryState.LAST_AVAILABLE_CHAPTER;
+		EStoryState state = folder != null ? folder._storyState : (view._isComplete ? EStoryState.FINISHED_BOOKMARK : EStoryState.LAST_AVAILABLE_CHAPTER);
 		imageModel._imageKey = getImageKey(state, false); //false=not movie
 		
 		if ( view.isUpdated() ) {

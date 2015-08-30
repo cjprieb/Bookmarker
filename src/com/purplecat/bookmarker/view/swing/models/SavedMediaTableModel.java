@@ -92,14 +92,20 @@ public class SavedMediaTableModel extends TAbstractTableModel<Media> {
 	
 	protected void updateItem(Media item) {
 		int iIndex = 0;
+		boolean bFound = false;
 		for ( Media existingItem : _backingList ) {
 			if ( existingItem._id == item._id ) {
+				bFound = true;
 				_backingList.set(iIndex, item);
 				SavedMediaTableModel.this.fireTableRowsUpdated(iIndex, iIndex);
 				break;
 			}
 			iIndex++;
 		}		
+		if ( !bFound && item._isSaved ) {
+			_backingList.add(item);
+			SavedMediaTableModel.this.fireTableRowsInserted(iIndex, iIndex);			
+		}
 	}
 	
 	protected void updateItem(OnlineMediaItem item) {

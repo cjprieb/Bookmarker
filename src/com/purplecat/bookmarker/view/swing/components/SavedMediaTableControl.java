@@ -13,6 +13,7 @@ import javax.swing.Action;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.RowFilter;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.table.TableRowSorter;
@@ -21,15 +22,16 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.purplecat.bookmarker.Resources;
 import com.purplecat.bookmarker.controller.Controller;
+import com.purplecat.bookmarker.extensions.DateTimeFormats.ReverseDateTimeComparor;
 import com.purplecat.bookmarker.extensions.MediaItemExt;
 import com.purplecat.bookmarker.models.EFavoriteState.FavoriteComparor;
 import com.purplecat.bookmarker.models.Media;
+import com.purplecat.bookmarker.models.SavedMediaQuery;
 import com.purplecat.bookmarker.view.swing.models.SavedMediaTableModel;
 import com.purplecat.bookmarker.view.swing.renderers.DataFields;
 import com.purplecat.bookmarker.view.swing.renderers.UpdatedMediaRowRenderer;
 import com.purplecat.commons.IResourceService;
 import com.purplecat.commons.TTableColumn;
-import com.purplecat.commons.extensions.DateTimeFormats.ReverseDateComparor;
 import com.purplecat.commons.swing.AppUtils.IDragDropAction;
 import com.purplecat.commons.swing.TTable;
 import com.purplecat.commons.swing.TablePopupCreator;
@@ -48,6 +50,8 @@ public class SavedMediaTableControl {
 	private final Controller _controller;
 	private final Toolbox _toolbox;
 	private final IResourceService _resources;
+	
+	private SavedMediaQuery _lastQuery;
 	
 	@Inject
 	public SavedMediaTableControl(
@@ -113,7 +117,7 @@ public class SavedMediaTableControl {
 
 			index = ListUtils.indexOf(_columns, DataFields.DATE_COL);
 			if ( index >= 0 ) { 
-				this.setComparator(index, new ReverseDateComparor());
+				this.setComparator(index, new ReverseDateTimeComparor());
 			}
 
 			index = ListUtils.indexOf(_columns, DataFields.TITLE_COL);
@@ -155,26 +159,27 @@ public class SavedMediaTableControl {
 		}
 	}
 	
-	/*public void query(Query query) {
-		mSorter.setRowFilter(new QueryFilter(query));
+	public void query(SavedMediaQuery query) {
+		_lastQuery = query;
+		_sorter.setRowFilter(new QueryFilter(_lastQuery));
 	}
 	
-	public class QueryFilter extends RowFilter<MediaTableModel, Integer> {
-		Query _lastQuery;
+	
+	public class QueryFilter extends RowFilter<SavedMediaTableModel, Integer> {
+		SavedMediaQuery _currentQuery;
 		
-		public QueryFilter(Query query) {
-			_lastQuery = query;
+		public QueryFilter(SavedMediaQuery query) {
+			_currentQuery = query;
 		}
 		
 		@Override
-		public boolean include(RowFilter.Entry<? extends MediaTableModel, ? extends Integer> entry) {
-			if ( _lastQuery != null ) {
-				return( _lastQuery.matchesQuery(CriterionMatchers.SavedItemMatcher, 
-						entry.getModel().getItemAt(entry.getIdentifier())) );
+		public boolean include(RowFilter.Entry<? extends SavedMediaTableModel, ? extends Integer> entry) {
+			if ( _currentQuery != null ) {
+				return( _currentQuery.matches(entry.getModel().getItemAt(entry.getIdentifier())) );
 			}
 			else {
 				return(true);
 			}
 		}
-	}*/
+	}
 }

@@ -35,6 +35,8 @@ public class BatotoWebsite implements IWebsiteParser {
 	
 	//(4.62 - 128votes)
 	protected final Pattern _ratingPattern = Pattern.compile("([\\d\\.]+)");
+	protected final String _pageFormat = "http://bato.to/?p=%d";
+	protected final int MAX_PAGE = 5;
 	
 	@Inject
 	public BatotoWebsite(ILoggingService logging, IGenreRepository genres) {
@@ -43,14 +45,27 @@ public class BatotoWebsite implements IWebsiteParser {
 		_info = new WebsiteInfo("Batoto", "http://bato.to/");
 	}
 	
-	protected Document getDocument() throws IOException {
-		return Jsoup.connect(_info._website).get();
+	protected Document getDocument(int page) throws IOException {
+		if ( page == 1 ) {
+			return Jsoup.connect(_info._website).get();
+		}
+		else {
+			return Jsoup.connect(String.format(_pageFormat, page)).get();
+		}
 	}
 
 	@Override
 	public List<OnlineMediaItem> load(DateTime minDateToLoad) throws ServiceException {
 		try {
-			return loadDocument(getDocument(), minDateToLoad);
+			List<OnlineMediaItem> allItems = new LinkedList<OnlineMediaItem>();
+			for ( int i = 1; i <= MAX_PAGE; i++ ) {
+				List<OnlineMediaItem> list = loadDocument(getDocument(i), minDateToLoad);
+				if ( list == null || list.isEmpty() ) {
+					break;
+				}
+				allItems.addAll(list);
+			}
+			return allItems;
 		} catch (IOException e) {
 			_logging.error(TAG, "Error getting document", e);
 			throw new ServiceException("Error loading Batoto", ServiceException.WEBSITE_ERROR);
@@ -58,11 +73,16 @@ public class BatotoWebsite implements IWebsiteParser {
 	}
 	
 	public List<OnlineMediaItem>  loadDocument(Document doc, DateTime minDateToLoad) {
+		if ( doc == null ) { return null; }
+		
 		List<OnlineMediaItem> items = new LinkedList<OnlineMediaItem>();
 		DateTime now = DateTime.now();
 		Elements rows = doc.select(".chapters_list .lang_English");
 		OnlineMediaItem currentItem = null;
+//		int rowCount = 0;
+//		_logging.debug(0, TAG, rows.size() + " rows found");
 		for ( Element row : rows ) {
+//			rowCount++;
 			//Each item takes up at least 2 rows
 			if ( row.select("td").size() == 2 ) {
 				//first row: thumbnail and title and link to title
@@ -87,14 +107,18 @@ public class BatotoWebsite implements IWebsiteParser {
 				}
 			}
 			else if ( currentItem != null ) {
+//				_logging.debug(1, TAG, rowCount + ") parsing date for: " + currentItem._displayTitle);
 				//chapter rows: place, link to chapter, and date/time
 				String chapterUrl = row.select("a").first().attr("href");
 				String chapterName = row.select("a").first().text();
 				String stringDate = row.select("td").last().text();
 				Place place = PlaceExt.parseBatotoPlace(chapterUrl);
 				DateTime date = WebsiteDateExt.parseBatotoDate(now, stringDate);
+//				_logging.debug(2, TAG, "date: " + date);
+//				_logging.debug(2, TAG, "place: " + place);
 				
 				if ( currentItem._updatedPlace.compareTo(place) <= 0 ) {
+//					_logging.debug(2, TAG, "updating date and place of existing batoto item");
 					currentItem._chapterUrl = chapterUrl;
 					currentItem._chapterName = chapterName;
 					currentItem._updatedPlace = place;

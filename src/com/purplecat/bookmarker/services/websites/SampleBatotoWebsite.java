@@ -25,16 +25,19 @@ public class SampleBatotoWebsite extends BatotoWebsite {
 	}
 	
 	@Override
-	protected Document getDocument() throws IOException {
-		String fileName = _fileIndex % 2 == 0 ? "sample_batoto.html" : "sample_batoto_3.html";
-		_fileIndex++;
-//		String fileName = "sample_batoto.html";
-		File in = new File(fileName);
-		if ( !in.exists() ) {
-			_logging.debug(0, TAG, "sample file not found: " + in.getAbsolutePath());
+	protected Document getDocument(int page) throws IOException {
+		if ( page == 1 ) {
+			String fileName = _fileIndex % 2 == 0 ? "sample_batoto.html" : "sample_batoto_3.html";
+			_fileIndex++;
+	//		String fileName = "sample_batoto.html";
+			File in = new File(fileName);
+			if ( !in.exists() ) {
+				_logging.debug(0, TAG, "sample file not found: " + in.getAbsolutePath());
+			}
+	//		_fileIndex++;
+			return Jsoup.parse(in, "UTF-8");
 		}
-//		_fileIndex++;
-		return Jsoup.parse(in, "UTF-8");
+		return null;
 	}
 
 	@Override

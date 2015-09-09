@@ -43,7 +43,7 @@ public class WebsiteParsingTests {
 		System.out.println("BATOTO");
 		IWebsiteParser site = new BatotoWebsite(_logging, _genreDatabase);		
 		try {
-			DateTime minUpdateDate = DateTime.now().minusHours(8); //hours ago
+			DateTime minUpdateDate = DateTime.now().minusHours(24); //hours ago
 			List<OnlineMediaItem> items = site.load(minUpdateDate);
 			assertNotNull(items);
 			assertTrue(items.size() > 0);
@@ -51,8 +51,8 @@ public class WebsiteParsingTests {
 			for ( OnlineMediaItem item : items ) {
 				iCount++;
 				checkItem(item);
-
-				if (iCount < 15 ) { 
+//
+				if (iCount < 0 ) { 
 					site.loadItem(item);
 					checkFullItemLoaded(item);					
 				}
@@ -60,6 +60,7 @@ public class WebsiteParsingTests {
 					Assert.fail("Item was updated too long ago");
 				}
 			}
+			Assert.assertTrue("no items from yesterday", items.stream().anyMatch(item -> item._updatedDate.getDayOfMonth() == minUpdateDate.getDayOfMonth()));
 		} catch (ServiceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

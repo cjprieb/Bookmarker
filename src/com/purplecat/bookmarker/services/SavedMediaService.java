@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 import com.purplecat.bookmarker.controller.observers.IListLoadedObserver;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
+import com.purplecat.bookmarker.models.Place;
 import com.purplecat.bookmarker.models.UrlPatternResult;
 import com.purplecat.bookmarker.services.databases.DatabaseException;
 import com.purplecat.bookmarker.services.databases.IGenreRepository;
@@ -18,6 +19,7 @@ import com.purplecat.bookmarker.services.websites.IWebsiteList;
 import com.purplecat.bookmarker.services.websites.IWebsiteParser;
 import com.purplecat.bookmarker.sql.IConnectionManager;
 import com.purplecat.commons.logs.ILoggingService;
+import com.purplecat.commons.utils.StringUtils;
 
 public class SavedMediaService {
 	public final ILoggingService _logging;
@@ -247,5 +249,38 @@ public class SavedMediaService {
 			throw serviceException;
 		}
 		return item;
+	}
+
+	public Media updatePlace(Media media, Place newPlace, String url) throws ServiceException {
+		ServiceException serviceException = null;
+		try {
+			_connectionManager.open();	
+
+			if ( !StringUtils.isNullOrEmpty(url) ) {
+				media._chapterUrl = url;
+			}
+			media._lastReadDate = new DateTime();
+			media._lastReadPlace._volume = newPlace._volume;
+			media._lastReadPlace._chapter = newPlace._chapter;
+			media._lastReadPlace._subChapter = newPlace._subChapter;
+			media._lastReadPlace._page = newPlace._page;
+			media._lastReadPlace._extra = newPlace._extra;
+			media._isSaved = true;
+			
+			_database.update(media);
+		}
+		catch (DatabaseException e) {
+			_logging.error("Saved Media Service", "Exception update place", e);
+			serviceException = new ServiceException("Error updating media place'" + media.getDisplayTitle() + "'", ServiceException.SQL_ERROR);
+		}
+		finally {
+			_connectionManager.close();
+		}	
+		if ( serviceException != null ) {
+			throw serviceException;
+		}
+		else {
+			return media;
+		}
 	}
 }

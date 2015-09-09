@@ -11,6 +11,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
+import com.purplecat.bookmarker.models.Place;
 import com.purplecat.bookmarker.services.SavedMediaService;
 import com.purplecat.bookmarker.services.ServiceException;
 import com.purplecat.bookmarker.services.databases.DatabaseException;
@@ -91,6 +92,37 @@ public class MediaServiceTests {
 			Media updatedManga = _service.get(matchingManga._id);
 			Assert.assertNotNull("Item was not found", updatedManga);
 			checkEquals(matchingManga, updatedManga);
+		} catch (ServiceException e) {
+			e.printStackTrace();
+			fail("Exception thrown: " + e.getMessage());
+		}		
+	}
+	
+	@Test
+	public void testUpdateFromSummaryPane() {
+		try {
+			Media mediaItem = null;
+			try {
+				mediaItem = GetRandom.getItem(_service._database.query());
+			}
+			catch (DatabaseException e) {
+				e.printStackTrace();
+				fail("DatabaseEception thrown: " + e.getMessage());
+			}
+			String url = "random url";
+			Place newPlace = mediaItem._lastReadPlace.copy();
+			newPlace._chapter++;
+			DateTime now = new DateTime();
+			
+			Media matchingManga = _service.updatePlace(mediaItem, newPlace, url);
+			Assert.assertNotNull("Item was not found", matchingManga);
+			Assert.assertTrue("updated date mismatch", Matchers.MatchDateTime(now, matchingManga._lastReadDate, 20));
+			Assert.assertEquals(mediaItem._lastReadPlace._volume, matchingManga._lastReadPlace._volume);
+			Assert.assertEquals(mediaItem._lastReadPlace._chapter, matchingManga._lastReadPlace._chapter);
+			Assert.assertEquals(mediaItem._lastReadPlace._subChapter, matchingManga._lastReadPlace._subChapter);
+			Assert.assertEquals(mediaItem._lastReadPlace._page, matchingManga._lastReadPlace._page);
+			Assert.assertTrue("not saved", matchingManga._isSaved);
+			Assert.assertEquals(url, matchingManga._chapterUrl);
 		} catch (ServiceException e) {
 			e.printStackTrace();
 			fail("Exception thrown: " + e.getMessage());

@@ -134,8 +134,7 @@ public class SavedMediaSummaryObserver implements IRowSelectionListener<Media>, 
 	@Override
 	public void updatePlace(Place place) {
 		if ( _currentMedia != null ) {
-			_currentMedia._lastReadPlace = place;
-			_controller.updateMedia(_currentMedia);
+			_controller.updateMediaPlace(_currentMedia, place, "");
 		}
 	}
 

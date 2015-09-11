@@ -1,0 +1,82 @@
+[
+	{
+		"order" : 3,
+		"_id" : 2,
+		"_mediaId" : 200,
+		"_displayTitle" : "Stealth Symphony",
+		"_storyState" : "FINISHED_BOOKMARK",
+		"_isComplete" : "true",
+		"_lastReadPlace" : { "_volume" : 0, "_chapter" : 6 },
+		"_lastReadDate" : "2014-04-10",
+		"_updatedPlace" : { "_volume" : 0, "_chapter" : 7 },
+		"_updatedDate" : "2014-05-15"
+	},
+	{
+		"order" : 1,
+		"_id" : 1,
+		"_mediaId" : 201,
+		"_displayTitle" : "Skip Beat",
+		"_storyState" : "LAST_AVAILABLE_CHAPTER",
+		"_isComplete" : "false",
+		"_lastReadPlace" : { "_volume" : 37, "_chapter" : 222 },
+		"_lastReadDate" : "2015-05-06",
+		"_updatedPlace" : { "_volume" : 37, "_chapter" : 223 },
+		"_updatedDate" : "2015-05-14"
+	},
+	{
+		"order" :2,
+		"_id" : 3,
+		"_mediaId" : 203,
+		"_displayTitle" : "Magi",
+		"_storyState" : "LAST_AVAILABLE_CHAPTER",
+		"_isComplete" : "false",
+		"_lastReadPlace" : { "_volume" : 0, "_chapter" : 245 },
+		"_lastReadDate" : "2015-04-10",
+		"_updatedPlace" : { "_volume" : 0, "_chapter" : 246 },
+		"_updatedDate" : "2015-04-15"
+	},
+	{
+		"order" : 5,
+		"_id" : 4,
+		"_mediaId" : 205,
+		"_displayTitle" : "ReLIFE",
+		"_storyState" : "LAST_AVAILABLE_CHAPTER",
+		"_isComplete" : "false",
+		"_lastReadPlace" : { "_volume" : 0, "_chapter" : 16 },
+		"_lastReadDate" : "2015-05-11",
+		"_updatedPlace" : { "_volume" : 0, "_chapter" : 16 },
+		"_updatedDate" : "2015-05-11"
+	},
+	{
+		"order" : 4,
+		"_id" : 5,
+		"_mediaId" : 206,
+		"_displayTitle" : "Akagami no shirayukihime",
+		"_storyState" : "LAST_AVAILABLE_CHAPTER",
+		"_isComplete" : "false",
+		"_lastReadPlace" : { "_volume" :4, "_chapter" : 32 },
+		"_lastReadDate" : "2015-05-11",
+		"_updatedPlace" : { "_volume" : 6, "_chapter" : 66 },
+		"_updatedDate" : "2015-05-13"
+	},
+	{
+		"order" : 7,
+		"_id" : 6,
+		"_mediaId" : 208,
+		"_displayTitle" : "Handa-kun",
+		"_storyState" : "",
+		"_isComplete" : "false",
+		"_updatedPlace" : { "_volume" : 2, "_chapter" : 10 },
+		"_updatedDate" : "2015-05-16"
+	},
+	{
+		"order" : 6,
+		"_id" : 7,
+		"_mediaId" : 210,
+		"_displayTitle" : "Bartender",
+		"_storyState" : "",
+		"_isComplete" : "false",
+		"_updatedPlace" : { "_volume" : 17, "_chapter" : 129 },
+		"_updatedDate" : "2015-05-20"
+	}
+]

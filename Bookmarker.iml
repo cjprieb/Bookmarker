@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="EclipseModuleManager">
+    <libelement value="file:///utilities/lib/sqlite-jdbc-3.7.2.jar" />
+    <libelement value="file:///utilities/lib/OrangeExtensions-1.2.jar" />
+    <libelement value="file:///utilities/lib/jsoup-1.8.2.jar" />
+    <libelement value="file:///Commons/lib/OrangeExtensions-1.2.jar" />
+    <libelement value="file:///Commons/joda-time-2.7/joda-time-2.7.jar" />
+    <libelement value="file:///Commons/lib/guava-18.0.jar" />
+    <libelement value="file:///Commons/lib/guice-4.0-no_aop.jar" />
+    <libelement value="file:///Commons/lib/javax.inject.jar" />
+    <libelement value="file:///Commons/lib/javax.json-1.0.4.jar" />
+    <libelement value="file:///Commons/purplecat-commons.jar" />
+    <src_description expected_position="0">
+      <src_folder value="file://$MODULE_DIR$/src" expected_position="0" />
+    </src_description>
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="false">
+    <output url="file://$MODULE_DIR$/bin" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/Maven" />
+      <excludeFolder url="file://$MODULE_DIR$/data" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/java/com/purplecat/bookmarker/view/swing/ignored" />
+      <excludeFolder url="file://$MODULE_DIR$/test_data" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="junit4">
+        <CLASSES>
+          <root url="jar://$APPLICATION_HOME_DIR$/lib/junit-4.11.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="jsoup-1.8.2.jar">
+        <CLASSES>
+          <root url="file:///utilities/lib/jsoup-1.8.2.jar" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="javax.json-1.0.4.jar">
+        <CLASSES>
+          <root url="file:///Commons/lib/javax.json-1.0.4.jar" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="module" module-name="commons" />
+    <orderEntry type="library" name="Maven: com.google.guava:guava:11.0.2" level="application" />
+    <orderEntry type="library" name="org.sonatype.sisu:sisu-guice:3.1.8" level="application" />
+    <orderEntry type="library" name="joda-time:joda-time:2.8.2" level="application" />
+    <orderEntry type="library" name="org.xerial:sqlite-jdbc:3.7.2" level="application" />
+    <orderEntry type="library" name="javax.json:javax.json-api:1.0" level="application" />
+    <orderEntry type="library" name="org.jsoup:jsoup:1.8.3" level="application" />
+  </component>
+</module>

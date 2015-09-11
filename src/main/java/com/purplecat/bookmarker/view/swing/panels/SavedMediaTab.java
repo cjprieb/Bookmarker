@@ -4,15 +4,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
 
-import javax.swing.GroupLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.LayoutStyle;
+import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.table.TableModel;
 
 import com.google.inject.Inject;
 import com.purplecat.bookmarker.Resources;
@@ -20,13 +19,17 @@ import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.models.EStoryState;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.SavedMediaQuery;
+import com.purplecat.bookmarker.models.WebsiteInfo;
 import com.purplecat.bookmarker.view.swing.components.SavedMediaTableControl;
 import com.purplecat.bookmarker.view.swing.components.StoryStateButton;
 import com.purplecat.bookmarker.view.swing.observers.SavedMediaSummaryObserver;
 import com.purplecat.commons.IResourceService;
+import com.purplecat.commons.extensions.Numbers;
+import com.purplecat.commons.logs.ILoggingService;
 import com.purplecat.commons.swing.CXableTextField;
 
 public class SavedMediaTab {
+	private static final String TAG = "SavedMediaTab";
 	private JPanel _panel;
 	
 	@Inject Controller _controller;
@@ -34,6 +37,7 @@ public class SavedMediaTab {
 	@Inject SummarySidebar _summaryPanel;
 	@Inject SavedMediaSummaryObserver _summaryObserver;
 	@Inject SavedMediaTableControl _savedMediaTableControl;
+	@Inject ILoggingService _logging;
 	
 	@Inject StoryStateButton _btnStoryState;
 	
@@ -49,7 +53,7 @@ public class SavedMediaTab {
 //	private JLabel mLblWebsites;
 //	private WebsiteComboBox	mCmbWebsites;
 	
-	public void create() {		
+	public void create() {
 		_controller.observeSummaryLoading(_summaryObserver);
 		_savedMediaTableControl.getTable().addRowSelectionListener(_summaryObserver);
 
@@ -139,28 +143,30 @@ public class SavedMediaTab {
 			.addContainerGap());
 		
 		layout.setVerticalGroup(layout.createSequentialGroup()
-			.addContainerGap()			
+			.addContainerGap()
 			.addGroup(layout.createSequentialGroup()
-				.addGroup(layout.createParallelGroup(Alignment.CENTER)
-					.addComponent(mLblKeyword, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addComponent(mTxtKeyword, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addComponent(mBtnReset, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-				)
-				.addGroup(layout.createParallelGroup(Alignment.CENTER)
+							.addGroup(layout.createParallelGroup(Alignment.CENTER)
+											.addComponent(mLblKeyword, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
+											.addComponent(mTxtKeyword, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
+											.addComponent(mBtnReset, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
+							)
+							.addGroup(layout.createParallelGroup(Alignment.CENTER)
 //						.addComponent(mLblAuthor, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 //						.addComponent(mTxtAuthor, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addComponent(mChkUpdated, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
+											.addComponent(mChkUpdated, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 //						.addComponent(mBtnFavState, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addComponent(_btnStoryState, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-				)
+											.addComponent(_btnStoryState, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
+							)
 //					.addGroup(layout.createParallelGroup(Alignment.CENTER)
 //							.addComponent(mLblWebsites, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 //							.addComponent(mCmbWebsites, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 //					)
 //					.addComponent(mGenreWindow, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 			)
-			.addComponent(_savedMediaTableControl.getComponent(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)				
+			.addComponent(_savedMediaTableControl.getComponent(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
 			.addContainerGap());
+
+		loadPreferences();
 	}
 	
 	public JPanel getPanel() {
@@ -218,6 +224,72 @@ public class SavedMediaTab {
 //		}
 		
 		return(query);
+	}
+
+	public void loadPreferences() {
+		_logging.debug(1, TAG, "Loading SavedMediaTab preferences");
+		Preferences prefs = Preferences.userNodeForPackage(getClass());
+
+		mChkUpdated.setSelected(prefs.getBoolean("saved-showUpdated", false));
+		mTxtKeyword.setText(prefs.get("saved-keyword", ""));
+
+		String[] keys = {};
+		Preferences sortPrefs = prefs.node("saved-sort");
+
+		try {
+			keys = sortPrefs.keys();
+		} catch (BackingStoreException e) {
+			_logging.error(TAG, "Erroring getting saved-sort keys", e);
+		}
+
+		RowSorter<? extends TableModel> rowSorter = _savedMediaTableControl.getTable().getRowSorter();
+		if ( rowSorter != null ) {
+			List<RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>();
+			for (String key : keys) {
+				int index = Numbers.parseInt(key, -1);
+				int column = sortPrefs.getInt(key, 0);
+				if (index >= 0 && column != 0) {
+					RowSorter.SortKey sortKey = new RowSorter.SortKey(
+							Math.abs(column) - 1,
+							column > 0 ? SortOrder.ASCENDING : SortOrder.DESCENDING);
+
+					sortKeys.add(index, sortKey);
+					System.out.println("adding key to sort: " + index + "; " + sortKey);
+				}
+			}
+			rowSorter.setSortKeys(sortKeys);
+		}
+		else {
+			System.out.println("sorter is null");
+		}
+
+		sendQuery();
+	}
+
+	public void savePreferences() {
+		_logging.debug(2, TAG, "Saving SavedMediaTab preferences");
+		Preferences prefs = Preferences.userNodeForPackage(getClass());
+
+		prefs.putBoolean("saved-showUpdated", mChkUpdated.isSelected());
+		prefs.put("saved-keyword", mTxtKeyword.getText());
+
+		Preferences sortPrefs = prefs.node("saved-sort");
+
+		try {
+			sortPrefs.clear();
+		} catch (BackingStoreException e) {
+			_logging.error(TAG, "Erroring clearing saved-sort keys", e);
+		}
+
+		RowSorter<? extends TableModel> rowSorter = _savedMediaTableControl.getTable().getRowSorter();
+		if ( rowSorter != null ) {
+			List<? extends RowSorter.SortKey> sortKeys = rowSorter.getSortKeys();
+			for (int i = 0; i < sortKeys.size(); i++) {
+				RowSorter.SortKey sortKey = sortKeys.get(i);
+				int column = (sortKey.getColumn()+1) * (sortKey.getSortOrder() == SortOrder.ASCENDING ? 1 : -1);
+				sortPrefs.putInt(String.valueOf(i), column);
+			}
+		}
 	}
 	
 	private ActionListener _queryComponentListener = new ActionListener() {

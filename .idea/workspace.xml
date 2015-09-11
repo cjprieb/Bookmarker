@@ -5,52 +5,18 @@
       <artifact name="Bookmarker:jar" />
     </artifacts-to-build>
   </component>
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/view/swing/panels/SavedMediaTab.java" line="184" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="1c97a81a-dba8-483b-82d0-91664a381337" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/suites/DatabaseTestSuite.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/suites/DatabaseTestSuite.java" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/DatabaseConnectorTestBase.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/DatabaseConnectorTestBase.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/ExtensionTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/ExtensionTests.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/FileSummaryRepositoryTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/FileSummaryRepositoryTests.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/FolderCacheTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/FolderCacheTests.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/FolderDatabaseTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/FolderDatabaseTests.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/FoldersControllerThreads.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/FoldersControllerThreads.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/GenreDatabaseRepositoryTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/GenreDatabaseRepositoryTests.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/MangaDatabaseRepositoryTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/MangaDatabaseRepositoryTests.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/Matchers.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/Matchers.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/MediaServiceTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/MediaServiceTests.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/NamedStatementTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/NamedStatementTests.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/OnlineDatabaseRepositoryTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/OnlineDatabaseRepositoryTests.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/OnlineUpdateThreadTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/OnlineUpdateThreadTests.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/SortingTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/SortingTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/SqlDatabaseTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/SqlDatabaseTests.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/TitleDatabaseRepositoryTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/TitleDatabaseRepositoryTests.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/UrlDatabaseRepositoryTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/UrlDatabaseRepositoryTests.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/UrlPatternServiceTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/UrlPatternServiceTests.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/WebsiteLoadingTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/WebsiteLoadingTests.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/WebsiteParsingTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/WebsiteParsingTests.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/DummyConnectionManager.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/DummyConnectionManager.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/DummyDragDrop.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/DummyDragDrop.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/DummyOnlineItemRepository.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/DummyOnlineItemRepository.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/DummySummaryRepository.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/DummySummaryRepository.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/DummyThreadObserver.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/DummyThreadObserver.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/DummyThreadPool.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/DummyThreadPool.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/DummyWebsiteList.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/DummyWebsiteList.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/SampleDatabaseService.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/SampleDatabaseService.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/SampleMangaDatabase.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/SampleMangaDatabase.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/SampleOnlineMangaDatabase.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/SampleOnlineMangaDatabase.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/SampleWebsiteList.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/SampleWebsiteList.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/resources/SampleUrlPatternResults.txt" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/resources/SampleUrlPatternResults.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/resources/SampleUrlPatterns.txt" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/resources/SampleUrlPatterns.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/resources/sample_manga.txt" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/resources/sample_manga.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/resources/updated_sample_manga.txt" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/resources/updated_sample_manga.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/modules/TestBookmarkerModule.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/modules/TestBookmarkerModule.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/modules/TestDatabaseModule.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/modules/TestDatabaseModule.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/modules/ThreadTestingModule.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/modules/ThreadTestingModule.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/suites/HelperTestSuite.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/suites/HelperTestSuite.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/suites/ServiceTestSuite.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/suites/ServiceTestSuite.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/suites/WebsiteTestSuite.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/suites/WebsiteTestSuite.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/swing/OnlineTableViewTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/swing/OnlineTableViewTests.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/services/ISettingsService.java" afterPath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/services/ISettingsService.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/services/websites/IWebsiteList.java" afterPath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/services/websites/IWebsiteList.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/view/swing/MainPanel.java" afterPath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/view/swing/MainPanel.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/view/swing/panels/OnlineUpdateTab.java" afterPath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/view/swing/panels/OnlineUpdateTab.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/view/swing/panels/SavedMediaTab.java" afterPath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/view/swing/panels/SavedMediaTab.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/view/swing/components/SavedMediaTableControl.java" afterPath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/view/swing/components/SavedMediaTableControl.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/codeStyleSettings.xml" afterPath="$PROJECT_DIR$/.idea/codeStyleSettings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Bookmarker.iws" />
@@ -66,6 +32,9 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="CompilerWorkspaceConfiguration">
+    <option name="MAKE_PROJECT_ON_SAVE" value="true" />
+  </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
@@ -75,17 +44,44 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="DatabaseConnectorTestBase.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/DatabaseConnectorTestBase.java">
+      <file leaf-file-name="ISettingsService.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/services/ISettingsService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.08746356">
-              <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="6" column="47" selection-start-line="6" selection-start-column="47" selection-end-line="6" selection-end-column="47" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="WebsiteDropdown.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/view/swing/components/WebsiteDropdown.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="23" column="50" selection-start-line="23" selection-start-column="50" selection-end-line="23" selection-end-column="50" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="IWebsiteList.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/services/websites/IWebsiteList.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.14492753">
+              <caret line="6" column="4" selection-start-line="6" selection-start-column="4" selection-end-line="6" selection-end-column="4" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -105,6 +101,12 @@
         <option value="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/view/swing/renderers/CategoryComboBoxRenderer.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/view/swing/ignored/CategoryComboBoxRenderer.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/DatabaseConnectorTestBase.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/view/swing/panels/OnlineUpdateTab.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/view/swing/MainPanel.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/view/swing/components/SavedMediaTableControl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/view/swing/panels/SavedMediaTab.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/services/ISettingsService.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/services/websites/IWebsiteList.java" />
       </list>
     </option>
   </component>
@@ -252,6 +254,8 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="PackagesPane">
         <subPane>
           <PATH>
@@ -266,13 +270,11 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$USER_HOME$/Bookmarker" />
-    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
+    <property name="settings.editor.selected.configurable" value="project.propCompiler" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
@@ -473,32 +475,33 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="15" y="27" width="1894" height="1037" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32955974" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32954547" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31949687" sideWeight="0.5027894" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32955974" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32955974" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20168954" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2623967" sideWeight="0.4972106" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20168954" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2623967" sideWeight="0.4972106" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32975295" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -521,11 +524,34 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/view/swing/panels/OnlineUpdateTab.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="180" column="71" selection-start-line="180" selection-start-column="71" selection-end-line="180" selection-end-column="71" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/view/swing/panels/SavedMediaTab.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="252" column="22" selection-start-line="252" selection-start-column="21" selection-end-line="252" selection-end-column="22" />
+          <folding>
+            <element signature="e#7798#7799#0" expanded="true" />
+            <element signature="e#7818#7819#0" expanded="true" />
+            <element signature="e#7962#7963#0" expanded="true" />
+            <element signature="e#8028#8029#0" expanded="true" />
+            <element signature="e#8058#8059#0" expanded="true" />
+            <element signature="e#8133#8134#0" expanded="true" />
+            <element signature="e#10442#10461#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Maven/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -533,7 +559,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -541,7 +566,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.2542373">
           <caret line="13" column="10" selection-start-line="13" selection-start-column="10" selection-end-line="13" selection-end-column="10" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -549,7 +573,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.37157756">
           <caret line="19" column="10" selection-start-line="19" selection-start-column="1" selection-end-line="19" selection-end-column="10" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -557,7 +580,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.21903521">
           <caret line="38" column="20" selection-start-line="38" selection-start-column="20" selection-end-line="38" selection-end-column="20" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -565,9 +587,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.47524753">
           <caret line="16" column="8" selection-start-line="16" selection-start-column="8" selection-end-line="16" selection-end-column="8" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -575,9 +594,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.56435645">
           <caret line="19" column="6" selection-start-line="19" selection-start-column="6" selection-end-line="19" selection-end-column="6" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -585,7 +601,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.62376237">
           <caret line="21" column="51" selection-start-line="21" selection-start-column="51" selection-end-line="21" selection-end-column="51" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -601,9 +616,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.65346533">
           <caret line="22" column="29" selection-start-line="22" selection-start-column="29" selection-end-line="22" selection-end-column="29" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -611,7 +623,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.2970297">
           <caret line="10" column="16" selection-start-line="10" selection-start-column="16" selection-end-line="10" selection-end-column="16" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -619,14 +630,76 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.41545188">
           <caret line="19" column="37" selection-start-line="19" selection-start-column="37" selection-end-line="19" selection-end-column="37" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/DatabaseConnectorTestBase.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.08746356">
-          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+        <state vertical-scroll-proportion="0.6341108">
+          <caret line="34" column="47" selection-start-line="34" selection-start-column="47" selection-end-line="34" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/view/swing/MainPanel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.66472304">
+          <caret line="109" column="34" selection-start-line="109" selection-start-column="34" selection-end-line="109" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/view/swing/panels/OnlineUpdateTab.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.30174926">
+          <caret line="124" column="26" selection-start-line="124" selection-start-column="26" selection-end-line="124" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/view/swing/panels/SavedMediaTab.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.68133533">
+          <caret line="253" column="85" selection-start-line="253" selection-start-column="85" selection-end-line="253" selection-end-column="85" />
+          <folding>
+            <element signature="e#7798#7799#0" expanded="true" />
+            <element signature="e#7818#7819#0" expanded="true" />
+            <element signature="e#7962#7963#0" expanded="true" />
+            <element signature="e#8028#8029#0" expanded="true" />
+            <element signature="e#8058#8059#0" expanded="true" />
+            <element signature="e#8133#8134#0" expanded="true" />
+            <element signature="e#10442#10461#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/view/swing/components/SavedMediaTableControl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.65014577">
+          <caret line="167" column="4" selection-start-line="167" selection-start-column="4" selection-end-line="167" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/services/ISettingsService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="6" column="47" selection-start-line="6" selection-start-column="47" selection-end-line="6" selection-end-column="47" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/view/swing/components/WebsiteDropdown.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="23" column="50" selection-start-line="23" selection-start-column="50" selection-end-line="23" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/services/websites/IWebsiteList.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.14492753">
+          <caret line="6" column="4" selection-start-line="6" selection-start-column="4" selection-end-line="6" selection-end-column="4" />
           <folding />
         </state>
       </provider>

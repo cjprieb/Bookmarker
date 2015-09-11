@@ -160,6 +160,7 @@ public class SavedMediaTableControl {
 	}
 	
 	public void query(SavedMediaQuery query) {
+		System.out.println("querying: isUpdated=" + query._isUpdated);
 		_lastQuery = query;
 		_sorter.setRowFilter(new QueryFilter(_lastQuery));
 	}

@@ -3,6 +3,7 @@ package com.purplecat.bookmarker.view.swing;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import javax.swing.AbstractAction;
@@ -112,6 +113,7 @@ public class MainPanel implements ChangeListener {
 		prefs.putInt("main-tabIndex", _tabbedPane.getSelectedIndex());
 		
 		_onlineUpdateTab.savePreferences();
+		_savedMediaTab.savePreferences();
 	}
 	
 	@Override

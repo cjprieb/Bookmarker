@@ -160,7 +160,6 @@ public class OnlineUpdateTab {
 	public void loadPreferences() {
 		_logging.debug(1, TAG, "Loading OnlineUpdateTab preferences");
 		Preferences prefs = Preferences.userNodeForPackage(getClass());
-		_logging.debug(3, TAG, "hours ago: " + prefs.getInt("update-hoursAgo", 8));
 		_spinner.setValue(prefs.getInt("update-hoursAgo", 8));
 		_chkLoadGenres.setSelected(prefs.getBoolean("update-loadGenres", true));
 		_chkAllWebsites.setSelected(prefs.getBoolean("update-allWebsites", false));
@@ -180,7 +179,6 @@ public class OnlineUpdateTab {
 	public void savePreferences() {
 		_logging.debug(2, TAG, "Saving OnlineUpdateTab preferences");
 		Preferences prefs = Preferences.userNodeForPackage(getClass());
-		_logging.debug(3, TAG, "hours ago: " + (int)_spinner.getHourValue());
 		
 		prefs.putInt("update-hoursAgo", (int)_spinner.getHourValue());
 		prefs.putBoolean("update-allWebsites", _chkAllWebsites.isSelected());

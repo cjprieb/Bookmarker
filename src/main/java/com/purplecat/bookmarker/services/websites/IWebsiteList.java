@@ -4,6 +4,6 @@ import java.util.Collection;
 
 public interface IWebsiteList {
 
-	public Collection<IWebsiteParser> getList();
+	Collection<IWebsiteParser> getList();
 	
 }

@@ -7,319 +7,51 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1c97a81a-dba8-483b-82d0-91664a381337" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/Bookmarker_jar.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/META-INF/MANIFEST.MF" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Maven/Maven.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/codeStyleSettings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../Commons/.idea/libraries/com_google_inject_guice_3_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../Commons/commons.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../Commons/.idea/libraries/dom4j_dom4j_1_6_1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Maven/pom.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/Resources.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/controller/Controller.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/controller/FolderCache.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/controller/observers/IFoldersObserver.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/controller/observers/IItemChangedObserver.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/controller/observers/IListLoadedObserver.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/controller/observers/ISummaryLoadObserver.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/controller/observers/ItemEvent.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/controller/observers/SampleTaskObserver.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/controller/tasks/LoadFolders.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/controller/tasks/LoadMediaSummaryTask.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/controller/tasks/OnlineUpdateTask.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/controller/tasks/SampleTask.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/controller/tasks/SavedMediaLoadTask.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/controller/tasks/UpdateMangaFromUrlTask.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/controller/tasks/UpdateMangaPlaceTask.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/controller/tasks/UpdateSavedFromOnlineTask.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/controller/tasks/UpdateSavedMediaTask.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/extensions/DateTimeFormats.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/extensions/FavoriteStateExt.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/extensions/MediaItemExt.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/extensions/OnlineMediaItemExt.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/extensions/PlaceExt.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/extensions/StoryStateExt.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/extensions/TitleExt.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/extensions/WebsiteDateExt.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/models/AltTitle.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/models/BaseDatabaseItem.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/models/EFavoriteState.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/models/EStoryState.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/models/Folder.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/models/Genre.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/models/Media.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/models/OnlineMediaItem.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/models/Place.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/models/SavedMediaQuery.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/models/StoryStateModel.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/models/UrlPattern.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/models/UrlPatternResult.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/models/UrlPatternType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/models/WebsiteInfo.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/data/images.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/data/strings_labels.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/DontRead.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/EndM.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/Finished.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/FinishedM.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/MidChapter.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/MidChapterOrange.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/MiddleM.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/average.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/blank.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/blankcircle.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/blankflag.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/blankstar.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/bookmark-new.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/bookmarker.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/check.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/closed-book.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/closed-bookmark-red.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/closed-bow-green.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/closed-bow-red.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/closed-red-x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/cross.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/emblem-favorite.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/emblem-important.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/flag.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/good.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/greencheck.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/heart.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/meh.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/open-book-question.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/open-book.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/open-bookmark-blue.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/open-bookmark-orange.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/open-bookmark-red.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/process-done.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/process-working.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/redcross.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/resources/icons/star.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/BaseDatabaseItemService.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/DefaultSettingsService.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/FileSummaryRepository.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/IFolderRepository.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/IItemService.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/ISettingsService.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/ISummaryRepository.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/OnlineMediaService.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/SavedMediaService.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/ServiceException.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/UrlPatternService.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/databases/DatabaseException.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/databases/DatabaseVersioning.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/databases/FolderDatabaseRepository.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/databases/GenreDatabaseRepository.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/databases/IGenreRepository.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/databases/IItemRepository.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/databases/IMediaRepository.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/databases/IOnlineMediaRepository.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/databases/IUrlPatternDatabase.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/databases/MediaBookmarkContract.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/databases/MediaDatabaseRepository.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/databases/OnlineMediaDatabase.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/databases/TitleDatabaseRepository.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/databases/UrlPatternDatabase.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/websites/BakaWebsite.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/websites/BatotoWebsite.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/websites/DefaultWebsiteList.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/websites/IWebsiteList.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/websites/IWebsiteLoadObserver.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/websites/IWebsiteParser.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/websites/IWebsiteThreadTask.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/websites/SampleBakaWebsite.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/websites/SampleBatotoWebsite.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/services/websites/WebsiteThreadObserver.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/sql/ConnectionManager.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/sql/DBUtils.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/sql/IConnectionManager.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/sql/NamedResultSet.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/sql/NamedStatement.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/DatabaseConnectorTestBase.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/ExtensionTests.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/FileSummaryRepositoryTests.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/FolderCacheTests.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/FolderDatabaseTests.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/FoldersControllerThreads.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/GenreDatabaseRepositoryTests.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/MangaDatabaseRepositoryTests.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/Matchers.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/MediaServiceTests.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/NamedStatementTests.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/OnlineDatabaseRepositoryTests.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/OnlineUpdateThreadTests.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/SortingTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/SqlDatabaseTests.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/TitleDatabaseRepositoryTests.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/UrlDatabaseRepositoryTests.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/UrlPatternServiceTests.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/WebsiteLoadingTests.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/WebsiteParsingTests.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/dummies/DummyConnectionManager.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/dummies/DummyDragDrop.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/dummies/DummyOnlineItemRepository.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/dummies/DummySummaryRepository.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/dummies/DummyThreadObserver.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/dummies/DummyThreadPool.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/dummies/DummyWebsiteList.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/dummies/SampleDatabaseService.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/dummies/SampleMangaDatabase.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/dummies/SampleOnlineMangaDatabase.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/dummies/SampleWebsiteList.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/dummies/resources/SampleUrlPatternResults.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/dummies/resources/SampleUrlPatterns.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/dummies/resources/sample_manga.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/dummies/resources/updated_sample_manga.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/modules/TestBookmarkerModule.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/modules/TestDatabaseModule.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/modules/ThreadTestingModule.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/suites/DatabaseTestSuite.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/suites/HelperTestSuite.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/suites/ServiceTestSuite.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/suites/WebsiteTestSuite.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/test/swing/OnlineTableViewTests.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/BookmarkerImages.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/BookmarkerStart.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/DebugStart.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/DebugSwingBookmarkerModule.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/DefaultColors.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/DefaultSizes.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/MainPanel.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/SwingBookmarkerModule.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/actions/LoadUpdatesAction.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/actions/StopUpdatesAction.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/actions/UrlDragDropAction.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/components/FavoriteStateButton.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/components/HourSpinner.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/components/HtmlEditorPane.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/components/LabelBadge.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/components/LabelButton.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/components/OnlineUpdateItemTableControl.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/components/PlaceEditor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/components/PlaceSpinner.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/components/RatioProgressBar.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/components/SavedMediaTableControl.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/components/StoryStateButton.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/components/WebsiteDropdown.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/html/SummaryRow.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/html/SummaryTextArea.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/html/SummaryTextRow.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/models/OnlineUpdateItemTableModel.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/models/SavedMediaTableModel.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/observers/IMediaItemEditor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/observers/LinkClickObserver.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/observers/OnlineMediaSummaryObserver.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/observers/SavedMediaSummaryObserver.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/observers/SummaryHyperlinkObserver.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/observers/UpdateMediaObserverControl.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/panels/EditMediaSummaryPanel.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/panels/GlassTimerPanel.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/panels/MediaSummaryPanel.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/panels/OnlineMediaSummaryPanel.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/panels/OnlineUpdateTab.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/panels/OverlayWindow.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/panels/SavedMediaSummaryPanel.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/panels/SavedMediaTab.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/panels/SummarySidebar.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/renderers/AuthorMediaRowRenderer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/renderers/BookmarkerRendererFactory.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/renderers/CalendarEditor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/renderers/CategoryComboBoxRenderer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/renderers/CategoryRenderer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/renderers/DataFields.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/renderers/DateTimeRenderer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/renderers/EpisodeProgressRenderer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/renderers/EpisodeRenderer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/renderers/FavoriteStateIconRenderer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/renderers/FlagIconRenderer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/renderers/FolderComboBoxRenderer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/renderers/FolderListRenderer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/renderers/FormatterFactories.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/renderers/GenreRenderer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/renderers/HtmlStyles.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/renderers/NextItemRenderer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/renderers/OnlineLoadedRowRenderer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/renderers/PlaceEditor.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/renderers/PlaceRenderer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/renderers/ProgressBarCellRenderer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/renderers/RatingRenderer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/renderers/StoryStateIconRenderer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/purplecat/bookmarker/view/swing/renderers/UpdatedMediaRowRenderer.java" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/IResourceService.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/IResourceService.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/Point.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/Point.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/Resources.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/Resources.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/TTableColumn.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/TTableColumn.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/ThreeState.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/ThreeState.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/extensions/DateTimeFormats.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/extensions/DateTimeFormats.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/extensions/EnumExt.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/extensions/EnumExt.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/extensions/Numbers.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/extensions/Numbers.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/io/BOMBufferedReader.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/io/BOMBufferedReader.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/io/FileUtils.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/io/FileUtils.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/logs/ConsoleLog.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/logs/ConsoleLog.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/logs/FileLog.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/logs/FileLog.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/logs/ILoggingService.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/logs/ILoggingService.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/resources/data/strings_labels.xml" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/resources/data/strings_labels.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/resources/icons/blankcircle.png" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/resources/icons/blankcircle.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/resources/icons/check.png" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/resources/icons/check.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/resources/icons/cross.png" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/resources/icons/cross.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/resources/icons/greencheck.png" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/resources/icons/greencheck.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/resources/icons/process-done.png" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/resources/icons/process-done.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/resources/icons/process-working.png" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/resources/icons/process-working.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/resources/icons/redcross.png" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/resources/icons/redcross.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/AnimatorLabel.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/AnimatorLabel.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/AppIcons.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/AppIcons.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/AppUtils.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/AppUtils.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/AwtColor.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/AwtColor.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/BorderType.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/BorderType.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/CXableTextField.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/CXableTextField.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/DialogButtonPanel.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/DialogButtonPanel.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/DialogMethods.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/DialogMethods.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/EnablableTableCellRenderer.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/EnablableTableCellRenderer.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/IImageRepository.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/IImageRepository.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/IRowActionListener.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/IRowActionListener.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/IRowSelectionListener.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/IRowSelectionListener.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/MyApplication.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/MyApplication.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/StackLayout.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/StackLayout.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/SwingImageRepository.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/SwingImageRepository.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/SwingResourceService.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/SwingResourceService.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/SwingThreadPool.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/SwingThreadPool.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/TTable.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/TTable.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/TablePopupCreator.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/TablePopupCreator.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/Toolbox.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/Toolbox.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/dragdrop/DragDropHandler.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/dragdrop/DragDropHandler.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/dragdrop/FileDrop.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/dragdrop/FileDrop.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/dragdrop/IEditableList.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/dragdrop/IEditableList.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/dragdrop/NewDragDropHandler.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/dragdrop/NewDragDropHandler.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/dragdrop/ReplaceTextTransferHandler.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/dragdrop/ReplaceTextTransferHandler.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/dragdrop/TableRowDragDropHandler.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/dragdrop/TableRowDragDropHandler.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/renderer/ICellRendererFactory.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/renderer/ICellRendererFactory.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/renderer/ITableRowRenderer.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/renderer/ITableRowRenderer.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/swing/renderer/IconCellRenderer.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/swing/renderer/IconCellRenderer.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/tests/GetRandom.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/tests/GetRandom.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/tests/Utils.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/tests/Utils.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/threads/IThreadObserver.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/threads/IThreadObserver.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/threads/IThreadPool.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/threads/IThreadPool.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/threads/IThreadTask.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/threads/IThreadTask.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/threads/RunnableUITask.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/threads/RunnableUITask.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/threads/RunnableWorkerTask.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/threads/RunnableWorkerTask.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/utils/ListUtils.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/utils/ListUtils.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/utils/StringUtils.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/utils/StringUtils.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/xmltests/Difference.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/xmltests/Difference.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/xmltests/DifferenceType.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/xmltests/DifferenceType.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/xmltests/Differences.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/xmltests/Differences.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/xmltests/XmlComparison.java" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/xmltests/XmlComparison.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/xmltests/austen_added.xml" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/xmltests/austen_added.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/xmltests/austen_edit.xml" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/xmltests/austen_edit.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/xmltests/austen_orig.xml" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/xmltests/austen_orig.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/xmltests/austen_reorder.xml" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/xmltests/austen_reorder.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/commons/xmltests/austen_same.xml" afterPath="$PROJECT_DIR$/../Commons/src/main/java/com/purplecat/commons/xmltests/austen_same.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/tests/ControlTests.java" afterPath="$PROJECT_DIR$/../Commons/src/test/java/com/purplecat/commons/ControlTests.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/tests/FileUtilsTests.java" afterPath="$PROJECT_DIR$/../Commons/src/test/java/com/purplecat/commons/FileUtilsTests.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/tests/XmlMatcherTests.java" afterPath="$PROJECT_DIR$/../Commons/src/test/java/com/purplecat/commons/XmlMatcherTests.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/tests/copy of sample.txt" afterPath="$PROJECT_DIR$/../Commons/src/test/java/com/purplecat/commons/copy of sample.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Commons/src/com/purplecat/tests/sample.txt" afterPath="$PROJECT_DIR$/../Commons/src/test/java/com/purplecat/commons/sample.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/bookmarker.db copy" afterPath="$PROJECT_DIR$/data/bookmarker.db copy" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/suites/DatabaseTestSuite.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/suites/DatabaseTestSuite.java" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/DatabaseConnectorTestBase.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/DatabaseConnectorTestBase.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/ExtensionTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/ExtensionTests.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/FileSummaryRepositoryTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/FileSummaryRepositoryTests.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/FolderCacheTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/FolderCacheTests.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/FolderDatabaseTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/FolderDatabaseTests.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/FoldersControllerThreads.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/FoldersControllerThreads.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/GenreDatabaseRepositoryTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/GenreDatabaseRepositoryTests.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/MangaDatabaseRepositoryTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/MangaDatabaseRepositoryTests.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/Matchers.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/Matchers.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/MediaServiceTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/MediaServiceTests.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/NamedStatementTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/NamedStatementTests.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/OnlineDatabaseRepositoryTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/OnlineDatabaseRepositoryTests.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/OnlineUpdateThreadTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/OnlineUpdateThreadTests.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/SortingTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/SortingTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/SqlDatabaseTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/SqlDatabaseTests.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/TitleDatabaseRepositoryTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/TitleDatabaseRepositoryTests.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/UrlDatabaseRepositoryTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/UrlDatabaseRepositoryTests.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/UrlPatternServiceTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/UrlPatternServiceTests.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/WebsiteLoadingTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/WebsiteLoadingTests.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/WebsiteParsingTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/WebsiteParsingTests.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/DummyConnectionManager.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/DummyConnectionManager.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/DummyDragDrop.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/DummyDragDrop.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/DummyOnlineItemRepository.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/DummyOnlineItemRepository.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/DummySummaryRepository.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/DummySummaryRepository.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/DummyThreadObserver.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/DummyThreadObserver.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/DummyThreadPool.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/DummyThreadPool.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/DummyWebsiteList.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/DummyWebsiteList.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/SampleDatabaseService.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/SampleDatabaseService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/SampleMangaDatabase.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/SampleMangaDatabase.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/SampleOnlineMangaDatabase.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/SampleOnlineMangaDatabase.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/SampleWebsiteList.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/SampleWebsiteList.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/resources/SampleUrlPatternResults.txt" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/resources/SampleUrlPatternResults.txt" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/resources/SampleUrlPatterns.txt" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/resources/SampleUrlPatterns.txt" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/resources/sample_manga.txt" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/resources/sample_manga.txt" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/resources/updated_sample_manga.txt" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/resources/updated_sample_manga.txt" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/modules/TestBookmarkerModule.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/modules/TestBookmarkerModule.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/modules/TestDatabaseModule.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/modules/TestDatabaseModule.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/modules/ThreadTestingModule.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/modules/ThreadTestingModule.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/suites/HelperTestSuite.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/suites/HelperTestSuite.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/suites/ServiceTestSuite.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/suites/ServiceTestSuite.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/suites/WebsiteTestSuite.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/suites/WebsiteTestSuite.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/swing/OnlineTableViewTests.java" afterPath="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/swing/OnlineTableViewTests.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Bookmarker.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -343,24 +75,12 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pom.xml">
+      <file leaf-file-name="DatabaseConnectorTestBase.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/DatabaseConnectorTestBase.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="10" column="8" selection-start-line="10" selection-start-column="8" selection-end-line="10" selection-end-column="8" />
+            <state vertical-scroll-proportion="0.08746356">
+              <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SampleMangaDatabase.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/SampleMangaDatabase.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.67784256">
-              <caret line="33" column="13" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -384,6 +104,7 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/view/swing/renderers/CategoryComboBoxRenderer.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/view/swing/ignored/CategoryComboBoxRenderer.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/DatabaseConnectorTestBase.java" />
       </list>
     </option>
   </component>
@@ -449,6 +170,86 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Bookmarker" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Bookmarker" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Bookmarker" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Bookmarker" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Bookmarker" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Bookmarker" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Bookmarker" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Bookmarker" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bookmarker" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="PackagesPane">
@@ -483,6 +284,11 @@
     <property name="Repository.Attach.Sources" value="false" />
     <property name="dynamic.classpath" value="false" />
     <property name="FullScreen" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.purplecat.bookmarker" />
+    </key>
   </component>
   <component name="RunManager" selected="Application.Bookmarker">
     <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
@@ -809,13 +615,19 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/purplecat/bookmarker/test/dummies/SampleMangaDatabase.java">
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/dummies/SampleMangaDatabase.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.67784256">
-          <caret line="33" column="13" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="0.41545188">
+          <caret line="19" column="37" selection-start-line="19" selection-start-column="37" selection-end-line="19" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/purplecat/bookmarker/DatabaseConnectorTestBase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.08746356">
+          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>

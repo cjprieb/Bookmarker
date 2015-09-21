@@ -24,16 +24,22 @@ import com.purplecat.commons.utils.StringUtils;
 
 public class BakaWebsite implements IWebsiteParser {
 	final String TAG = "BakaWebsite";
-	
-	protected final WebsiteInfo _info;
+	final String NAME = "BakaUpdates";
+	final String URL = "https://www.mangaupdates.com/releases.html";
+
 	protected final ILoggingService _logging;
 	protected final IGenreRepository _genreDatabase;
 	
 	public BakaWebsite(ILoggingService logging, IGenreRepository genres) {
 		_logging = logging;
 		_genreDatabase = genres;
-		_info = new WebsiteInfo("BakaUpdates", "https://www.mangaupdates.com/releases.html");
 	}
+
+	@Override
+	public String getName() { return NAME; }
+
+	@Override
+	public String getWebsiteUrl() { return URL; }
 
 	@Override
 	public OnlineMediaItem loadItem(OnlineMediaItem item) throws ServiceException {
@@ -74,14 +80,9 @@ public class BakaWebsite implements IWebsiteParser {
 		}
 		return item;
 	}
-
-	@Override
-	public WebsiteInfo getInfo() {
-		return _info;
-	}
 	
 	protected Document getDocument() throws IOException {
-		return Jsoup.connect(_info._website).get();
+		return Jsoup.connect(URL).get();
 	}
 
 	@Override
@@ -116,7 +117,7 @@ public class BakaWebsite implements IWebsiteParser {
 					if ( ahref != null && tableTime.compareTo(minDateToLoad) >= 0 ) {
 						String sChapterText = cells.get(1).text();
 						OnlineMediaItem item = new OnlineMediaItem();
-						item._websiteName = _info._name;
+						item._websiteName = getName();
 						item._displayTitle = cells.get(0).text();
 						item._updatedPlace = PlaceExt.parseBakaPlace(sChapterText);
 						item._updatedDate = tableTime;

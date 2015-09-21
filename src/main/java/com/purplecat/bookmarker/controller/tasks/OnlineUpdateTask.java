@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.purplecat.bookmarker.services.websites.IWebsiteList;
 import org.joda.time.DateTime;
 
 import com.google.inject.Inject;
@@ -29,22 +30,21 @@ public class OnlineUpdateTask {
 	final ILoggingService _logging;
 	final IConnectionManager _connectionManager;
 	final IGenreRepository _genreRepository;
+	final OnlineBookmarkComparator _bookmarkComparer;
 	
 	private boolean _isRunning = false;
 	private boolean _stopRunning = false;
 	
-//	private List<Genre> _genres = new LinkedList<Genre>();
-	
-	private OnlineBookmarkComparator _bookmarkComparer = new OnlineBookmarkComparator();
-	
 	@Inject
 	public OnlineUpdateTask(IWebsiteLoadObserver obs, IOnlineMediaRepository repository, 
-			ILoggingService logging, IConnectionManager mgr, IGenreRepository genreRepository) {
+							ILoggingService logging, IConnectionManager mgr, IGenreRepository genreRepository,
+							IWebsiteList websiteList) {
 		_observer = obs;
 		_repository = repository;
 		_logging = logging;
 		_connectionManager = mgr;
 		_genreRepository = genreRepository;
+		_bookmarkComparer = new OnlineBookmarkComparator(websiteList);
 	}
 
 	public synchronized boolean isRunning() {
@@ -89,12 +89,12 @@ public class OnlineUpdateTask {
 				break;
 			}
 			try {	
-				_observer.notifySiteStarted(scraper.getInfo());
+				_observer.notifySiteStarted(scraper.getName(), scraper.getWebsiteUrl());
 				
 				List<OnlineMediaItem> siteList = scraper.load(minDateToLoad);
 				
-				_logging.debug(0, TAG, "Site parsed: " + scraper.getInfo()._name);
-				_observer.notifySiteParsed(scraper.getInfo(), siteList.size());				
+				_logging.debug(0, TAG, "Site parsed: " + scraper.getName());
+				_observer.notifySiteParsed(scraper.getName(), siteList.size());
 				
 				updatedMediaIds.addAll(loadMatchingMedia(siteList, retList));
 
@@ -108,10 +108,10 @@ public class OnlineUpdateTask {
 				}
 			} 
 			catch (ServiceException e) {
-				_logging.error(TAG, "Error loading from: " + scraper.getInfo()._name, e);
+				_logging.error(TAG, "Error loading from: " + scraper.getName(), e);
 				//TODO: how to handle service exception
 			} 
-			_observer.notifySiteFinished(scraper.getInfo());
+			_observer.notifySiteFinished(scraper.getName());
 		}
 
 		_observer.notifyLoadFinished(retList);

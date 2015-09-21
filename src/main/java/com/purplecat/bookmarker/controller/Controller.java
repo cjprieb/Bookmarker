@@ -85,8 +85,8 @@ public class Controller {
 		_websiteLoadObservers.add(obs);
 	}
 	
-	public void loadUpdateMedia(int hoursAgo, boolean loadGenres, boolean loadAll, WebsiteInfo selectedWebsite) {
-		_observer.setLoadParameters(hoursAgo, loadGenres, loadAll, selectedWebsite, _websiteLoadObservers);
+	public void loadUpdateMedia(int hoursAgo, boolean loadGenres, boolean loadAll, String name) {
+		_observer.setLoadParameters(hoursAgo, loadGenres, loadAll, name, _websiteLoadObservers);
 		_threadPool.runOnWorkerThread(_observer);
 	}
 	

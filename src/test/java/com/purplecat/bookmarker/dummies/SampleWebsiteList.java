@@ -25,10 +25,20 @@ public class SampleWebsiteList implements IWebsiteList {
 	}
 
 	@Override
-	public Collection<IWebsiteParser> getList() {
+	public List<IWebsiteParser> getList() {
 		return _websites;
 	}
-	
+
+	@Override
+	public List<IWebsiteParser> getSortedList() {
+		return _websites;
+	}
+
+	@Override
+	public int compare(String websiteName, String websiteName1) {
+		return 0;
+	}
+
 	public int getSampleHoursAgo() {
 		return 8;//this will work for batoto
 	}

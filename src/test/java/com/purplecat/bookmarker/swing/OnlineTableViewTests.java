@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import com.purplecat.bookmarker.services.websites.IWebsiteList;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
@@ -44,6 +45,7 @@ public class OnlineTableViewTests {
 	OnlineMediaListObserver _observer;
 	FolderCache _folderCache;
 	Folder _ignoreFolder;
+	IWebsiteList _websiteList;
 	
 	@Before
 	public void setup() {
@@ -66,6 +68,7 @@ public class OnlineTableViewTests {
 		_model = new OnlineUpdateItemTableModel(_controller, _resources, _folderCache);
 		_model.setColumns(_columns);
 		_observer = _model.new OnlineMediaListObserver();
+		_websiteList = injector.getInstance(IWebsiteList.class);
 		
 		_ignoreFolder = new Folder();
 		_ignoreFolder._id = 1;
@@ -75,21 +78,21 @@ public class OnlineTableViewTests {
 	
 	@Test 
 	public void onlineTableModel_SiteStarted() {		
-		_observer.notifySiteStarted(_site);		
+		_observer.notifySiteStarted(_site._name, _site._website);
 		assertEquals(1, _model.getRowCount());
 		assertEquals(_site._name, _model.getItemAt(0)._displayTitle);
 		assertEquals(_site._website, _model.getItemAt(0)._titleUrl);
 		assertNull(_model.getItemAt(0)._updatedDate);
 		
 		//Don't duplicate
-		_observer.notifySiteStarted(_site);		
+		_observer.notifySiteStarted(_site._name, _site._website);
 		assertEquals(1, _model.getRowCount());
 	}
 	
 	@Test 
 	public void onlineTableModel_SiteParsed() {
-		_observer.notifySiteStarted(_site);
-		_observer.notifySiteParsed(_site, 10);
+		_observer.notifySiteStarted(_site._name, _site._website);
+		_observer.notifySiteParsed(_site._name, 10);
 		assertEquals(1, _model.getRowCount());
 		assertEquals(_site._name, _model.getItemAt(0)._displayTitle);
 		assertEquals(_site._website, _model.getItemAt(0)._titleUrl);
@@ -98,8 +101,8 @@ public class OnlineTableViewTests {
 	
 	@Test 
 	public void onlineTableModel_SiteLoaded() {
-		_observer.notifySiteStarted(_site);
-		_observer.notifySiteParsed(_site, 10);
+		_observer.notifySiteStarted(_site._name, _site._website);
+		_observer.notifySiteParsed(_site._name, 10);
 		
 		OnlineMediaItem item = getRandomItem();
 		System.out.println("item: " + item);
@@ -149,7 +152,7 @@ public class OnlineTableViewTests {
 	public void onlineTableModel_ItemParsed() {
 		OnlineMediaItem item = getRandomItem();
 
-		_observer.notifySiteStarted(_site);
+		_observer.notifySiteStarted(_site._name, _site._website);
 		_observer.notifyItemParsed(item, 1, 1);
 		
 		assertEquals(2, _model.getRowCount());
@@ -159,11 +162,11 @@ public class OnlineTableViewTests {
 	@Test 
 	public void onlineTableModel_CorrectOrder() {
 		BookmarkerRendererFactory factory = new BookmarkerRendererFactory(_imageResources, _resources, _folderCache);
-		OnlineUpdateItemTableControl tableControl = new OnlineUpdateItemTableControl(factory, _controller, _resources, _toolbox, new DummyDragDrop(), _model);
+		OnlineUpdateItemTableControl tableControl = new OnlineUpdateItemTableControl(factory, _controller, _resources, _toolbox, new DummyDragDrop(), _model, _websiteList);
 		OnlineUpdateItemTableModel model = tableControl.getModel();
 		OnlineMediaListObserver observer = _model.new OnlineMediaListObserver();
 		_controller.observeOnlineThreadLoading(observer);
-		_controller.loadUpdateMedia(8, true, false, _site);
+		_controller.loadUpdateMedia(8, true, false, _site._name);
 		
 		assertTrue("list has no elements", model.getRowCount() > 1);
 		assertTrue("table has no elements", tableControl.getTable().getRowCount() > 1);

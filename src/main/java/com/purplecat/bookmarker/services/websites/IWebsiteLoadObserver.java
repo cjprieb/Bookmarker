@@ -7,18 +7,18 @@ import com.purplecat.bookmarker.models.WebsiteInfo;
 
 public interface IWebsiteLoadObserver {
 
-	public void notifyLoadStarted();
+	void notifyLoadStarted();
 	
-	public void notifySiteStarted(WebsiteInfo site);
+	void notifySiteStarted(String siteName, String siteUrl);
 	
-	public void notifySiteParsed(WebsiteInfo site, int itemsFound);
+	void notifySiteParsed(String siteName, int itemsFound);
 	
-	public void notifyItemParsed(OnlineMediaItem item, int itemsParsed, int totalUpdateCount);
+	void notifyItemParsed(OnlineMediaItem item, int itemsParsed, int totalUpdateCount);
 	
-	public void notifySiteFinished(WebsiteInfo site);
+	void notifySiteFinished(String siteName);
 	
-	public void notifyLoadFinished(List<OnlineMediaItem> list);
+	void notifyLoadFinished(List<OnlineMediaItem> list);
 
-	public void notifyItemRemoved(OnlineMediaItem newItem, int iItemsParsed, int size);	
+	void notifyItemRemoved(OnlineMediaItem newItem, int iItemsParsed, int size);
 
 }

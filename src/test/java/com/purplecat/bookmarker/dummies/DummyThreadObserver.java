@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.google.inject.Singleton;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
-import com.purplecat.bookmarker.models.WebsiteInfo;
 import com.purplecat.bookmarker.services.websites.IWebsiteLoadObserver;
 
 @Singleton
@@ -38,12 +37,12 @@ public class DummyThreadObserver implements IWebsiteLoadObserver {
 	}
 	
 	@Override
-	public void notifySiteStarted(WebsiteInfo site) {
+	public void notifySiteStarted(String siteName, String siteUrl) {
 		_siteStarted = true;
 	}
 	
 	@Override
-	public void notifySiteParsed(WebsiteInfo site, int itemsFound) {
+	public void notifySiteParsed(String siteName, int itemsFound) {
 		_siteLoaded = true;
 		_itemsFound = itemsFound;
 	}
@@ -63,7 +62,7 @@ public class DummyThreadObserver implements IWebsiteLoadObserver {
 	}
 	
 	@Override
-	public void notifySiteFinished(WebsiteInfo site) {
+	public void notifySiteFinished(String siteName) {
 		_siteFinished = true;
 	}
 	

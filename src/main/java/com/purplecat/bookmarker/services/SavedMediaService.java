@@ -186,7 +186,7 @@ public class SavedMediaService {
 			try {
 				_connectionManager.open();
 				Optional<OnlineMediaItem> optOnlineItem = _onlineDatabase.queryByMediaId(mediaId).stream()
-					.filter(item -> item._websiteName.equals(matchingParser.get().getInfo()._name))
+					.filter(item -> item._websiteName.equals(matchingParser.get().getName()))
 					.findFirst();	
 				if ( optOnlineItem.isPresent() ) {
 					onlineItem = optOnlineItem.get();

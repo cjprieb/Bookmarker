@@ -3,6 +3,7 @@ package com.purplecat.bookmarker.extensions;
 import java.util.Comparator;
 import java.util.List;
 
+import com.purplecat.bookmarker.services.websites.IWebsiteList;
 import org.joda.time.Duration;
 
 import com.purplecat.bookmarker.models.OnlineMediaItem;
@@ -74,6 +75,12 @@ public class OnlineMediaItemExt {
 	}
 	
 	public static class OnlineBookmarkComparator implements Comparator<OnlineMediaItem> {
+		private final IWebsiteList _websiteList;
+
+		public OnlineBookmarkComparator(IWebsiteList websiteList) {
+			_websiteList = websiteList;
+		}
+
 		@Override
 		public int compare(OnlineMediaItem o1, OnlineMediaItem o2) {
 			if ( o1._websiteName == null && o2._websiteName == null ) {
@@ -95,8 +102,7 @@ public class OnlineMediaItemExt {
 				}
 			}
 			else {
-				//TODO: determine website order
-				return o1._websiteName.compareTo(o2._websiteName);
+				return _websiteList.compare(o1._websiteName, o2._websiteName);
 			}
 		}		
 	}

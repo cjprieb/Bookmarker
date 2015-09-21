@@ -9,11 +9,13 @@ import com.purplecat.bookmarker.models.WebsiteInfo;
 import com.purplecat.bookmarker.services.ServiceException;
 
 public interface IWebsiteParser {
-	public List<OnlineMediaItem> load(DateTime minDateToLoad) throws ServiceException;
+	List<OnlineMediaItem> load(DateTime minDateToLoad) throws ServiceException;
 
-	public WebsiteInfo getInfo();
+	String getName();
 
-	public OnlineMediaItem loadItem(OnlineMediaItem item) throws ServiceException;
+	String getWebsiteUrl();
 
-	public boolean urlMatches(String url);
+	OnlineMediaItem loadItem(OnlineMediaItem item) throws ServiceException;
+
+	boolean urlMatches(String url);
 }

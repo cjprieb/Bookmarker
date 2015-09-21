@@ -100,10 +100,10 @@ public class OnlineUpdateItemTableModel extends TAbstractTableModel<OnlineMediaI
 		return obj;
 	}
 	
-	private void updateSite(WebsiteInfo site, boolean updateDate) {
+	private void updateSite(String siteName, String siteUrl, boolean updateDate) {
 		boolean bFound = false;
 		for ( OnlineMediaItem item : _backingList ) {
-			if ( item._displayTitle.equals(site._name) ) {					
+			if ( item._displayTitle.equals(siteName) ) {
 				bFound = true;
 				item._updatedDate = updateDate ? new DateTime() : null;
 				break;
@@ -111,9 +111,11 @@ public class OnlineUpdateItemTableModel extends TAbstractTableModel<OnlineMediaI
 		}
 		if ( !bFound ) {
 			OnlineMediaItem siteItem = new OnlineMediaItem();
-			siteItem._displayTitle = site._name;
-			siteItem._websiteName = site._name;
-			siteItem._titleUrl = site._website;
+			siteItem._displayTitle = siteName;
+			siteItem._websiteName = siteName;
+			if ( siteUrl != null ) {
+				siteItem._titleUrl = siteUrl;
+			}
 			int size = _backingList.size();
 			_backingList.add(siteItem);
 			OnlineUpdateItemTableModel.this.fireTableRowsInserted(size, size);
@@ -194,13 +196,13 @@ public class OnlineUpdateItemTableModel extends TAbstractTableModel<OnlineMediaI
 		public void notifyLoadStarted() {}
 
 		@Override
-		public void notifySiteStarted(WebsiteInfo site) {
-			updateSite(site, false);
+		public void notifySiteStarted(String siteName, String siteUrl) {
+			updateSite(siteName, siteUrl, false);
 		}
 
 		@Override
-		public void notifySiteParsed(WebsiteInfo site, int itemsFound) {
-			updateSite(site, true);
+		public void notifySiteParsed(String siteName, int itemsFound) {
+			updateSite(siteName, null, true);
 		}
 
 		@Override
@@ -214,7 +216,7 @@ public class OnlineUpdateItemTableModel extends TAbstractTableModel<OnlineMediaI
 		}
 
 		@Override
-		public void notifySiteFinished(WebsiteInfo site) {}
+		public void notifySiteFinished(String siteName) {}
 
 		@Override
 		public void notifyLoadFinished(List<OnlineMediaItem> list) {

@@ -28,7 +28,7 @@ public class WebsiteThreadObserver implements IWebsiteLoadObserver, Runnable {
 	private OnlineUpdateTask _task; 
 	private int _hoursAgo;
 	private boolean _loadGenres;
-	private Iterable<IWebsiteParser> _selectedWebsites;
+	private List<IWebsiteParser> _selectedWebsites;
 	private Iterable<IWebsiteLoadObserver> _observers;
 	
 	@Inject
@@ -37,20 +37,18 @@ public class WebsiteThreadObserver implements IWebsiteLoadObserver, Runnable {
 		_threadPool = threadPool;
 		_websites = websites;
 		_onlineRepository = onlineRepository;
-		_task = new OnlineUpdateTask(this, _onlineRepository, logging, mgr, genreRepository);
+		_task = new OnlineUpdateTask(this, _onlineRepository, logging, mgr, genreRepository, _websites);
 	}
 	
-	public void setLoadParameters(int hoursAgo, boolean loadGenres, boolean loadAll, WebsiteInfo selectedWebsite, Iterable<IWebsiteLoadObserver> observers) {
+	public void setLoadParameters(int hoursAgo, boolean loadGenres, boolean loadAll, String name, Iterable<IWebsiteLoadObserver> observers) {
 		_hoursAgo = hoursAgo;
 		_loadGenres = loadGenres;
 		_observers = observers;
-		
-		if ( loadAll ) {
-			_selectedWebsites = _websites.getList();
-		}
-		else {
-			_selectedWebsites = _websites.getList().stream()
-					.filter(site -> site.getInfo()._name.equalsIgnoreCase(selectedWebsite._name))
+
+		_selectedWebsites = _websites.getSortedList();
+		if ( !loadAll ) {
+			_selectedWebsites = _selectedWebsites.stream()
+					.filter(site -> site.getName().equalsIgnoreCase(name))
 					.collect(Collectors.toList());
 		}
 	}
@@ -74,13 +72,13 @@ public class WebsiteThreadObserver implements IWebsiteLoadObserver, Runnable {
 	}
 
 	@Override
-	public void notifySiteStarted(WebsiteInfo site) {
-		_threadPool.runOnUIThread(new RunSiteStarted(site));
+	public void notifySiteStarted(String siteName, String siteUrl) {
+		_threadPool.runOnUIThread(new RunSiteStarted(siteName, siteUrl));
 	}
 
 	@Override
-	public void notifySiteParsed(WebsiteInfo site, int itemsFound) {
-		_threadPool.runOnUIThread(new RunSiteParsed(site, itemsFound));
+	public void notifySiteParsed(String siteName, int itemsFound) {
+		_threadPool.runOnUIThread(new RunSiteParsed(siteName, itemsFound));
 	}
 
 	@Override
@@ -94,8 +92,8 @@ public class WebsiteThreadObserver implements IWebsiteLoadObserver, Runnable {
 	}
 
 	@Override
-	public void notifySiteFinished(WebsiteInfo site) {
-		_threadPool.runOnUIThread(new RunSiteFinished(site));
+	public void notifySiteFinished(String siteName) {
+		_threadPool.runOnUIThread(new RunSiteFinished(siteName));
 	}
 
 	@Override
@@ -115,32 +113,34 @@ public class WebsiteThreadObserver implements IWebsiteLoadObserver, Runnable {
 	}
 
 	public class RunSiteStarted extends IWebsiteThreadTask {
-		WebsiteInfo _info;
+		String _siteName;
+		String _siteUrl;
 		
-		public RunSiteStarted(WebsiteInfo info) {
+		public RunSiteStarted(String siteName, String siteUrl) {
 			super(_observers);
-			_info = info;
+			_siteName = siteName;
+			_siteUrl = siteUrl;
 		}
 		
 		@Override
 		public void run(IWebsiteLoadObserver obs) {
-			obs.notifySiteStarted(_info);
+			obs.notifySiteStarted(_siteName, _siteUrl);
 		}
 	}
 
 	public class RunSiteParsed extends IWebsiteThreadTask {
-		WebsiteInfo _info;
+		String _siteName;
 		int _itemsFound;
 		
-		public RunSiteParsed(WebsiteInfo info, int itemsFound) {
+		public RunSiteParsed(String siteName, int itemsFound) {
 			super(_observers);
-			_info = info;
+			_siteName = siteName;
 			_itemsFound = itemsFound;
 		}
 		
 		@Override
 		public void run(IWebsiteLoadObserver obs) {
-			obs.notifySiteParsed(_info, _itemsFound);
+			obs.notifySiteParsed(_siteName, _itemsFound);
 		}
 	}
 
@@ -170,16 +170,16 @@ public class WebsiteThreadObserver implements IWebsiteLoadObserver, Runnable {
 	}
 
 	public class RunSiteFinished extends IWebsiteThreadTask {
-		WebsiteInfo _info;
+		String _siteName;
 		
-		public RunSiteFinished(WebsiteInfo info) {
+		public RunSiteFinished(String siteName) {
 			super(_observers);
-			_info = info;
+			_siteName = siteName;
 		}
 		
 		@Override
 		public void run(IWebsiteLoadObserver obs) {
-			obs.notifySiteFinished(_info);
+			obs.notifySiteFinished(_siteName);
 		}
 	}
 

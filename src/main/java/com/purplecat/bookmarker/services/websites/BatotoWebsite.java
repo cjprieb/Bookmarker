@@ -28,8 +28,9 @@ import com.purplecat.commons.utils.StringUtils;
 
 public class BatotoWebsite implements IWebsiteParser {
 	final String TAG = "BatotoWebsite";
-	
-	protected final WebsiteInfo _info;
+	final String NAME = "Batoto";
+	final String HOMEPAGE_URL = "http://bato.to";
+
 	protected final ILoggingService _logging;
 	protected final IGenreRepository _genreDatabase;
 	
@@ -42,16 +43,16 @@ public class BatotoWebsite implements IWebsiteParser {
 	public BatotoWebsite(ILoggingService logging, IGenreRepository genres) {
 		_logging = logging;
 		_genreDatabase = genres;
-		_info = new WebsiteInfo("Batoto", "http://bato.to/");
 	}
+
+	@Override
+	public String getName() { return NAME; }
+
+	@Override
+	public String getWebsiteUrl() { return HOMEPAGE_URL; }
 	
 	protected Document getDocument(int page) throws IOException {
-		if ( page == 1 ) {
-			return Jsoup.connect(_info._website).get();
-		}
-		else {
-			return Jsoup.connect(String.format(_pageFormat, page)).get();
-		}
+		return Jsoup.connect(String.format(_pageFormat, page)).get();
 	}
 
 	@Override
@@ -97,7 +98,7 @@ public class BatotoWebsite implements IWebsiteParser {
 				try {
 					titleLink = row.select("td").get(1).select("a").get(1);
 					
-					currentItem._websiteName = _info._name;
+					currentItem._websiteName = getName();
 					currentItem._displayTitle = titleLink.text();
 					currentItem._titleUrl = titleLink.attr("href");
 //					_logging.debug(0, TAG, "Parsing: " + currentItem._displayTitle + " (" + currentItem._titleUrl + ")");
@@ -127,11 +128,6 @@ public class BatotoWebsite implements IWebsiteParser {
 			}
 		}
 		return items;
-	}
-
-	@Override
-	public WebsiteInfo getInfo() {
-		return _info;
 	}
 
 	@Override

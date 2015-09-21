@@ -9,7 +9,6 @@ import com.purplecat.bookmarker.controller.observers.IListLoadedObserver;
 import com.purplecat.bookmarker.controller.observers.ISummaryLoadObserver;
 import com.purplecat.bookmarker.models.Media;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
-import com.purplecat.bookmarker.models.WebsiteInfo;
 import com.purplecat.bookmarker.services.websites.IWebsiteLoadObserver;
 import com.purplecat.bookmarker.view.swing.renderers.DataFields;
 import com.purplecat.commons.IResourceService;
@@ -142,10 +141,10 @@ public class SavedMediaTableModel extends TAbstractTableModel<Media> {
 		public void notifyLoadStarted() {}
 
 		@Override
-		public void notifySiteStarted(WebsiteInfo site) {}
+		public void notifySiteStarted(String siteName, String siteUrl) {}
 
 		@Override
-		public void notifySiteParsed(WebsiteInfo site, int itemsFound) {}
+		public void notifySiteParsed(String siteName, int itemsFound) {}
 
 		@Override
 		public void notifyItemParsed(OnlineMediaItem item, int itemsParsed, int updateCount) {
@@ -156,7 +155,7 @@ public class SavedMediaTableModel extends TAbstractTableModel<Media> {
 		public void notifyItemRemoved(OnlineMediaItem newItem, int itemsParsed, int size) {}
 
 		@Override
-		public void notifySiteFinished(WebsiteInfo site) {}
+		public void notifySiteFinished(String siteName) {}
 
 		@Override
 		public void notifyLoadFinished(List<OnlineMediaItem> list) {

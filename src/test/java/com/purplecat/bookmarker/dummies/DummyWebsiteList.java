@@ -27,6 +27,12 @@ public class DummyWebsiteList implements IWebsiteList {
 		public boolean itemLoadCalled() {
 			return _itemLoadCalled;
 		}
+
+		@Override
+		public String getName() { return "name"; }
+
+		@Override
+		public String getWebsiteUrl() { return "url"; }
 		
 		@Override
 		public List<OnlineMediaItem> load(DateTime minDateTime) {
@@ -74,11 +80,6 @@ public class DummyWebsiteList implements IWebsiteList {
 		}
 
 		@Override
-		public WebsiteInfo getInfo() {
-			return new WebsiteInfo("name", "url");
-		}
-
-		@Override
 		public OnlineMediaItem loadItem(OnlineMediaItem item) {
 			_itemLoadCalled = true;
 			return item;
@@ -100,7 +101,17 @@ public class DummyWebsiteList implements IWebsiteList {
 	}
 
 	@Override
-	public Collection<IWebsiteParser> getList() {
+	public List<IWebsiteParser> getList() {
 		return _list;
+	}
+
+	@Override
+	public List<IWebsiteParser> getSortedList() {
+		return _list;
+	}
+
+	@Override
+	public int compare(String websiteName, String websiteName1) {
+		return 0;
 	}
 }

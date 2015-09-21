@@ -2,12 +2,7 @@ package com.purplecat.bookmarker.view.swing;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
-import com.purplecat.bookmarker.services.DefaultSettingsService;
-import com.purplecat.bookmarker.services.FileSummaryRepository;
-import com.purplecat.bookmarker.services.IFolderRepository;
-import com.purplecat.bookmarker.services.ISettingsService;
-import com.purplecat.bookmarker.services.ISummaryRepository;
-import com.purplecat.bookmarker.services.UrlPatternService;
+import com.purplecat.bookmarker.services.*;
 import com.purplecat.bookmarker.services.databases.FolderDatabaseRepository;
 import com.purplecat.bookmarker.services.databases.GenreDatabaseRepository;
 import com.purplecat.bookmarker.services.databases.IGenreRepository;
@@ -46,7 +41,7 @@ public class DebugSwingBookmarkerModule extends AbstractModule {
 		bind(ILoggingService.class).to(ConsoleLog.class);
 		bind(String.class).annotatedWith(Names.named("Resource File")).toInstance("com.purplecat.bookmarker.Resources");
 		bind(String.class).annotatedWith(Names.named("Project Path")).toInstance("/com/purplecat/bookmarker/");
-		bind(ISettingsService.class).to(DefaultSettingsService.class);
+		bind(ISettingsService.class).to(PropertiesSettingsService.class);
 		
 		//Database/Repository items
 		bind(IConnectionManager.class).to(ConnectionManager.class);

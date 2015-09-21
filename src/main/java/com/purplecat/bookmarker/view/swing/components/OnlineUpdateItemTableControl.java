@@ -23,6 +23,7 @@ import com.purplecat.bookmarker.controller.Controller;
 import com.purplecat.bookmarker.extensions.OnlineMediaItemExt;
 import com.purplecat.bookmarker.extensions.OnlineMediaItemExt.OnlineBookmarkComparator;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
+import com.purplecat.bookmarker.services.websites.IWebsiteList;
 import com.purplecat.bookmarker.view.swing.models.OnlineUpdateItemTableModel;
 import com.purplecat.bookmarker.view.swing.renderers.DataFields;
 import com.purplecat.bookmarker.view.swing.renderers.OnlineLoadedRowRenderer;
@@ -46,6 +47,7 @@ public class OnlineUpdateItemTableControl {
 	private final Controller _controller;
 	private final Toolbox _toolbox;
 	private final IResourceService _resources;
+	private final IWebsiteList _websiteList;
 	
 	@Inject
 	public OnlineUpdateItemTableControl(
@@ -54,7 +56,8 @@ public class OnlineUpdateItemTableControl {
 			IResourceService resources, 
 			Toolbox toolbox,
 			@Named("Manga Url") IDragDropAction mangaDropAction,
-			OnlineUpdateItemTableModel model) {
+			OnlineUpdateItemTableModel model,
+			IWebsiteList websiteList) {
 		_resources = resources;
 		_controller = ctrl;
 		_toolbox = toolbox;
@@ -64,6 +67,7 @@ public class OnlineUpdateItemTableControl {
 				DataFields.TITLE_COL,
 				DataFields.PLACE_COL
 		};
+		_websiteList = websiteList;
 		
 		_model = model;	
 		_model.setColumns(_columns);
@@ -109,7 +113,7 @@ public class OnlineUpdateItemTableControl {
 			
 			int index = ListUtils.indexOf(_columns, DataFields.ONLINE_STATE_COL);
 			if ( index >= 0 ) { 
-				this.setComparator(index, new OnlineBookmarkComparator());
+				this.setComparator(index, new OnlineBookmarkComparator(_websiteList));
 				sortKeys.add(new SortKey(index, SortOrder.ASCENDING)); 
 			}
 			

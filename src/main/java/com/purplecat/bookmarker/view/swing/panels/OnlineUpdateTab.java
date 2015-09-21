@@ -145,12 +145,12 @@ public class OnlineUpdateTab {
 		return _chkAllWebsites.isSelected();
 	}
 	
-	public WebsiteInfo getSelectedWebsiteInfo() {
-		return (WebsiteInfo)_websiteDropdown.getSelectedItem();
+	public String getSelectedWebsiteName() {
+		return (String)_websiteDropdown.getSelectedItem();
 	}
 	
 	public void callLoadUpdates() {
-		_controller.loadUpdateMedia(getHoursAgo(), getLoadGenresSetting(), getLoadAllWebsitesSetting(), getSelectedWebsiteInfo());		
+		_controller.loadUpdateMedia(getHoursAgo(), getLoadGenresSetting(), getLoadAllWebsitesSetting(), getSelectedWebsiteName());
 	}
 
 	public OnlineMediaItem getSelectedItem() {
@@ -166,8 +166,8 @@ public class OnlineUpdateTab {
 		
 		String websiteName = prefs.get("update-selectedWebsite", "");
 		for ( int i = 0; i < _websiteDropdown.getItemCount(); i++ ) {
-			WebsiteInfo info = _websiteDropdown.getItemAt(i);
-			if ( info._name.equals(websiteName) ) {
+			String name = _websiteDropdown.getItemAt(i);
+			if ( name.equals(websiteName) ) {
 				_websiteDropdown.setSelectedIndex(i);
 				break;
 			}
@@ -183,7 +183,7 @@ public class OnlineUpdateTab {
 		prefs.putInt("update-hoursAgo", (int)_spinner.getHourValue());
 		prefs.putBoolean("update-allWebsites", _chkAllWebsites.isSelected());
 		prefs.putBoolean("update-loadGenres", _chkLoadGenres.isSelected());
-		prefs.put("update-selectedWebsite", ((WebsiteInfo)_websiteDropdown.getSelectedItem())._name);
+		prefs.put("update-selectedWebsite", ((String)_websiteDropdown.getSelectedItem()));
 	}
 
 	class OnlineUpdateTabObserver implements IWebsiteLoadObserver {
@@ -191,10 +191,10 @@ public class OnlineUpdateTab {
 		public void notifyLoadStarted() {}
 	
 		@Override
-		public void notifySiteStarted(WebsiteInfo site) {}
+		public void notifySiteStarted(String siteName, String siteUrl) {}
 	
 		@Override
-		public void notifySiteParsed(WebsiteInfo site, int itemsFound) {}
+		public void notifySiteParsed(String siteName, int itemsFound) {}
 	
 		@Override
 		public void notifyItemParsed(OnlineMediaItem item, int itemsParsed, int totalUpdateCount) {}
@@ -203,8 +203,8 @@ public class OnlineUpdateTab {
 		public void notifyItemRemoved(OnlineMediaItem newItem, int itemsParsed, int size) {}
 	
 		@Override
-		public void notifySiteFinished(WebsiteInfo site) {
-			_updateMediaTableControl.getModel().removeItemsOlderThan(getHoursAgo(), site._name);
+		public void notifySiteFinished(String siteName) {
+			_updateMediaTableControl.getModel().removeItemsOlderThan(getHoursAgo(), siteName);
 		}
 	
 		@Override

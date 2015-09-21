@@ -11,7 +11,6 @@ import org.joda.time.format.DateTimeFormat;
 
 import com.purplecat.bookmarker.Resources;
 import com.purplecat.bookmarker.models.OnlineMediaItem;
-import com.purplecat.bookmarker.models.WebsiteInfo;
 import com.purplecat.bookmarker.services.websites.IWebsiteLoadObserver;
 import com.purplecat.bookmarker.view.swing.components.LabelBadge;
 import com.purplecat.bookmarker.view.swing.components.RatioProgressBar;
@@ -59,18 +58,18 @@ public class UpdateMediaObserverControl implements IWebsiteLoadObserver {
 	}
 
 	@Override
-	public void notifySiteStarted(WebsiteInfo site) {
+	public void notifySiteStarted(String siteName, String siteUrl) {
 		markStarted();
 		_progressBar.setString(
-			String.format(_resources.getString(Resources.string.notifyLoadingSite), site._name)
+			String.format(_resources.getString(Resources.string.notifyLoadingSite), siteName)
 		);
 	}
 
 	@Override
-	public void notifySiteParsed(WebsiteInfo site, int maxFound) {
+	public void notifySiteParsed(String siteName, int maxFound) {
 		_progressBar.setMaximum(maxFound);
 		_progressBar.setString(
-			String.format(_resources.getString(Resources.string.notifyLoadingGenres), site._name)
+			String.format(_resources.getString(Resources.string.notifyLoadingGenres), siteName)
 		);
 	}
 
@@ -93,7 +92,7 @@ public class UpdateMediaObserverControl implements IWebsiteLoadObserver {
 	}
 
 	@Override
-	public void notifySiteFinished(WebsiteInfo site) {
+	public void notifySiteFinished(String siteName) {
 		markDone();
 	}
 

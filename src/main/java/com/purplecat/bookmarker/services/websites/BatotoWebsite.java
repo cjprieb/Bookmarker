@@ -113,14 +113,14 @@ public class BatotoWebsite implements IWebsiteParser {
 				String chapterUrl = row.select("a").first().attr("href");
 				String chapterName = row.select("a").first().text();
 				String stringDate = row.select("td").last().text();
-				Place place = PlaceExt.parseBatotoPlace(chapterUrl);
+				Place place = PlaceExt.parseBatotoPlace(chapterName);
 				DateTime date = WebsiteDateExt.parseBatotoDate(now, stringDate);
 //				_logging.debug(2, TAG, "date: " + date);
 //				_logging.debug(2, TAG, "place: " + place);
 				
 				if ( currentItem._updatedPlace.compareTo(place) <= 0 ) {
 //					_logging.debug(2, TAG, "updating date and place of existing batoto item");
-					currentItem._chapterUrl = chapterUrl;
+					currentItem._chapterUrl = HOMEPAGE_URL + chapterUrl;
 					currentItem._chapterName = chapterName;
 					currentItem._updatedPlace = place;
 					currentItem._updatedDate = date;

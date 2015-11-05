@@ -27,7 +27,7 @@ public class SampleBatotoWebsite extends BatotoWebsite {
 	@Override
 	protected Document getDocument(int page) throws IOException {
 		if ( page == 1 ) {
-			String fileName = _fileIndex % 2 == 0 ? "sample_batoto.html" : "sample_batoto_3.html";
+			String fileName = _fileIndex % 2 == 0 ? "sample_batoto_nov_2.html" : "sample_batoto_3.html";
 			_fileIndex++;
 	//		String fileName = "sample_batoto.html";
 			File in = new File(fileName);

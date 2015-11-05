@@ -18,9 +18,11 @@ public class PlaceExt {
 	private static final int SUBCHAPTER = 3;
 	private static final int EXTRA 		= 4;
 	private static final int PAGE 		= 5;
+	private static final int END 		= 6;
 
 	private static final Pattern _bakaPlaceRegex = Pattern.compile("(?:v\\.(\\d+) )?c\\.(.+)");
 	private static final Pattern _chapterRegex = Pattern.compile("\\d+/([^/_]+)_(?:v(\\d+)_)?(?:ch(\\d+)([^_]+)?_)?by_(.+)");
+	private static final Pattern _batotoRegex = Pattern.compile("(?:Vol\\.(\\d+) )?(Ch\\.([\\.\\d]+))(?: \\(v(\\d+)\\))?");
 	
 	public static Place parse(String str) {
 		Place place = new Place();
@@ -230,37 +232,88 @@ public class PlaceExt {
 	public static Place parseBatotoPlace(String chapterUrl) {
 		int volume = 0, chapter = 0, sub = 0;
 		boolean extra = false;
-		
-		//	http://bato.to/read/_/320356/world-trigger_ch101_by_glorious-scanlations
-		//	http://bato.to/read/_/320360/medarot_v1_ch4_by_heavenly-scans
-		//	http://bato.to/read/_/320273/song-of-the-long-march_ch43.2_by_easy-going-scans
-		//	http://bato.to/read/_/320272/kounodori-the-stork_v2_ch7.1_by_futari-wa-pretty-anon
-		//	http://bato.to/read/_/320220/alice-in-borderland_v6_ch24--v2-_by_nest-traducciones
-		Matcher matcher = _chapterRegex.matcher(chapterUrl);
-		if ( matcher.find() ) {
-			
-			volume = Numbers.parseInt(matcher.group(2), 0);
-			chapter = Numbers.parseInt(matcher.group(3), 0);
-			String moreDetail = matcher.group(4);
-			if ( moreDetail != null && moreDetail.length() > 0 ) {
-				if ( moreDetail.startsWith(".") ) {
-					String subChapterString = "";
-					for ( int i = 1; i < moreDetail.length(); i++ ) {
-						if ( Character.isDigit(moreDetail.charAt(i) ) ) {
-							subChapterString += moreDetail.charAt(i);
-						}
-						else {
-							break;
-						}
+		int state = START;
+		// Ch.5: Day 3 / Night of Fate (3)
+		// Vol.7 Ch.0 Read Online
+		// Ch.43: Achiga's Story 6
+		// Vol.1 Ch.2: East-Only Alices
+		// Vol.25 Ch.198: Mortal Combat (4)
+		// Vol.3 Ch.8 (v2) Read Online
+		// Ch.03: Chapter 03
+		// Ch.68.5: Winning Over the Tanakas, That Is, A Problem We've Dealt With Before
+		StringBuilder buffer = new StringBuilder();
+		for(int i = 0; i < chapterUrl.length(); i++) {
+			char c = chapterUrl.charAt(i);
+			//System.out.println(i + ": c=" + c + " State="+state +" buffer="+buffer);
+			switch (state) {
+				case START:
+					buffer.append(c);
+					if ( buffer.toString().equals("Vol.") ) {
+						state = VOLUME;
+						buffer.setLength(0);
 					}
-					sub = Numbers.parseInt(subChapterString, 0);
-				}
-				else if ( moreDetail.contains("v2") ){
-					extra = true; //?
-				}
+					if ( buffer.toString().equals("Ch.") ) {
+						state = CHAPTER;
+						buffer.setLength(0);
+					}
+					break;
+
+				case VOLUME:
+					if ( Character.isDigit(c) ) {
+						buffer.append(c);
+					}
+					else {
+						volume = Numbers.parseInt(buffer.toString(), 0);
+						buffer.setLength(0);
+						state = START;
+					}
+					break;
+
+				case CHAPTER:
+					if ( Character.isDigit(c) ) {
+						buffer.append(c);
+					}
+					else {
+						chapter = Numbers.parseInt(buffer.toString(), 0);
+						buffer.setLength(0);
+						state = c == '.' ? SUBCHAPTER : END;
+					}
+					break;
+
+				case SUBCHAPTER:
+					if ( Character.isDigit(c) ) {
+						buffer.append(c);
+					}
+					else {
+						sub = Numbers.parseInt(buffer.toString(), 0);
+						buffer.setLength(0);
+						state = END;
+					}
+					break;
+
+				case EXTRA:
+					if ( c == ')' ) {
+						extra = true;
+						i = chapterUrl.length();
+					}
+					break;
+
+				case END:
+					if ( c == '(' ) {
+						buffer.setLength(0);
+						state = EXTRA;
+					}
+					else if ( c == ' ' ) {
+						//do nothing
+					}
+					else {
+						i = chapterUrl.length();
+					}
+					break;
+
 			}
 		}
-		
+
 		return new Place(volume, chapter, sub, 0, extra);
 	}
 }

@@ -36,19 +36,7 @@
 		"_updatedDate" : "2015-04-15"
 	},
 	{
-		"order" : 5,
-		"_id" : 4,
-		"_mediaId" : 205,
-		"_displayTitle" : "ReLIFE",
-		"_storyState" : "LAST_AVAILABLE_CHAPTER",
-		"_isComplete" : "false",
-		"_lastReadPlace" : { "_volume" : 0, "_chapter" : 16 },
-		"_lastReadDate" : "2015-05-11",
-		"_updatedPlace" : { "_volume" : 0, "_chapter" : 16 },
-		"_updatedDate" : "2015-05-11"
-	},
-	{
-		"order" : 4,
+		"order" : 3,
 		"_id" : 5,
 		"_mediaId" : 206,
 		"_displayTitle" : "Akagami no shirayukihime",
@@ -60,7 +48,55 @@
 		"_updatedDate" : "2015-05-13"
 	},
 	{
+		"order" : 4,
+		"_id" : 50,
+		"_mediaId" : 210,
+		"_displayTitle" : "My Shiny World",
+		"_storyState" : "LAST_AVAILABLE_CHAPTER",
+		"_isComplete" : "false",
+		"_lastReadPlace" : { "_volume" :0, "_chapter" : 9 },
+		"_lastReadDate" : "2015-06-24",
+		"_updatedPlace" : { "_volume" : 0, "_chapter" : 10 },
+		"_updatedDate" : "2015-10-02"
+	},
+	{
+		"order" : 5,
+		"_id" : 51,
+		"_mediaId" : 211,
+		"_displayTitle" : "Tegami bachi",
+		"_storyState" : "LAST_AVAILABLE_CHAPTER",
+		"_isComplete" : "false",
+		"_lastReadPlace" : { "_volume" :0, "_chapter" : 56 },
+		"_lastReadDate" : "2014-06-24",
+		"_updatedPlace" : { "_volume" : 0, "_chapter" : 86 },
+		"_updatedDate" : "2015-10-03"
+	},
+	{
+		"order" : 6,
+		"_id" : 52,
+		"_mediaId" : 212,
+		"_displayTitle" : "Until death do us part",
+		"_storyState" : "LAST_AVAILABLE_CHAPTER",
+		"_isComplete" : "false",
+		"_lastReadPlace" : { "_volume" :24, "_chapter" : 194 },
+		"_lastReadDate" : "2015-08-24",
+		"_updatedPlace" : { "_volume" : 25, "_chapter" : 198 },
+		"_updatedDate" : "2015-10-04"
+	},
+	{
 		"order" : 7,
+		"_id" : 4,
+		"_mediaId" : 205,
+		"_displayTitle" : "ReLIFE",
+		"_storyState" : "LAST_AVAILABLE_CHAPTER",
+		"_isComplete" : "false",
+		"_lastReadPlace" : { "_volume" : 0, "_chapter" : 16 },
+		"_lastReadDate" : "2015-05-11",
+		"_updatedPlace" : { "_volume" : 0, "_chapter" : 16 },
+		"_updatedDate" : "2015-05-11"
+	},
+	{
+		"order" : 8,
 		"_id" : 6,
 		"_mediaId" : 208,
 		"_displayTitle" : "Handa-kun",
@@ -68,15 +104,5 @@
 		"_isComplete" : "false",
 		"_updatedPlace" : { "_volume" : 2, "_chapter" : 10 },
 		"_updatedDate" : "2015-05-16"
-	},
-	{
-		"order" : 6,
-		"_id" : 7,
-		"_mediaId" : 210,
-		"_displayTitle" : "Bartender",
-		"_storyState" : "",
-		"_isComplete" : "false",
-		"_updatedPlace" : { "_volume" : 17, "_chapter" : 129 },
-		"_updatedDate" : "2015-05-20"
 	}
 ]

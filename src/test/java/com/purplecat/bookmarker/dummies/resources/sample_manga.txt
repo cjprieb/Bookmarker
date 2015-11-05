@@ -79,5 +79,32 @@
 		"_isComplete" : "false",
 		"_lastReadPlace" : { "_volume" : 9, "_chapter" : 55 },
 		"_lastReadDate" : "2015-04-15"
+	},
+	{
+		"order" : 4,
+		"_id" : 210,
+		"_displayTitle" : "My Shiny World",
+		"_storyState" : "LAST_AVAILABLE_CHAPTER",
+		"_isComplete" : "false",
+		"_lastReadPlace" : { "_volume" :0, "_chapter" : 9 },
+		"_lastReadDate" : "2015-06-24"
+	},
+	{
+		"order" : 5,
+		"_id" : 211,
+		"_displayTitle" : "Tegami bachi",
+		"_storyState" : "LAST_AVAILABLE_CHAPTER",
+		"_isComplete" : "false",
+		"_lastReadPlace" : { "_volume" :0, "_chapter" : 56 },
+		"_lastReadDate" : "2014-06-24"
+	},
+	{
+		"order" : 6,
+		"_id" : 212,
+		"_displayTitle" : "Until death do us part",
+		"_storyState" : "LAST_AVAILABLE_CHAPTER",
+		"_isComplete" : "false",
+		"_lastReadPlace" : { "_volume" :24, "_chapter" : 194 },
+		"_lastReadDate" : "2015-08-24"
 	}
 ]

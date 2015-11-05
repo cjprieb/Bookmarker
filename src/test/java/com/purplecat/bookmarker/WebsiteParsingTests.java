@@ -48,9 +48,12 @@ public class WebsiteParsingTests {
 			assertNotNull(items);
 			assertTrue(items.size() > 0);
 			int iCount = 0;
+			int itemsWithNoPlace = 0;
 			for ( OnlineMediaItem item : items ) {
 				iCount++;
-				checkItem(item);
+				if ( !checkItem(item) ) {
+					itemsWithNoPlace++;
+				}
 //
 				if (iCount < 0 ) { 
 					site.loadItem(item);
@@ -59,6 +62,10 @@ public class WebsiteParsingTests {
 				if ( item._updatedDate.compareTo(minUpdateDate) < 0 ) {
 					Assert.fail("Item was updated too long ago");
 				}
+			}
+//			occasionally bookmarks will have no places, so not all invalid places should count
+			if ( itemsWithNoPlace > 10 ) {
+				Assert.fail("too many items found without a place: " + itemsWithNoPlace);
 			}
 			Assert.assertTrue("no items from yesterday", items.stream().anyMatch(item -> item._updatedDate.getDayOfMonth() == minUpdateDate.getDayOfMonth()));
 		} catch (ServiceException e) {
@@ -95,7 +102,7 @@ public class WebsiteParsingTests {
 		}
 	}
 	
-	protected void checkItem(OnlineMediaItem item) {
+	protected boolean checkItem(OnlineMediaItem item) {
 		DateTime date = DateTime.now().minusDays(10);
 		System.out.println("checking " + item);
 		System.out.println("    date: " + item._updatedDate);
@@ -105,13 +112,15 @@ public class WebsiteParsingTests {
 		Assert.assertTrue("no website name", item._websiteName != null && item._websiteName.length() > 0);
 		Assert.assertNotNull("date is null", item._updatedDate);
 		Assert.assertTrue("invalid date", item._updatedDate.isAfter(date));
-		
+
 		if ( item._chapterUrl != null && item._chapterUrl.length() > 0 && ( item._chapterName == null || !item._chapterName.contains("Oneshot") )  ) {
 //			Assert.assertTrue("invalid place", item._updatedPlace.compareTo(new Place()) > 0);
 			if ( item._updatedPlace.compareTo(new Place()) == 0 ) {
 				System.err.println("No place found for " + item._displayTitle + " (using " + item._chapterUrl + ")");
+				return false;
 			}
 		}
+		return true;
 	}
 	
 	protected void checkFullItemLoaded(OnlineMediaItem item) {

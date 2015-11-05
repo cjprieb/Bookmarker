@@ -10,6 +10,7 @@
   <string name="lblAuthor">Author</string>
   <string name="lblBookmarks">Bookmarks</string>
   <string name="lblBookmarkFileUrl">Bookmark File URL:</string>
+  <string name="lblCancel">Cancel</string>
   <string name="lblCategories">Categories</string>
   <string name="lblCategory">Category</string>
   <string name="lblChapter">Chapter</string>
@@ -69,6 +70,7 @@
   <string name="lblNone">None</string>
   <string name="lblNoSite">No website</string>
   <string name="lblNovel">Novel</string>
+  <string name="lblOkay">OK</string>
   <string name="lblOnline">Online</string>
   <string name="lblOnlyNullAuthors">Show only media with null authors</string>
   <string name="lblOnlyTitlesStartingWith">only titles starting with...</string>

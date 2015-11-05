@@ -27,33 +27,6 @@
       <excludeFolder url="file://$MODULE_DIR$/test_data" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
-      <library name="junit4">
-        <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/lib/junit-4.11.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="jsoup-1.8.2.jar">
-        <CLASSES>
-          <root url="file:///utilities/lib/jsoup-1.8.2.jar" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="javax.json-1.0.4.jar">
-        <CLASSES>
-          <root url="file:///Commons/lib/javax.json-1.0.4.jar" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="module" module-name="commons" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:11.0.2" level="application" />
@@ -62,5 +35,7 @@
     <orderEntry type="library" name="org.xerial:sqlite-jdbc:3.7.2" level="application" />
     <orderEntry type="library" name="javax.json:javax.json-api:1.0" level="application" />
     <orderEntry type="library" name="org.jsoup:jsoup:1.8.3" level="application" />
+    <orderEntry type="library" name="org.hamcrest:hamcrest-junit:2.0.0.0" level="application" />
+    <orderEntry type="library" name="javax.json-1.0.4" level="application" />
   </component>
 </module>

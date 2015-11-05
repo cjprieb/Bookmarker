@@ -9,7 +9,7 @@ sub parseResourceFile($$);
 my $packageName = "bookmarker";
 
 my $currDir = cwd();
-my $dir = $currDir . "/src/com/purplecat/$packageName/";
+my $dir = $currDir . "/src/main/java/com/purplecat/$packageName/";
 my $outFile = $dir . "Resources.java";
 my $package = "com.purplecat.$packageName";
 
